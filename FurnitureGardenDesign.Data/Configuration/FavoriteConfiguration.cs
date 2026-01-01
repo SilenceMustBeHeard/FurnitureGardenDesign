@@ -1,0 +1,17 @@
+﻿using FurnitureGardenDesign.Data.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace FurnitureGardenDesign.Data.Configurations
+{
+    public class FavoriteConfiguration : IEntityTypeConfiguration<Favorite>
+    {
+        public void Configure(EntityTypeBuilder<Favorite> builder)
+        {
+            builder.HasKey(f => f.Id);
+
+            builder.HasIndex(f => new { f.UserId, f.CatalogDesignId })
+                   .IsUnique();
+        }
+    }
+}

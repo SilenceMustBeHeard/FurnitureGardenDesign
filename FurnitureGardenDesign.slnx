@@ -1,0 +1,23 @@
+<Solution>
+  <Folder Name="/Data/">
+    <Project Path="FurnitureGardenDesign.Data.Common/FurnitureGardenDesign.Data.Common.csproj" />
+    <Project Path="FurnitureGardenDesign.Data.Models/FurnitureGardenDesign.Data.Models.csproj" />
+    <Project Path="FurnitureGardenDesign.Data/FurnitureGardenDesign.Data.csproj" />
+  </Folder>
+  <Folder Name="/Service/">
+    <Project Path="FurnitureGardenDesign.Services.Automapping/FurnitureGardenDesign.Services.Automapping.csproj" />
+    <Project Path="FurnitureGardenDesign.Services.Common/FurnitureGardenDesign.Services.Common.csproj" />
+    <Project Path="FurnitureGardenDesign.Services.Core/FurnitureGardenDesign.Services.Core.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="FurnitureGardenDesign.Services.Tests/FurnitureGardenDesign.Services.Tests.csproj" />
+    <Project Path="FurnitureGardenDesign.Web.Tests/FurnitureGardenDesign.Web.Tests.csproj" />
+    <Project Path="FurnitureGardenDesignIntegrationTests/FurnitureGardenDesignIntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/Web/">
+    <Project Path="FurnitureGardenDesign.Web.Infrastructure/FurnitureGardenDesign.Web.Infrastructure.csproj" />
+    <Project Path="FurnitureGardenDesign.Web.ViewModels/FurnitureGardenDesign.Web.ViewModels.csproj" />
+    <Project Path="FurnitureGardenDesign.Web/FurnitureGardenDesign.Web.csproj" />
+  </Folder>
+  <Project Path="FurnitureGardenDesign.Common/FurnitureGardenDesign.Common.csproj" />
+</Solution>
