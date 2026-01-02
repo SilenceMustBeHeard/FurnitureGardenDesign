@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repository\" />
     <Folder Include="Seeding\Dtos\" />
     <Folder Include="Seeding\Input\" />
     <Folder Include="Seeding\Utilities\" />

@@ -24,7 +24,7 @@ namespace FurnitureGardenDesign.Data.Configurations
                    .OnDelete(DeleteBehavior.Restrict);
 
             // Order ↔ User (ApplicationUser)
-            builder.HasOne<ApplicationUser>()
+            builder.HasOne(o=>o.User)
                    .WithMany(u => u.Orders)
                    .HasForeignKey(o => o.UserId)
                    .OnDelete(DeleteBehavior.Restrict);

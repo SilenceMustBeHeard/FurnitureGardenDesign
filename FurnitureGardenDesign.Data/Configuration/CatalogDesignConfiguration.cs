@@ -37,6 +37,10 @@ namespace FurnitureGardenDesign.Data.Configurations
                    .WithOne(f => f.CatalogDesign)
                    .HasForeignKey(f => f.CatalogDesignId)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(d => d.CategoryId);
+            builder.HasIndex(d => d.IsActive);
+
         }
     }
 }

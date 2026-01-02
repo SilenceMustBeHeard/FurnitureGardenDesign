@@ -6,12 +6,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FurnitureGardenDesign.Data.Models
 {
-    public class Order
+    public class Order : BaseDeletableEntity
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
         // Customer
         public string UserId { get; set; } = null!;
+        public ApplicationUser User { get; set; } = null!;
 
         // Order details
 
@@ -30,9 +31,9 @@ namespace FurnitureGardenDesign.Data.Models
         [MinLength(3)]
         public string Description { get; set; } = null!; // short text describing how it should look like
 
-        [Required]
+      
         [Url]
-        public string ReferenceImageUrl { get; set; } = null!;
+        public string? ReferenceImageUrl { get; set; }
 
         // Status
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
@@ -42,6 +43,7 @@ namespace FurnitureGardenDesign.Data.Models
         public virtual Category Category { get; set; } = null!;
 
 
+       
 
 
 

@@ -14,11 +14,12 @@ namespace Furniture_GardenDesign.Data.Configuration
             builder.HasKey(u => u.Id);
 
             // User <> Orders
-            builder
-                .HasMany(u => u.Orders)
-                .WithOne()
-                .HasForeignKey(o => o.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //builder
+            //    .HasMany(u => u.Orders)
+            //    .WithOne(o => o.User)
+            //    .HasForeignKey(o => o.UserId)
+            //    .OnDelete(DeleteBehavior.Restrict);
+
 
             // User <= Favorites
             builder

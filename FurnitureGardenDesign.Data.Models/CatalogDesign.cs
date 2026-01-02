@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FurnitureGardenDesign.Data.Models
 {
-    public class CatalogDesign
+    public class CatalogDesign : BaseDeletableEntity
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -26,9 +27,9 @@ namespace FurnitureGardenDesign.Data.Models
         [Url]
         public string ImageUrl { get; set; } = null!;
 
-        [Required]
-        [Range(0, 99999.99)]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
+
 
         // flag
 
