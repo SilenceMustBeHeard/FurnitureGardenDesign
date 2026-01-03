@@ -7,12 +7,12 @@ namespace FurnitureGardenDesign.Data.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         public string UserId { get; set; } = null!;
-        public ApplicationUser User { get; set; } = null!;
+        public virtual ApplicationUser User { get; set; } = null!;
 
 
         public Guid CatalogDesignId { get; set; }
 
    
-        public CatalogDesign CatalogDesign { get; set; } = null!;
+        public virtual CatalogDesign CatalogDesign { get; set; } = null!;
     }
 }

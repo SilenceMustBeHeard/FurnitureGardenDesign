@@ -12,7 +12,7 @@ namespace FurnitureGardenDesign.Data.Models
 
         // Customer
         public string UserId { get; set; } = null!;
-        public ApplicationUser User { get; set; } = null!;
+        public virtual ApplicationUser User { get; set; } = null!;
 
         // Order details
 

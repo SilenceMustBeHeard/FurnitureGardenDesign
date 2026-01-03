@@ -16,7 +16,7 @@ namespace FurnitureGardenDesign.Data.Models
         public string Title { get; set; } = null!;
 
         public Guid CategoryId { get; set; }
-        public Category Category { get; set; } = null!;
+        public virtual  Category Category { get; set; } = null!;
 
 
         [Required]
@@ -35,14 +35,16 @@ namespace FurnitureGardenDesign.Data.Models
 
         public bool IsActive { get; set; } = true;
 
- 
+               // materials used
         public virtual ICollection<Material> Materials { get; set; }
          = new HashSet<Material>();
 
-        public  ICollection<Review> Reviews { get; set; }
+        // reviews given
+        public  virtual ICollection<Review> Reviews { get; set; }
             = new HashSet<Review>();
   
-        public  ICollection<Favorite> Favorites { get; set; }
+
+        public virtual ICollection<Favorite> Favorites { get; set; }
             = new HashSet<Favorite>();
     }
 }
