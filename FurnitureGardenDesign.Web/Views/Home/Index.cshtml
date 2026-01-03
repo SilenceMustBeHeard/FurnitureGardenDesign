@@ -1,4 +1,10 @@
-﻿@{
+﻿@using FurnitureGardenDesign.Data.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+
+
+@{
     ViewData["Title"] = "Home";
 }
 
@@ -13,19 +19,39 @@
             Designed for your space. Crafted for your style.
         </p>
 
-        <div class="hero-actions">
-            <a asp-controller="Catalog"
-               asp-action="Index"
-               class="btn btn-primary-glass btn-lg">
-                Explore Designs
-            </a>
+        <div class="d-flex gap-3 justify-content-center mt-4">
 
-            <a asp-area="Identity"
-               asp-page="/Account/Register"
-               class="btn btn-outline-glass btn-lg">
-                Create Account
-            </a>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <a class="btn btn-primary-glass btn-lg"
+                   asp-controller="Catalog"
+                   asp-action="Index">
+                    Catalogue
+                </a>
+
+                <a class="btn btn-outline-glass btn-lg"
+                   asp-controller="Orders"
+                   asp-action="Create">
+                    New Order
+                </a>
+            }
+            else
+            {
+                <a class="btn btn-primary-glass btn-lg"
+                   asp-controller="Catalog"
+                   asp-action="Explore">
+                    Explore Designs
+                </a>
+
+                <a class="btn btn-outline-glass btn-lg"
+                   asp-area="Identity"
+                   asp-page="/Account/Register">
+                    Create Account
+                </a>
+            }
+
         </div>
+
     </div>
 </section>
 

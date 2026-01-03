@@ -1,20 +1,26 @@
+using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace FurnitureGardenDesign.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        public IActionResult Index()
+        private readonly ILogger<HomeController> _logger;
+
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
+            : base(userManager)
         {
-            return View();
+            _logger = logger;
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        [AllowAnonymous]
+        public IActionResult Index() => View();
+
+        public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
