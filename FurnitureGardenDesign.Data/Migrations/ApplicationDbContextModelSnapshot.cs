@@ -230,30 +230,6 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.ToTable("Favorites");
                 });
 
-            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Manager", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Manager");
-                });
-
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Material", b =>
                 {
                     b.Property<Guid>("Id")
@@ -442,10 +418,12 @@ namespace FurnitureGardenDesign.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -482,10 +460,12 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -553,17 +533,6 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("CatalogDesign");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Manager", b =>
-                {
-                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "User")
-                        .WithOne()
-                        .HasForeignKey("FurnitureGardenDesign.Data.Models.Manager", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });

@@ -16,6 +16,7 @@ namespace FurnitureGardenDesign.Data
         public virtual DbSet<DesignVariant> DesignVariants { get; set; } = null!;
         public virtual DbSet<CatalogDesign> CatalogDesigns { get; set; } = null!;
         public virtual DbSet<Favorite> Favorites { get; set; } = null!;
+        
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Material> Materials { get; set; } = null!;
         public virtual DbSet<Review> Reviews { get; set; } = null!;
