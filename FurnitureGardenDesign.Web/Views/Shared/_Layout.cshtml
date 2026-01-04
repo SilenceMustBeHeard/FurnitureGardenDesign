@@ -20,12 +20,12 @@
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <!-- Централни бутони (всички роли) -->
+                    <!-- central buttons all roles -->
                     <div class="d-flex align-items-center gap-2 mx-auto">
                         @await Component.InvokeAsync("Navbar")
                     </div>
 
-                    <!-- Дясно меню (Theme + Account) -->
+                    <!--right menu acc + theme-->
                     <div class="d-flex align-items-center gap-2">
                         <button id="themeToggle" class="btn btn-outline-glass btn-sm" title="Toggle theme">🌙</button>
 
@@ -36,6 +36,7 @@
                             <ul class="dropdown-menu dropdown-menu-end">
                                 @await Component.InvokeAsync("AccountMenu")
                             </ul>
+
                         </div>
                     </div>
 

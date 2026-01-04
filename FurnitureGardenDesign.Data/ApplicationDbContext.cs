@@ -12,7 +12,7 @@ namespace FurnitureGardenDesign.Data
         }
 
         // DbSets
-        public virtual DbSet<OrderFormViewModel> Orders { get; set; } = null!;
+        public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<DesignVariant> DesignVariants { get; set; } = null!;
         public virtual DbSet<CatalogDesign> CatalogDesigns { get; set; } = null!;
         public virtual DbSet<Favorite> Favorites { get; set; } = null!;
@@ -33,7 +33,7 @@ namespace FurnitureGardenDesign.Data
 
             // Soft delete
             builder
-                .Entity<OrderFormViewModel>()
+                .Entity<Order>()
                 .HasQueryFilter(o => !o.IsDeleted); // filter for order
 
 
@@ -57,7 +57,7 @@ namespace FurnitureGardenDesign.Data
 
             // Automatic set for Created on
             builder
-                .Entity<OrderFormViewModel>()
+                .Entity<Order>()
                 .Property(o => o.CreatedOn)
                 .HasDefaultValueSql("GETUTCDATE()");  // if not set any value, giving it currnet UTC time
 

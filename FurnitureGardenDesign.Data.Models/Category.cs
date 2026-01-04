@@ -17,8 +17,8 @@ namespace FurnitureGardenDesign.Data.Models
         //flag
         public bool IsActive { get; set; } = true;
 
-        public virtual ICollection<OrderFormViewModel> Orders { get; set; }
-        = new HashSet<OrderFormViewModel>();
+        public virtual ICollection<Order> Orders { get; set; }
+        = new HashSet<Order>();
 
         public virtual ICollection<CatalogDesign> CatalogDesigns { get; set; }
             = new HashSet<CatalogDesign>();

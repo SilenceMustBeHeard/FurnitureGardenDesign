@@ -1,7 +1,6 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace FurnitureGardenDesign.Web.ViewModels.Order
+namespace FurnitureGardenDesign.Web.ViewModels
 {
    
     public class OrderFormViewModel

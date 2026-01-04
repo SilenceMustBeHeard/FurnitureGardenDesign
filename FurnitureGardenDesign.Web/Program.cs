@@ -1,6 +1,7 @@
 ﻿using FurnitureGardenDesign.Data;
 using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Implementations;
+using FurnitureGardenDesign.Data.Repository.Implementations.FurnitureGardenDesign.Data.Repository.Implementations;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Data.Seeding;
 using FurnitureGardenDesign.Services.Core.Implementations;
@@ -37,20 +38,18 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole("Admin"));
 });
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
-builder.Services.AddScoped<IOrderService, OrderService>();
+// repositories
+builder.Services.AddScoped<IRepositoryAsync<Category, Guid>, CategoryRepository>();
+builder.Services.AddScoped<IRepositoryAsync<CatalogDesign, Guid>, CatalogRepository>();
+builder.Services.AddScoped<IRepositoryAsync<Order, Guid>, OrderRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+// services
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICatalogService, CatalogService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
-// Repository layer
-builder.Services.AddScoped(typeof(IRepositoryAsync<,>), typeof(BaseRepository<,>));
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 
 // ===== Build App =====

@@ -85,9 +85,11 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
 
             public IEnumerable<TEntity> GetAll() => _dbSet.ToList();
 
-            public async Task<IEnumerable<TEntity>> GetCategoriesAsync()
-              => await _dbSet.ToListAsync();
+        public async Task<IEnumerable<TEntity>> GetCategoriesAsync()
+         => await _dbSet.ToListAsync();
 
+
+   
             public IQueryable<TEntity> GetAllAttached()
                 => _dbSet.AsQueryable();
 

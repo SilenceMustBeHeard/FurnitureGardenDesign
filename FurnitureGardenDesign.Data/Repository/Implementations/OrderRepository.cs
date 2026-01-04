@@ -1,4 +1,5 @@
-﻿using FurnitureGardenDesign.Data;
+﻿using Furniture_GardenDesign.Data.Enums;
+using FurnitureGardenDesign.Data;
 using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -9,47 +10,25 @@ using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Data.Repository.Implementations
 {
-    public class OrderRepository : IOrderRepository
+    
+
+    namespace FurnitureGardenDesign.Data.Repository.Implementations
     {
-        private readonly ApplicationDbContext _context;
-
-        public OrderRepository(ApplicationDbContext context)
+        public class OrderRepository
+            : BaseRepository<Order, Guid>, IOrderRepository
         {
-            _context = context;
-        }
+            public OrderRepository(ApplicationDbContext context)
+                : base(context)
+            {
+            }
 
-        public async Task AddAsync(OrderFormViewModel order)
-        {
-            await _context.Orders.AddAsync(order);
-            await _context.SaveChangesAsync();
-        }
+            public async Task<int> CountPendingAsync()
+            {
+                return await _dbSet
+                    .CountAsync(o => o.Status == OrderStatus.Pending);
+            }
 
-        public async Task<IEnumerable<OrderFormViewModel>> GetAllAsync()
-        {
-            return await _context.Orders
-                                 .Include(o => o.User)
-                                 .Include(o => o.Category)
-                                 .Include(o => o.DesignVariants)
-                                 .ToListAsync();
-        }
-
-        public async Task<int> CountAsync(Expression<Func<OrderFormViewModel, bool>> predicate)
-        {
-            return await _context.Orders.CountAsync(predicate);
-        }
-
-        public IEnumerable<OrderFormViewModel> GetAll()
-        {
-            return _context.Orders
-                           .Include(o => o.User)
-                           .Include(o => o.Category)
-                           .Include(o => o.DesignVariants)
-                           .ToList();
-        }
-
-        public int Count()
-        {
-            return _context.Orders.Count();
         }
     }
+
 }

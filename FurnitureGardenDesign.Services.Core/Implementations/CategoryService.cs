@@ -10,11 +10,11 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IRepositoryAsync<Category, Guid> _categoryRepo;
+        private readonly IRepositoryAsync<Category, Guid> _repo;
 
-        public CategoryService(IRepositoryAsync<Category, Guid> categoryRepo)
+        public CategoryService(IRepositoryAsync<Category, Guid> repo)
         {
-            _categoryRepo = categoryRepo;
+            _repo = repo;
         }
 
         public async Task CreateCategoryAsync(Category model)
@@ -22,17 +22,14 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             var category = new Category
             {
                 Name = model.Name,
-                Description = model.Description,
                 IsActive = true
             };
 
-            await _categoryRepo.AddAsync(category);
-            await _categoryRepo.SaveChangesAsync();
+            await _repo.AddAsync(category);
         }
 
-        public async Task<IEnumerable<Category>> GetAllActiveCategoriesAsync()
-        {
-            return await _categoryRepo.GetCategoriesAsync();
-        }
+        public Task<IEnumerable<Category>> GetAllActiveCategoriesAsync()
+       => _repo.GetCategoriesAsync();
     }
+
 }

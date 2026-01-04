@@ -11,8 +11,8 @@ namespace FurnitureGardenDesign.Data.Models
         public string? Address { get; set; }     // by choice
 
         // Navigation
-        public virtual ICollection<OrderFormViewModel> Orders { get; set; }
-            = new HashSet<OrderFormViewModel>();
+        public virtual ICollection<Order> Orders { get; set; }
+            = new HashSet<Order>();
 
         public virtual ICollection<Favorite> Favorites { get; set; } 
             = new HashSet<Favorite>();

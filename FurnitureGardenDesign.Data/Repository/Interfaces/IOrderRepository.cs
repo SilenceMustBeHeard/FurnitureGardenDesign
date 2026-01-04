@@ -1,17 +1,13 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace FurnitureGardenDesign.Data.Repository.Interfaces
 {
     public interface IOrderRepository
+       : IRepository<Order, Guid>, IRepositoryAsync<Order, Guid>
     {
-        Task AddAsync(OrderFormViewModel order);
-        Task<IEnumerable<OrderFormViewModel>> GetAllAsync();
-        Task<int> CountAsync(Expression<Func<OrderFormViewModel, bool>> predicate);
-        IEnumerable<OrderFormViewModel> GetAll();
-        int Count();
+        Task<int> CountPendingAsync();
     }
 }

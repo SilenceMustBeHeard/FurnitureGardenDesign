@@ -15,6 +15,6 @@ namespace FurnitureGardenDesign.Data.Models
         public bool IsApproved { get; set; }
 
         // Navigation
-        public OrderFormViewModel Order { get; set; } = null!;
+        public Order Order { get; set; } = null!;
     }
 }

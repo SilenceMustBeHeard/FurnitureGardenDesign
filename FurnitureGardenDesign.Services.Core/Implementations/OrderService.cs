@@ -1,6 +1,7 @@
 ﻿using Furniture_GardenDesign.Data.Enums;
 using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Implementations;
+using FurnitureGardenDesign.Data.Repository.Implementations.FurnitureGardenDesign.Data.Repository.Implementations;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using System;
@@ -18,30 +19,35 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             _orderRepo = orderRepo;
         }
 
-        public async Task CreateOrderAsync(string userId, OrderFormViewModel model)
+        public async Task CreateOrderAsync(string userId, Order model)
         {
-            var order = new OrderFormViewModel
+            var order = new Order
             {
                 UserId = userId,
                 CategoryId = model.CategoryId,
                 Description = model.Description,
-                Status =OrderStatus.Pending
+                FurnitureType = model.FurnitureType,
+                Dimensions = model.Dimensions,
+                ReferenceImageUrl = model.ReferenceImageUrl,
+                Status = OrderStatus.Pending,
+                CreatedOn = DateTime.UtcNow
             };
 
             await _orderRepo.AddAsync(order);
         }
 
+
         public async Task<int> GetPendingOrdersCountAsync()
         {
-            return await _orderRepo.CountAsync(o => o.Status ==OrderStatus.Pending);
+            return await _orderRepo.CountPendingAsync();
         }
 
-        public async Task<IEnumerable<OrderFormViewModel>> GetPendingOrdersAsync()
+        public async Task<IEnumerable<Order>> GetPendingOrdersAsync()
         {
-            var orders = await _orderRepo.GetAllAsync();
+            var orders =  _orderRepo.GetAll();
             return orders
-                .Where(o => o.Status ==OrderStatus.Pending) // LINQ върху IEnumerable
-                .Select(o => new OrderFormViewModel
+                .Where(o => o.Status ==OrderStatus.Pending) 
+                .Select(o => new Order
                 {
                     Id = o.Id,
                     UserId = o.UserId,

@@ -1,108 +1,87 @@
 ﻿using Furniture_GardenDesign.Data.Enums;
 using FurnitureGardenDesign.Data;
 using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Data.Repository.Implementations;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
-using FurnitureGardenDesign.Web.ViewModels.Order;
+using FurnitureGardenDesign.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-
-[Authorize]
-public class OrdersController : Controller
+namespace FurnitureGardenDesign.Web.Controllers
 {
-    private readonly ApplicationDbContext _context;
-    private readonly UserManager<AppUser> _userManager;
-    private readonly ICategoryRepository _categoryRepository;
-
-    public OrdersController(
-        ApplicationDbContext context,
-        UserManager<AppUser> userManager,
-        ICategoryRepository categoryRepository)
+    [Authorize]
+    public class OrdersController : Controller
     {
-        _context = context;
-        _userManager = userManager;
-        _categoryRepository = categoryRepository;
-    }
+        private readonly IOrderService _orderService;
+        private readonly ICategoryService _categoryService;
 
-    // =========================
-    // GET: Orders/Create
-    // =========================
-    public async Task<IActionResult> Create()
-    {
-        await LoadCategoriesAsync();
 
-        return base.View(new FurnitureGardenDesign.Web.ViewModels.Order.OrderFormViewModel());
-    }
-
-    // =========================
-    // POST: Orders/Create
-    // =========================
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(FurnitureGardenDesign.Web.ViewModels.Order.OrderFormViewModel model)
-    {
-        if (!ModelState.IsValid)
+        public OrdersController(
+            IOrderService orderService,
+            ICategoryService categoryService)
         {
-            await LoadCategoriesAsync();
-            return View(model);
+            _orderService = orderService;
+            _categoryService = categoryService;
         }
 
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        var order = new FurnitureGardenDesign.Data.Models.OrderFormViewModel
+        // =========================
+        // GET: Orders/Create
+        // =========================
+        public async Task<IActionResult> Create()
         {
-            Id = Guid.NewGuid(),
-            UserId = userId!,
-            FurnitureType = model.FurnitureType,
-            Dimensions = model.Dimensions,
-            Description = model.Description,
-            ReferenceImageUrl = model.ReferenceImageUrl,
-            CategoryId = model.CategoryId,
-            Status = OrderStatus.Pending,
-            CreatedOn = DateTime.UtcNow
-        };
+            await LoadCategoriesAsync();
+            return View(new OrderFormViewModel());
+        }
 
-        _context.Orders.Add(order);
-        await _context.SaveChangesAsync();
-
-        TempData["Message"] = "Your order has been submitted!";
-        return RedirectToAction("Index", "CatalogDesigns");
-    }
-
-    // =========================
-    // GET: Orders/Manage
-    // =========================
-    [Authorize(Roles = "Admin,Manager")]
-    public async Task<IActionResult> Manage()
-    {
-        var orders = await _context.Orders
-            .Include(o => o.User)
-            .Include(o => o.Category)
-            .Where(o => o.Status == OrderStatus.Pending)
-            .ToListAsync();
-
-        return View(orders);
-    }
-
-    // =========================
-    // Helper method
-    // =========================
-    private async Task LoadCategoriesAsync()
-    {
-        var categories = await _categoryRepository
-            .GetAll()
-            .Where(c => c.IsActive)
-            .ToListAsync();
-
-        ViewBag.Categories = categories.Select(c => new SelectListItem
+        // =========================
+        // POST: Orders/Create
+        // =========================
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Order model)
         {
-            Value = c.Id.ToString(),
-            Text = c.Name
-        });
+            if (!ModelState.IsValid)
+            {
+                await LoadCategoriesAsync();
+                return View(model);
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            await _orderService.CreateOrderAsync(userId, model);
+
+            TempData["Message"] = "Your order has been submitted!";
+            return RedirectToAction("Index", "CatalogDesigns");
+        }
+
+        // =========================
+        // GET: Orders/Manage
+        // =========================
+        [Authorize(Roles = "Admin,Manager")]
+        public async Task<IActionResult> Manage()
+        {
+            var orders = await _orderService.GetPendingOrdersAsync();
+            return View(orders);
+        }
+
+        // =========================
+        // Helper
+        // =========================
+        private async Task LoadCategoriesAsync()
+        {
+            var categories = await _categoryService.GetAllActiveCategoriesAsync();
+
+            ViewBag.Categories = categories.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.Name
+            });
+        }
     }
 
 

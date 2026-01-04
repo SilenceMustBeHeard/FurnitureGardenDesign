@@ -11,10 +11,10 @@ namespace FurnitureGardenDesign.Services.Core.Interfaces
         Task<int> GetPendingOrdersCountAsync();
 
        
-        Task<IEnumerable<OrderFormViewModel>> GetPendingOrdersAsync();
+        Task<IEnumerable<Order>> GetPendingOrdersAsync();
 
-        // създаване на нова поръчка
-        Task CreateOrderAsync(string userId, OrderFormViewModel model);
+        // create new order
+        Task CreateOrderAsync(string userId, Order model);
 
     }
 
