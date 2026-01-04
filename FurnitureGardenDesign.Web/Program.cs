@@ -3,9 +3,12 @@ using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Implementations;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Data.Seeding;
+using FurnitureGardenDesign.Services.Core.Implementations;
+using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.Infrastructure.MiddleWare;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,9 +31,23 @@ builder.Services.AddDefaultIdentity<AppUser>(options =>
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy =>
+        policy.RequireRole("Admin"));
+});
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICatalogService, CatalogService>();
+
+// Repository layer
+builder.Services.AddScoped(typeof(IRepositoryAsync<,>), typeof(BaseRepository<,>));
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();

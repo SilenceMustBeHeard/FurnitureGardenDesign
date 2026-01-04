@@ -13,7 +13,7 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
 
         Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 
-        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<IEnumerable<TEntity>> GetCategoriesAsync();
         Task<int> CountAsync();
         Task AddAsync(TEntity item);
 

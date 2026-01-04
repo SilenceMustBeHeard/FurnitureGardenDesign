@@ -15,26 +15,16 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
 
         public OrderRepository(ApplicationDbContext context)
         {
-            _context = context; // DI of DbContext
+            _context = context;
         }
 
-        // adding order to the db
-        public async Task AddOrderAsync(Order order)
+        public async Task AddAsync(OrderFormViewModel order)
         {
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
         }
 
-        // gives all categories
-        public async Task<IEnumerable<Category>> GetCategoriesAsync()
-        {
-            return await _context.Categories
-                                 .AsNoTracking()
-                                 .Where(c => c.IsActive)
-                                 .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Order>> GetAllAsync()
+        public async Task<IEnumerable<OrderFormViewModel>> GetAllAsync()
         {
             return await _context.Orders
                                  .Include(o => o.User)
@@ -43,14 +33,12 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
                                  .ToListAsync();
         }
 
-
-        public async Task<int> CountAsync(Expression<Func<Order, bool>> predicate)
+        public async Task<int> CountAsync(Expression<Func<OrderFormViewModel, bool>> predicate)
         {
             return await _context.Orders.CountAsync(predicate);
         }
 
-        // Синхронно: взимане на всички
-        public IEnumerable<Order> GetAll()
+        public IEnumerable<OrderFormViewModel> GetAll()
         {
             return _context.Orders
                            .Include(o => o.User)
@@ -58,7 +46,6 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
                            .Include(o => o.DesignVariants)
                            .ToList();
         }
-
 
         public int Count()
         {

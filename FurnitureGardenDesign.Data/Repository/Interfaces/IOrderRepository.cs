@@ -8,20 +8,10 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
 {
     public interface IOrderRepository
     {
-        Task AddOrderAsync(Order order); // adding an order
-        Task<IEnumerable<Category>> GetCategoriesAsync(); // for category dropdown
-
-       
-        Task<IEnumerable<Order>> GetAllAsync();
-
-        
-        Task<int> CountAsync(Expression<Func<Order, bool>> predicate);
-
-        
-        IEnumerable<Order> GetAll();
+        Task AddAsync(OrderFormViewModel order);
+        Task<IEnumerable<OrderFormViewModel>> GetAllAsync();
+        Task<int> CountAsync(Expression<Func<OrderFormViewModel, bool>> predicate);
+        IEnumerable<OrderFormViewModel> GetAll();
         int Count();
-
-
-
     }
 }

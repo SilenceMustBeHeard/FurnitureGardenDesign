@@ -3,23 +3,62 @@
 
 <div class="d-flex align-items-center gap-2">
 
-    <button id="themeToggle" class="btn btn-outline-glass btn-sm" title="Toggle theme">🌙</button>
 
-    @if (!Model.IsLoggedIn)
-    {
-        <a class="btn btn-outline-glass" asp-area="Identity" asp-page="/Account/Register">Create Account</a>
-        <a class="btn btn-primary-glass" asp-controller="CatalogDesigns" asp-action="Index">Catalog</a>
-    }
-    else if (Model.IsAdmin || Model.IsManager)
-    {
-        <a class="btn btn-primary-glass" asp-controller="Orders" asp-action="Manage">
-            New Orders (@Model.NewOrdersCount)
-        </a>
-        <a class="btn btn-outline-glass" asp-controller="CatalogDesigns" asp-action="Index">Catalog</a>
-    }
-    else
-    {
-        <a class="btn btn-primary-glass" asp-controller="CatalogDesigns" asp-action="Index">Explore Designs</a>
-        <a class="btn btn-outline-glass" asp-controller="Orders" asp-action="Create">Make Order</a>
-    }
+
+@if (!Model.IsLoggedIn)
+{
+    <!-- Guest -->
+    <a class="btn btn-primary-glass"
+       asp-controller="CatalogDesigns"
+       asp-action="Index">
+        Catalogue
+    </a>
+}
+else if (Model.IsUser)
+{
+    <!-- Ordinary user -->
+    <a class="btn btn-primary-glass"
+       asp-controller="CatalogDesigns"
+       asp-action="Index">
+        Catalogue
+    </a>
+
+    <a class="btn btn-outline-glass"
+       asp-controller="Orders"
+       asp-action="Create">
+        New Order
+    </a>
+}
+else if (Model.IsManager)
+{
+    <!-- Manager -->
+    <a class="btn btn-primary-glass"
+       asp-controller="CatalogDesigns"
+       asp-action="Index">
+        Catalogue
+    </a>
+
+    <a class="btn btn-outline-glass"
+       asp-controller="Orders"
+       asp-action="Manage">
+        Orders (@Model.PendingOrdersCount)
+    </a>
+}
+else if (Model.IsAdmin)
+{
+    <!-- Admin -->
+    <a class="btn btn-warning-glass"
+       asp-area="Admin"
+       asp-controller="Category"
+       asp-action="Create">
+        Add Category
+    </a>
+
+    <a class="btn btn-outline-glass"
+       asp-controller="Orders"
+       asp-action="Manage">
+        Orders (@Model.PendingOrdersCount)
+    </a>
+}
+
 </div>

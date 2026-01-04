@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FurnitureGardenDesign.Data.Models
 {
-    public class Order : BaseDeletableEntity
+    public class OrderFormViewModel : BaseDeletableEntity
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 

@@ -1,12 +1,4 @@
-﻿@using FurnitureGardenDesign.Data.Models
-@using FurnitureGardenDesign.Data.Repository.Interfaces
-@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
-@inject IOrderRepository OrderRepository
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
@@ -28,75 +20,21 @@
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <!--left nav menu-->
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-
-                    <!-- central buttons according to role -->
+                    <!-- Централни бутони (всички роли) -->
                     <div class="d-flex align-items-center gap-2 mx-auto">
-                        @{
-                            var isLoggedIn = SignInManager.IsSignedIn(User);
-                            var isAdmin = User.IsInRole("Admin");
-                            var isManager = User.IsInRole("Manager");
-                            var newOrdersCount = 0;
-
-                            if ((isAdmin || isManager) && isLoggedIn)
-                            {
-                                <!--  new orders count -->
-                                newOrdersCount = OrderRepository.GetAll().Count(o => o.Status == Furniture_GardenDesign.Data.Enums.OrderStatus.Pending);
-                            }
-                        }
-
-                        @if (!isLoggedIn)
-                        {
-                            <!--  none-logged-in -->
-                            <a class="btn btn-outline-glass" asp-area="Identity" asp-page="/Account/Register">Create Account</a>
-                            <a class="btn btn-primary-glass" asp-controller="CatalogDesigns" asp-action="Index">Catalog</a>
-                        }
-                        else if (isAdmin || isManager)
-                        {
-                            <!-- Admin / Manager -->
-                            <a class="btn btn-primary-glass" asp-controller="CatalogDesigns" asp-action="Index">Catalog</a>
-                            <a class="btn btn-outline-glass" asp-controller="Orders" asp-action="Manage">
-                                New Orders (@newOrdersCount)
-                            </a>
-                        }
-                        else
-                        {
-                            <!--ordinary user -->
-                            <a class="btn btn-primary-glass" asp-controller="CatalogDesigns" asp-action="Index">Explore Designs</a>
-                            <a class="btn btn-outline-glass" asp-controller="Orders" asp-action="Create">Make Order</a>
-                        }
+                        @await Component.InvokeAsync("Navbar")
                     </div>
 
-                    <!--  Account menu -->
+                    <!-- Дясно меню (Theme + Account) -->
                     <div class="d-flex align-items-center gap-2">
                         <button id="themeToggle" class="btn btn-outline-glass btn-sm" title="Toggle theme">🌙</button>
 
                         <div class="dropdown">
-                            <button class="btn btn-primary-glass dropdown-toggle" type="button" id="goDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-primary-glass dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                 Account
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="goDropdown">
-                                @if (isLoggedIn)
-                                {
-                                    <li>
-                                        <form method="post" asp-area="Identity" asp-page="/Account/Logout" id="logoutForm">
-                                            <button type="submit" class="dropdown-item">Logout</button>
-                                        </form>
-                                    </li>
-                                }
-                                else
-                                {
-                                    <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">Login</a></li>
-                                    <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Register</a></li>
-                                }
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                @await Component.InvokeAsync("AccountMenu")
                             </ul>
                         </div>
                     </div>
@@ -114,7 +52,7 @@
 
     <footer class="glass-footer border-top footer text-muted text-center">
         <div class="container">
-            &copy; 2025 - Furniture &amp; Garden Design - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - Furniture &amp; Garden Design
         </div>
     </footer>
 

@@ -2,6 +2,7 @@
 using FurnitureGardenDesign.Data;
 using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
+using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Order;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-[Authorize] // само логнати потребители
+[Authorize]
 public class OrdersController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -34,7 +35,7 @@ public class OrdersController : Controller
     {
         await LoadCategoriesAsync();
 
-        return View(new OrderFormViewModel());
+        return base.View(new FurnitureGardenDesign.Web.ViewModels.Order.OrderFormViewModel());
     }
 
     // =========================
@@ -42,7 +43,7 @@ public class OrdersController : Controller
     // =========================
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(OrderFormViewModel model)
+    public async Task<IActionResult> Create(FurnitureGardenDesign.Web.ViewModels.Order.OrderFormViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -52,7 +53,7 @@ public class OrdersController : Controller
 
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        var order = new Order
+        var order = new FurnitureGardenDesign.Data.Models.OrderFormViewModel
         {
             Id = Guid.NewGuid(),
             UserId = userId!,
@@ -103,4 +104,8 @@ public class OrdersController : Controller
             Text = c.Name
         });
     }
+
+
+
+
 }

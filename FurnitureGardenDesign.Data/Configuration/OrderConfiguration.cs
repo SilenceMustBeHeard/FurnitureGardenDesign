@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FurnitureGardenDesign.Data.Configurations
 {
-    public class OrderConfiguration : IEntityTypeConfiguration<Order>
+    public class OrderConfiguration : IEntityTypeConfiguration<OrderFormViewModel>
     {
-        public void Configure(EntityTypeBuilder<Order> builder)
+        public void Configure(EntityTypeBuilder<OrderFormViewModel> builder)
         {
             builder.HasKey(o => o.Id);
 
