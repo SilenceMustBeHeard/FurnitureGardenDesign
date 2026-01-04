@@ -1,5 +1,7 @@
 ﻿using FurnitureGardenDesign.Data;
 using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Data.Repository.Implementations;
+using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Data.Seeding;
 using FurnitureGardenDesign.Web.Infrastructure.MiddleWare;
 using Microsoft.AspNetCore.Identity;
@@ -29,6 +31,10 @@ builder.Services.AddDefaultIdentity<AppUser>(options =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
 
 // ===== Build App =====
 var app = builder.Build();
@@ -66,6 +72,13 @@ app.UseAuthorization();
 
 // Middleware for /manager routes
 app.UseMiddleware<ManagerAccessMiddleware>();
+
+
+
+
+
+
+
 
 // ===== Routing =====
 app.MapControllerRoute(

@@ -1,0 +1,25 @@
+﻿@using FurnitureGardenDesign.Web.ViewModels
+@model NavbarButtonsViewModel
+
+<div class="d-flex align-items-center gap-2">
+
+    <button id="themeToggle" class="btn btn-outline-glass btn-sm" title="Toggle theme">🌙</button>
+
+    @if (!Model.IsLoggedIn)
+    {
+        <a class="btn btn-outline-glass" asp-area="Identity" asp-page="/Account/Register">Create Account</a>
+        <a class="btn btn-primary-glass" asp-controller="CatalogDesigns" asp-action="Index">Catalog</a>
+    }
+    else if (Model.IsAdmin || Model.IsManager)
+    {
+        <a class="btn btn-primary-glass" asp-controller="Orders" asp-action="Manage">
+            New Orders (@Model.NewOrdersCount)
+        </a>
+        <a class="btn btn-outline-glass" asp-controller="CatalogDesigns" asp-action="Index">Catalog</a>
+    }
+    else
+    {
+        <a class="btn btn-primary-glass" asp-controller="CatalogDesigns" asp-action="Index">Explore Designs</a>
+        <a class="btn btn-outline-glass" asp-controller="Orders" asp-action="Create">Make Order</a>
+    }
+</div>

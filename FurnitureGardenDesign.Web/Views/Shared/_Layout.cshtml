@@ -1,7 +1,10 @@
 ﻿@using FurnitureGardenDesign.Data.Models
+@using FurnitureGardenDesign.Data.Repository.Interfaces
 @using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
+@inject IOrderRepository OrderRepository
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -16,13 +19,16 @@
     <header>
         <nav class="navbar navbar-expand-sm glass-nav navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Furniture &amp; Garden Design</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    Furniture &amp; Garden Design
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <!--left nav menu-->
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -32,6 +38,44 @@
                         </li>
                     </ul>
 
+                    <!-- central buttons according to role -->
+                    <div class="d-flex align-items-center gap-2 mx-auto">
+                        @{
+                            var isLoggedIn = SignInManager.IsSignedIn(User);
+                            var isAdmin = User.IsInRole("Admin");
+                            var isManager = User.IsInRole("Manager");
+                            var newOrdersCount = 0;
+
+                            if ((isAdmin || isManager) && isLoggedIn)
+                            {
+                                <!--  new orders count -->
+                                newOrdersCount = OrderRepository.GetAll().Count(o => o.Status == Furniture_GardenDesign.Data.Enums.OrderStatus.Pending);
+                            }
+                        }
+
+                        @if (!isLoggedIn)
+                        {
+                            <!--  none-logged-in -->
+                            <a class="btn btn-outline-glass" asp-area="Identity" asp-page="/Account/Register">Create Account</a>
+                            <a class="btn btn-primary-glass" asp-controller="CatalogDesigns" asp-action="Index">Catalog</a>
+                        }
+                        else if (isAdmin || isManager)
+                        {
+                            <!-- Admin / Manager -->
+                            <a class="btn btn-primary-glass" asp-controller="CatalogDesigns" asp-action="Index">Catalog</a>
+                            <a class="btn btn-outline-glass" asp-controller="Orders" asp-action="Manage">
+                                New Orders (@newOrdersCount)
+                            </a>
+                        }
+                        else
+                        {
+                            <!--ordinary user -->
+                            <a class="btn btn-primary-glass" asp-controller="CatalogDesigns" asp-action="Index">Explore Designs</a>
+                            <a class="btn btn-outline-glass" asp-controller="Orders" asp-action="Create">Make Order</a>
+                        }
+                    </div>
+
+                    <!--  Account menu -->
                     <div class="d-flex align-items-center gap-2">
                         <button id="themeToggle" class="btn btn-outline-glass btn-sm" title="Toggle theme">🌙</button>
 
@@ -40,7 +84,7 @@
                                 Account
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="goDropdown">
-                                @if (SignInManager.IsSignedIn(User))
+                                @if (isLoggedIn)
                                 {
                                     <li>
                                         <form method="post" asp-area="Identity" asp-page="/Account/Logout" id="logoutForm">
