@@ -14,8 +14,4 @@
     <ProjectReference Include="..\FurnitureGardenDesign.Services.Core\FurnitureGardenDesign.Services.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="MiddleWare\" />
-  </ItemGroup>
-
 </Project>

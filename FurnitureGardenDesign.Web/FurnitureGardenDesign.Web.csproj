@@ -20,12 +20,8 @@
     <ProjectReference Include="..\FurnitureGardenDesign.Data.Models\FurnitureGardenDesign.Data.Models.csproj" />
     <ProjectReference Include="..\FurnitureGardenDesign.Data\FurnitureGardenDesign.Data.csproj" />
     <ProjectReference Include="..\FurnitureGardenDesign.Services.Core\FurnitureGardenDesign.Services.Core.csproj" />
+    <ProjectReference Include="..\FurnitureGardenDesign.Web.Infrastructure\FurnitureGardenDesign.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\FurnitureGardenDesign.Web.ViewModels\FurnitureGardenDesign.Web.ViewModels.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Authorization\Handler\" />
-    <Folder Include="Authorization\Requirements\" />
   </ItemGroup>
 
 </Project>

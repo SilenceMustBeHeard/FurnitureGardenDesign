@@ -10,9 +10,4 @@
     <ProjectReference Include="..\FurnitureGardenDesign.Data\FurnitureGardenDesign.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Implementations\" />
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>

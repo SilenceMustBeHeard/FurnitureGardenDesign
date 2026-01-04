@@ -1,20 +1,21 @@
 ﻿using FurnitureGardenDesign.Data;
 using FurnitureGardenDesign.Data.Models;
-
+using FurnitureGardenDesign.Data.Seeding;
+using FurnitureGardenDesign.Web.Infrastructure.MiddleWare;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Connection string
+// ===== Connection string =====
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-// Add DbContext
+// ===== Add DbContext =====
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// Add Identity
+// ===== Add Identity =====
 builder.Services.AddDefaultIdentity<AppUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -22,36 +23,30 @@ builder.Services.AddDefaultIdentity<AppUser>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
-    options.Password.RequiredLength = 3;
 })
-.AddRoles<IdentityRole>()  // key for role manager
-.AddEntityFrameworkStores<ApplicationDbContext>()
-.AddDefaultTokenProviders();
-// MVC + Razor
-builder.Services.AddControllersWithViews()
-    .AddRazorRuntimeCompilation();
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+// ===== Build App =====
 var app = builder.Build();
 
-// Seed database
+// ===== Seed Roles and Users =====
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    await dbContext.Database.MigrateAsync();
-
-    // Seed only roles and admin if you want
-    await IdentitySeeder.SeedRolesAsync(roleManager); // optional
+    await IdentitySeeder.SeedRolesAsync(roleManager);
     await IdentitySeeder.SeedAdminAsync(userManager);
+    await IdentitySeeder.SeedManagerAsync(userManager);
 }
 
-// Middleware
+// ===== Middleware =====
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
     app.UseMigrationsEndPoint();
 }
 else
@@ -62,15 +57,20 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
-// Routes
+// Middleware for /manager routes
+app.UseMiddleware<ManagerAccessMiddleware>();
+
+// ===== Routing =====
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-await app.RunAsync();
+app.Run();

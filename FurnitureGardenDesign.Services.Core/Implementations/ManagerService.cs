@@ -1,0 +1,24 @@
+﻿using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Services.Core.Interfaces;
+using Microsoft.AspNetCore.Identity;
+
+namespace FurnitureGardenDesign.Services.Core
+{
+    public class ManagerService : IManagerService
+    {
+        private readonly UserManager<AppUser> _userManager;
+
+        public ManagerService(UserManager<AppUser> userManager)
+        {
+            _userManager = userManager;
+        }
+
+       
+
+        public async Task<bool> IsUserManagerAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            return user != null && await _userManager.IsInRoleAsync(user, "Manager");
+        }
+    }
+}
