@@ -9,7 +9,7 @@ namespace FurnitureGardenDesign.Web.Controllers
     [Authorize]
     public abstract class BaseController : Controller
     {
-        protected BaseController(UserManager<ApplicationUser> userManager)
+        protected BaseController(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
         }
@@ -20,10 +20,10 @@ namespace FurnitureGardenDesign.Web.Controllers
 
 
 
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
 
         protected string GetUserId() => _userManager.GetUserId(User);
-        protected async Task<ApplicationUser?> GetCurrentUserAsync()
+        protected async Task<AppUser?> GetCurrentUserAsync()
         {
             return await _userManager.GetUserAsync(User);
         }

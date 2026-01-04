@@ -4,7 +4,7 @@ using FurnitureGardenDesign.Data.Models;
 
 namespace FurnitureGardenDesign.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

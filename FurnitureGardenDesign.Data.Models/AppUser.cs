@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FurnitureGardenDesign.Data.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class AppUser : IdentityUser
     {
 
         public string? FullName { get; set; }    // Personalization Purposes

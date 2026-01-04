@@ -37,7 +37,7 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.ToTable("CatalogDesignMaterials", (string)null);
                 });
 
-            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.ApplicationUser", b =>
+            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -230,6 +230,30 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.ToTable("Favorites");
                 });
 
+            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Manager", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Manager");
+                });
+
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Material", b =>
                 {
                     b.Property<Guid>("Id")
@@ -418,12 +442,10 @@ namespace FurnitureGardenDesign.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -460,12 +482,10 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -520,19 +540,30 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FurnitureGardenDesign.Data.Models.ApplicationUser", null)
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", null)
                         .WithMany("Favorites")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FurnitureGardenDesign.Data.Models.ApplicationUser", "User")
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CatalogDesign");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Manager", b =>
+                {
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "User")
+                        .WithOne()
+                        .HasForeignKey("FurnitureGardenDesign.Data.Models.Manager", "UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -545,7 +576,7 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FurnitureGardenDesign.Data.Models.ApplicationUser", "User")
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -564,7 +595,7 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FurnitureGardenDesign.Data.Models.ApplicationUser", "User")
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -586,7 +617,7 @@ namespace FurnitureGardenDesign.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("FurnitureGardenDesign.Data.Models.ApplicationUser", null)
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -595,7 +626,7 @@ namespace FurnitureGardenDesign.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("FurnitureGardenDesign.Data.Models.ApplicationUser", null)
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -610,7 +641,7 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FurnitureGardenDesign.Data.Models.ApplicationUser", null)
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -619,14 +650,14 @@ namespace FurnitureGardenDesign.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("FurnitureGardenDesign.Data.Models.ApplicationUser", null)
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.ApplicationUser", b =>
+            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.AppUser", b =>
                 {
                     b.Navigation("Favorites");
 
