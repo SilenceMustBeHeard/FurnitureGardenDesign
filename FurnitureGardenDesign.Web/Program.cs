@@ -95,11 +95,17 @@ app.UseMiddleware<ManagerAccessMiddleware>();
 
 
 
+// ====== Routing ======
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+);
 
-// ===== Routing =====
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
+
 app.MapRazorPages();
 
 app.Run();

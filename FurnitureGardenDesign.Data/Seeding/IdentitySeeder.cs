@@ -22,7 +22,7 @@ namespace FurnitureGardenDesign.Data.Seeding
         // 2️⃣ Seed Admin
         public static async Task SeedAdminAsync(UserManager<AppUser> userManager)
         {
-            const string adminEmail = "admin@furniture.com";
+            const string adminEmail = "admin@fgd.com";
             var admin = await userManager.FindByEmailAsync(adminEmail);
 
             if (admin == null)
@@ -43,7 +43,7 @@ namespace FurnitureGardenDesign.Data.Seeding
         // 3️⃣ Seed Manager
         public static async Task SeedManagerAsync(UserManager<AppUser> userManager)
         {
-            const string managerEmail = "manager@furniture.com";
+            const string managerEmail = "manager@fgd.com";
             var manager = await userManager.FindByEmailAsync(managerEmail);
 
             if (manager == null)

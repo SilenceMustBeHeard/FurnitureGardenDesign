@@ -22,6 +22,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             var category = new Category
             {
                 Name = model.Name,
+                Description = model.Description,
                 IsActive = true
             };
 
