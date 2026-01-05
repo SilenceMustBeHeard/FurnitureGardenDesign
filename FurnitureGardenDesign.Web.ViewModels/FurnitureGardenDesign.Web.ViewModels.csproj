@@ -14,7 +14,6 @@
     <ProjectReference Include="..\FurnitureGardenDesign.Common\FurnitureGardenDesign.Common.csproj" />
     <ProjectReference Include="..\FurnitureGardenDesign.Data.Models\FurnitureGardenDesign.Data.Models.csproj" />
     <ProjectReference Include="..\FurnitureGardenDesign.Data\FurnitureGardenDesign.Data.csproj" />
-    <ProjectReference Include="..\FurnitureGardenDesign.Services.Core\FurnitureGardenDesign.Services.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,13 +1,14 @@
-﻿using FurnitureGardenDesign.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FurnitureGardenDesign.Web.ViewModels.Category;
 
-namespace FurnitureGardenDesign.Services.Core.Interfaces
+public interface ICategoryService
 {
-    public interface ICategoryService
-    {
-        Task CreateCategoryAsync(Category model);
-        Task<IEnumerable<Category>> GetAllActiveCategoriesAsync();
-    }
+    Task<IEnumerable<CategoryViewModelList>> GetAllActiveCategoriesAsync();
+
+    Task AddCategoryAsync(CategoryViewModelCreate model);
+
+    Task<CategoryViewModelEdit?> GetCategoryForEditByIdAsync(Guid id);
+
+    Task EditCategoryAsync(Guid id, CategoryViewModelEdit model);
+
+    Task SoftDeleteCategoryAsync(Guid id);
 }

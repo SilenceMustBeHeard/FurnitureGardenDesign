@@ -41,14 +41,18 @@ builder.Services.AddAuthorization(options =>
 // repositories
 builder.Services.AddScoped<IRepositoryAsync<Category, Guid>, CategoryRepository>();
 builder.Services.AddScoped<IRepositoryAsync<CatalogDesign, Guid>, CatalogRepository>();
+
 builder.Services.AddScoped<IRepositoryAsync<Order, Guid>, OrderRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+
 // services
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICatalogService, CatalogService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
-builder.Services.AddScoped<IOrderService, OrderService>();
+
 
 
 

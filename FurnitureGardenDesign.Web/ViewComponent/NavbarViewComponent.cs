@@ -22,6 +22,7 @@ namespace FurnitureGardenDesign.Web.ViewModels
         {
             _signInManager = signInManager;
             _orderService = orderService;
+        
         }
 
         public async Task<IViewComponentResult> InvokeAsync()

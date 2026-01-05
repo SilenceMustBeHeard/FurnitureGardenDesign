@@ -1,36 +1,56 @@
-﻿@{
+﻿@model IEnumerable<FurnitureGardenDesign.Web.ViewModels.Category.CategoryViewModelList>
+
+@{
     ViewData["Title"] = "Categories";
 }
 
 <div class="container mt-5">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-warning">
-            🗂 Categories
-        </h2>
+        <h2 class="fw-bold text-warning">🗂 Categories</h2>
 
         <a asp-area="Admin"
            asp-controller="Category"
-           asp-action="Create"
+           asp-action="Add"
            class="btn btn-warning-glass fw-semibold">
             ➕ Add Category
         </a>
     </div>
 
-    @if (TempData["Success"] != null)
+    @if (!Model.Any())
     {
-        <div class="alert alert-success glass-card text-center">
-            @TempData["Success"]
+        <div class="glass-card p-4 text-center text-muted">
+            No categories loaded yet.
         </div>
     }
-
-    <div class="glass-card p-4 mt-4 text-center text-muted">
-        <p class="mb-0">
-            No categories loaded yet.
-        </p>
-        <small>
-            Categories will appear here once created.
-        </small>
-    </div>
+    else
+    {
+        <div class="glass-card p-4">
+            <table class="table table-hover text-light">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Active</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model)
+                    {
+                        <tr>
+                            <td>@c.Name</td>
+                            <td>@(c.IsActive ? "Yes" : "No")</td>
+                            <td class="text-end">
+                                <a asp-action="Edit" asp-route-id="@c.Id"
+                                   class="btn btn-sm btn-outline-warning">
+                                    Edit
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 
 </div>

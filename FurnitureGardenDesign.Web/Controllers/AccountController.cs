@@ -63,6 +63,7 @@ namespace FurnitureGardenDesign.Web.Controllers
             return View(model);
         }
 
+
         // -------------------- LOGOUT --------------------
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -76,15 +76,16 @@ namespace FurnitureGardenDesign.Web.Controllers
         {
             var categories = await _categoryService.GetAllActiveCategoriesAsync();
 
-            ViewBag.Categories = categories.Select(c => new SelectListItem
-            {
-                Value = c.Id.ToString(),
-                Text = c.Name
-            });
+            ViewBag.Categories = categories
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString() 
+                })
+                .ToList();
         }
+
+
+
     }
-
-
-
-
 }
