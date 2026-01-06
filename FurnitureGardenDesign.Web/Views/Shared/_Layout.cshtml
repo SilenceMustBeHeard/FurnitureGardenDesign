@@ -47,6 +47,16 @@
 
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="container mt-4">
+                    <div class="alert alert-success glass text-center shadow-sm">
+                        <i class="bi bi-check-circle me-2"></i>
+                        @TempData["SuccessMessage"]
+                    </div>
+                </div>
+            }
+
             @RenderBody()
         </main>
     </div>

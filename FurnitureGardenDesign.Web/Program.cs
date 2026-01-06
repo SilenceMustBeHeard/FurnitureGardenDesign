@@ -39,7 +39,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 // repositories
-builder.Services.AddScoped<IRepositoryAsync<Category, Guid>, CategoryRepository>();
+
 builder.Services.AddScoped<IRepositoryAsync<CatalogDesign, Guid>, CatalogRepository>();
 
 builder.Services.AddScoped<IRepositoryAsync<Order, Guid>, OrderRepository>();
@@ -91,19 +91,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Middleware for /manager routes
-app.UseMiddleware<ManagerAccessMiddleware>();
-
-
+//app.UseMiddleware<ManagerAccessMiddleware>();
 
 
 
 
 
 // ====== Routing ======
-app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-);
 
 app.MapControllerRoute(
     name: "default",

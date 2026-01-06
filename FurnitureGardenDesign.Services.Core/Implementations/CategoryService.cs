@@ -31,7 +31,7 @@ public class CategoryService : ICategoryService
             Id = Guid.NewGuid(),
             Name = model.Name,
             Description = model.Description,
-            IsActive = model.IsActive
+           
         };
 
         await _categoryRepository.AddAsync(category);
@@ -44,6 +44,7 @@ public class CategoryService : ICategoryService
 
         return new CategoryViewModelEdit
         {
+            Id = category.Id,
             Name = category.Name,
             Description = category.Description,
             IsActive = category.IsActive
@@ -70,3 +71,4 @@ public class CategoryService : ICategoryService
         await _categoryRepository.DeleteAsync(category);
     }
 }
+

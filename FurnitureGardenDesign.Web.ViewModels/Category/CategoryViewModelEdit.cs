@@ -6,7 +6,6 @@ namespace FurnitureGardenDesign.Web.ViewModels.Category
     {
         public Guid Id { get; set; }
         [Required]
-        [MinLength(3)]
         [MaxLength(100)]
         public string Name { get; set; } = null!;
 

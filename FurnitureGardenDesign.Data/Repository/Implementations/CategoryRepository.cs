@@ -8,20 +8,17 @@ using System.Text;
 
 namespace FurnitureGardenDesign.Data.Repository.Implementations
 {
-    public class CategoryRepository
-        : BaseRepository<Category, Guid>, ICategoryRepository
-    {
-        public CategoryRepository(ApplicationDbContext context)
-            : base(context)
-        {
-        }
-        public async Task<IEnumerable<Category>> GetAllActiveAsync()
-          => await _dbSet.Where(m => m.IsActive).ToListAsync();
 
+    public class CategoryRepository : BaseRepository<Category, Guid>, ICategoryRepository
+    {
+        public CategoryRepository(ApplicationDbContext context) : base(context) { }
+
+        public async Task<IEnumerable<Category>> GetAllActiveAsync()
+            => await _dbSet.Where(c => c.IsActive).ToListAsync();
 
         public Category? GetByName(string name)
-            => _dbSet.FirstOrDefault(m => m.Name == name);
-
+            => _dbSet.FirstOrDefault(c => c.Name == name);
     }
+
 
 }
