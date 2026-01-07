@@ -50,7 +50,47 @@ namespace FurnitureGardenDesign.Web.Controllers
             await _categoryService.AddCategoryAsync(model);
 
             TempData["SuccessMessage"] = "Category created successfully!";
-            return RedirectToAction("Home");
+            return RedirectToAction("Index");
         }
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var model = await _categoryService.GetCategoryForEditByIdAsync(id);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(CategoryViewModelEdit model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            await _categoryService.EditCategoryAsync(model.Id, model);
+
+            TempData["SuccessMessage"] = "Category edited successfully!";
+            return RedirectToAction("Index");
+        }
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> EditList()
+        {
+            var categories = await _categoryService.GetAllActiveCategoriesAsync();
+
+
+
+            return View("Edit Categories"); 
+
+        }
+
     }
 }

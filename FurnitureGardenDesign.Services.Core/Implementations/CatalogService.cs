@@ -1,6 +1,7 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,21 +11,86 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
     public class CatalogService : ICatalogService
     {
         private readonly IRepositoryAsync<CatalogDesign, Guid> _catalogRepo;
+        private readonly IRepositoryAsync<Favorite, Guid> _favoriteRepo;
+        private readonly IRepositoryAsync<Review, Guid> _reviewRepo;
 
-        public CatalogService(IRepositoryAsync<CatalogDesign, Guid> catalogRepo)
+        public CatalogService(
+            IRepositoryAsync<CatalogDesign, Guid> catalogRepo,
+            IRepositoryAsync<Favorite, Guid> favoriteRepo,
+            IRepositoryAsync<Review, Guid> reviewRepo)
         {
             _catalogRepo = catalogRepo;
+            _favoriteRepo = favoriteRepo;
+            _reviewRepo = reviewRepo;
         }
 
-        public async Task<IEnumerable<CatalogDesign>> GetAllDesignsAsync()
+
+        public async Task<IEnumerable<CatalogDesign>> GetAllActiveAsync()
+        
+            => await _catalogRepo.GetAllAttached()
+                .Where(c => c.IsActive)
+                .Include(c => c.Category)
+                .Include(c => c.Materials)
+                .Include(c => c.Reviews)
+                .ToListAsync();
+        
+
+        public async Task<CatalogDesign?> GetByIdAsync(Guid id)
+        
+            => await _catalogRepo.GetAllAttached()
+                .Include(c => c.Category)
+                .Include(c => c.Materials)
+                .Include(c => c.Reviews)
+                .Include(c => c.Favorites)
+                .FirstOrDefaultAsync(c => c.Id == id && c.IsActive);
+        
+
+        public async Task AddToFavoritesAsync(string userId, Guid designId)
         {
-            return await _catalogRepo.GetCategoriesAsync(); 
+            var exists = _favoriteRepo.GetAllAttached()
+                .Any(f => f.UserId == userId && f.CatalogDesignId == designId);
+
+            if (!exists)
+            {
+                await _favoriteRepo.AddAsync(new Favorite
+                {
+                    UserId = userId,
+                    CatalogDesignId = designId
+                });
+            }
         }
 
-        public async Task<CatalogDesign?> GetDesignByIdAsync(Guid id)
+        public async Task RemoveFromFavoritesAsync(string userId, Guid designId)
         {
-            return await _catalogRepo.GetByIdAsync(id);
+            var favorite = _favoriteRepo.GetAllAttached()
+                .FirstOrDefault(f => f.UserId == userId && f.CatalogDesignId == designId);
+
+            if (favorite != null)
+            {
+                await _favoriteRepo.DeleteAsync(favorite);
+            }
         }
+
+        public async Task AddReviewAsync(string userId, Guid designId, int rating, string? comment)
+        {
+            var review = new Review
+            {
+                CatalogDesignId = designId,
+                UserId = userId,
+                Rating = rating,
+                Comment = comment
+            };
+            await _reviewRepo.AddAsync(review);
+        }
+
+        public async Task<IEnumerable<Review>> GetReviewsAsync(Guid designId)
+        
+            => await _reviewRepo.GetAllAttached()
+                .Where(r => r.CatalogDesignId == designId)
+                .Include(r => r.User)
+                .ToListAsync();
+        
     }
-
 }
+
+

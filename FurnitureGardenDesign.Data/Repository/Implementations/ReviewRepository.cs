@@ -9,7 +9,7 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
     public class ReviewRepository:
          BaseRepository<Review, Guid>, IReviewRepository
     {
-        protected ReviewRepository(ApplicationDbContext context) :
+        public ReviewRepository(ApplicationDbContext context) :
             base(context)
         {
         }

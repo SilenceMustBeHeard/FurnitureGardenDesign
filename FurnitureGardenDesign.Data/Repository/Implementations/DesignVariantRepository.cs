@@ -9,7 +9,7 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
     public class DesignVariantRepository:
         BaseRepository<DesignVariant, Guid>, IDesignVariantRepository
     {
-        protected DesignVariantRepository(ApplicationDbContext context) 
+        public DesignVariantRepository(ApplicationDbContext context) 
             : base(context)
         {
         }

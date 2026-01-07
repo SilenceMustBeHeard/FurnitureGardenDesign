@@ -47,6 +47,12 @@ builder.Services.AddScoped<IRepositoryAsync<CatalogDesign, Guid>, CatalogReposit
 builder.Services.AddScoped<IRepositoryAsync<Order, Guid>, OrderRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IRepositoryAsync<CatalogDesign, Guid>, CatalogRepository>();
+builder.Services.AddScoped<IRepositoryAsync<Favorite, Guid>, FavoriteRepository>();
+builder.Services.AddScoped<IRepositoryAsync<Review, Guid>, ReviewRepository>();
+
+//builder.Services.AddScoped<ICatalogService, CatalogService>();
+
 
 //builder.Services.RegisterRepositories(typeof(ICategoryRepository).Assembly);
 // services

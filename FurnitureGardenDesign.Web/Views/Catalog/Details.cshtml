@@ -1,0 +1,30 @@
+﻿@model FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogDesignViewModel
+
+<h2>@Model.Title</h2>
+<img src="@Model.ImageUrl" class="img-fluid" alt="@Model.Title" />
+
+<p>@Model.Description</p>
+<p>Category: @Model.CategoryName</p>
+<p>Price: @Model.Price.ToString("C")</p>
+<p>Rating: @Model.AverageRating (from @Model.ReviewCount reviews)</p>
+
+<form asp-action="AddFavorite" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button class="btn btn-primary" type="submit" @(Model.IsFavorited ? "disabled" : "")>
+        @(Model.IsFavorited ? "Favorited" : "Add to Favorites")
+    </button>
+</form>
+
+<h3>Reviews</h3>
+<form asp-action="AddReview" method="post" class="mb-4">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="mb-2">
+        <label>Rating (0-5)</label>
+        <input type="number" name="rating" min="0" max="5" class="form-control" required />
+    </div>
+    <div class="mb-2">
+        <label>Comment</label>
+        <textarea name="comment" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Submit Review</button>
+</form>

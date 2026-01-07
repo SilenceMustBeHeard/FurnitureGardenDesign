@@ -40,7 +40,8 @@ public class CategoryService : ICategoryService
     public async Task<CategoryViewModelEdit?> GetCategoryForEditByIdAsync(Guid id)
     {
         var category = await _categoryRepository.GetByIdAsync(id);
-        if (category == null) return null;
+        if (category == null)
+            return null;
 
         return new CategoryViewModelEdit
         {
@@ -61,6 +62,7 @@ public class CategoryService : ICategoryService
         category.IsActive = model.IsActive;
 
         await _categoryRepository.UpdateAsync(category);
+       
     }
 
     public async Task SoftDeleteCategoryAsync(Guid id)

@@ -9,7 +9,7 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
     public class FavoriteRepository:
           BaseRepository<Favorite, Guid>, IFavoriteRepository
     {
-        protected FavoriteRepository(ApplicationDbContext context)
+        public FavoriteRepository(ApplicationDbContext context)
             : base(context)
         {
         }

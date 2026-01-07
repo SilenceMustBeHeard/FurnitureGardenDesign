@@ -7,7 +7,11 @@ namespace FurnitureGardenDesign.Services.Core.Interfaces
 {
     public interface ICatalogService
     {
-        Task<IEnumerable<CatalogDesign>> GetAllDesignsAsync();
-        Task<CatalogDesign?> GetDesignByIdAsync(Guid id);
+        Task<IEnumerable<CatalogDesign>> GetAllActiveAsync();
+        Task<CatalogDesign?> GetByIdAsync(Guid id);
+        Task AddToFavoritesAsync(string userId, Guid designId);
+        Task RemoveFromFavoritesAsync(string userId, Guid designId);
+        Task AddReviewAsync(string userId, Guid designId, int rating, string? comment);
+        Task<IEnumerable<Review>> GetReviewsAsync(Guid designId);
     }
 }

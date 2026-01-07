@@ -1,22 +1,12 @@
 ﻿@model IEnumerable<FurnitureGardenDesign.Web.ViewModels.Category.CategoryViewModelList>
 
 @{
-    ViewData["Title"] = "Categories";
+    ViewData["Title"] = "Edit Categories";
 }
 
 <div class="container mt-5">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-warning">🗂 Categories</h2>
-
-        <a asp-area="Admin"
-           asp-controller="Category"
-           asp-action="Create"
-           class="btn btn-warning-glass fw-semibold">
-            ➕ Add Category
-        </a>
-
-    </div>
+    <h2 class="fw-bold text-warning mb-4">Edit Categories</h2>
 
     @if (!Model.Any())
     {
@@ -31,8 +21,8 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                       
-                        <th></th>
+                        <th>Active</th>
+                        <th class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,7 +32,10 @@
                             <td>@c.Name</td>
                             <td>@(c.IsActive ? "Yes" : "No")</td>
                             <td class="text-end">
-                                <a asp-action="Edit" asp-route-id="@c.Id"
+                                <a asp-area="Admin"
+                                   asp-controller="Category"
+                                   asp-action="Edit"
+                                   asp-route-id="@c.Id"
                                    class="btn btn-sm btn-outline-warning">
                                     Edit
                                 </a>
