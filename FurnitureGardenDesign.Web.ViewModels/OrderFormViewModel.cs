@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace FurnitureGardenDesign.Web.ViewModels
 {
@@ -29,5 +30,10 @@ namespace FurnitureGardenDesign.Web.ViewModels
         [Required]
         [Display(Name = "Category")]
         public Guid CategoryId { get; set; } // choice of category
+
+
+        public IEnumerable<SelectListItem> Categories { get; set; } 
+            = new List<SelectListItem>();
+
     }
 }

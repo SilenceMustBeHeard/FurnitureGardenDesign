@@ -11,7 +11,7 @@ namespace FurnitureGardenDesign.Data.Configurations
         {
             builder.HasKey(d => d.Id);
 
-            //precision for decimal fields
+          
             builder.Property(d => d.Price)
              .HasPrecision(18, 2);
 

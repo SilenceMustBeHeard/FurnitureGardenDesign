@@ -38,7 +38,8 @@ namespace FurnitureGardenDesign.Web.ViewModels
                 model.IsManager = HttpContext.User.IsInRole(RoleNames.Manager);
                 model.IsUser = !model.IsAdmin && !model.IsManager;
 
-                if (model.IsAdmin || model.IsManager)
+                if (model.IsAdmin 
+                    || model.IsManager)
                 {
                     model.PendingOrdersCount = await _orderService.GetPendingOrdersCountAsync();
                 }

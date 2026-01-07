@@ -29,39 +29,42 @@ namespace FurnitureGardenDesign.Web.Controllers
             _categoryService = categoryService;
         }
 
-        // =========================
         // GET: Orders/Create
-        // =========================
+       
         public async Task<IActionResult> Create()
         {
+           
             await LoadCategoriesAsync();
             return View(new OrderFormViewModel());
         }
 
-        // =========================
-        // POST: Orders/Create
-        // =========================
+
+
+        // POST : Orders
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Order model)
+        public async Task<IActionResult> Create(OrderFormViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 await LoadCategoriesAsync();
-                return View(model);
+                return View(model); 
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
             await _orderService.CreateOrderAsync(userId, model);
 
-            TempData["Message"] = "Your order has been submitted!";
-            return RedirectToAction("Index", "CatalogDesigns");
+            TempData["SuccessMessage"] = "Your order has been submitted!";
+
+            return RedirectToAction("Index", "Home");
+
         }
 
-        // =========================
+
+
         // GET: Orders/Manage
-        // =========================
+
         [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Manage()
         {
@@ -69,9 +72,9 @@ namespace FurnitureGardenDesign.Web.Controllers
             return View(orders);
         }
 
-        // =========================
+
         // Helper
-        // =========================
+
         private async Task LoadCategoriesAsync()
         {
             var categories = await _categoryService.GetAllActiveCategoriesAsync();
@@ -80,10 +83,11 @@ namespace FurnitureGardenDesign.Web.Controllers
                 .Select(c => new SelectListItem
                 {
                     Text = c.Name,
-                    Value = c.Id.ToString() 
+                    Value = c.Id.ToString()
                 })
                 .ToList();
         }
+
 
 
 

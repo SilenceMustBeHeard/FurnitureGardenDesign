@@ -8,14 +8,17 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-
+using static FurnitureGardenDesign.Common.ExceptionMessages;
 namespace FurnitureGardenDesign.Web.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
     {
         private const string ServiceSuffix = "Service";
+        private const string InterfacePreffix = "I";
+        private const string RepoTypeSuffix = "Repository";
+        private const string BaseRepoTypePreffix = "Base";
 
-        public static IServiceCollection RegisterUserServices(
+        public static IServiceCollection RegisterServices(
             this IServiceCollection services,
             Assembly serviceAssembly)
         {
@@ -31,27 +34,69 @@ namespace FurnitureGardenDesign.Web.Infrastructure.Extensions
                 .GetTypes()
                 .Where(t =>
                     t.IsInterface &&
-                    t.Name.StartsWith("I") &&
+                    t.Name.StartsWith(InterfacePreffix) &&
                     t.Name.EndsWith(ServiceSuffix))
                 .ToArray();
 
             foreach (Type implementation in serviceClasses)
             {
-                Type? serviceInterface = serviceInterfaces
-                    .FirstOrDefault(i =>
-                        i.Name == $"I{implementation.Name}");
 
+                Type? serviceInterface = implementation.GetInterfaces()
+                    .FirstOrDefault(i => i.Name == $"{InterfacePreffix}{implementation.Name}");
                 if (serviceInterface == null)
                 {
-                    continue;
+                    throw new ArgumentException(string.Format(RepoInterfaceNotFound, implementation.Name));
                 }
 
                 services.AddScoped(serviceInterface, implementation);
+
             }
 
             return services;
         }
+
+
+
+        public static IServiceCollection RegisterRepositories
+            (this IServiceCollection serviceCollection, Assembly repositoryAssembly)
+        {
+
+
+            Type[] repoClasses = repositoryAssembly
+                .GetTypes()
+                .Where(r => r.Name.EndsWith(RepoTypeSuffix)
+                && !r.IsInterface
+                && !r.IsAbstract)
+                .ToArray();
+
+            foreach (Type implementation in repoClasses)
+            {
+                Type? repoInterface = implementation.GetInterfaces()
+                    .FirstOrDefault(i => i.Name == $"{InterfacePreffix}{implementation.Name}");
+                if (repoInterface == null)
+                {
+                    throw new ArgumentException(string.Format(RepoInterfaceNotFound, implementation.Name));
+                }
+
+                serviceCollection.AddScoped(repoInterface, implementation);
+
+
+            }
+
+            return serviceCollection;
+        }
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
 

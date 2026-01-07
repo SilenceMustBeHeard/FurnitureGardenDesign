@@ -18,7 +18,7 @@ namespace FurnitureGardenDesign.Web.Controllers
             _signInManager = signInManager;
         }
 
-        // -------------------- REGISTER --------------------
+        //  REGISTER 
         [HttpGet]
         public IActionResult Register() => View();
 
@@ -43,7 +43,7 @@ namespace FurnitureGardenDesign.Web.Controllers
             return View(model);
         }
 
-        // -------------------- LOGIN --------------------
+        //  LOGIN 
         [HttpGet]
         public IActionResult Login() => View();
 
@@ -64,7 +64,7 @@ namespace FurnitureGardenDesign.Web.Controllers
         }
 
 
-        // -------------------- LOGOUT --------------------
+        //  LOGOUT 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()

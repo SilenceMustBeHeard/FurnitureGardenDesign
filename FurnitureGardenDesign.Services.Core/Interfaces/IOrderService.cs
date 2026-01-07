@@ -1,7 +1,8 @@
-﻿using System;
+﻿using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Web.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using FurnitureGardenDesign.Data.Models;
 
 
 namespace FurnitureGardenDesign.Services.Core.Interfaces
@@ -14,7 +15,7 @@ namespace FurnitureGardenDesign.Services.Core.Interfaces
         Task<IEnumerable<Order>> GetPendingOrdersAsync();
 
         // create new order
-        Task CreateOrderAsync(string userId, Order model);
+        Task CreateOrderAsync(string userId, OrderFormViewModel model);
 
     }
 

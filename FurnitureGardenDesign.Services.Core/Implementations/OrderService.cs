@@ -4,6 +4,7 @@ using FurnitureGardenDesign.Data.Repository.Implementations;
 using FurnitureGardenDesign.Data.Repository.Implementations.FurnitureGardenDesign.Data.Repository.Implementations;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,15 +20,15 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             _orderRepo = orderRepo;
         }
 
-        public async Task CreateOrderAsync(string userId, Order model)
+        public async Task CreateOrderAsync(string userId, OrderFormViewModel model)
         {
             var order = new Order
             {
                 UserId = userId,
                 CategoryId = model.CategoryId,
-                Description = model.Description,
                 FurnitureType = model.FurnitureType,
                 Dimensions = model.Dimensions,
+                Description = model.Description,
                 ReferenceImageUrl = model.ReferenceImageUrl,
                 Status = OrderStatus.Pending,
                 CreatedOn = DateTime.UtcNow
@@ -35,6 +36,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
             await _orderRepo.AddAsync(order);
         }
+
 
 
         public async Task<int> GetPendingOrdersCountAsync()

@@ -50,7 +50,7 @@ namespace FurnitureGardenDesign.Web.Controllers
             await _categoryService.AddCategoryAsync(model);
 
             TempData["SuccessMessage"] = "Category created successfully!";
-            return RedirectToAction("Index");
+            return RedirectToAction("Home");
         }
     }
 }

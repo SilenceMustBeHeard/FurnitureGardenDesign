@@ -6,6 +6,7 @@ using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Data.Seeding;
 using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Web.Infrastructure.Extensions;
 using FurnitureGardenDesign.Web.Infrastructure.MiddleWare;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,15 +14,15 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ===== Connection string =====
+//  Connection string 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-// ===== Add DbContext =====
+//  Add DbContext 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// ===== Add Identity =====
+//  Add Identity 
 builder.Services.AddDefaultIdentity<AppUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -40,26 +41,28 @@ builder.Services.AddAuthorization(options =>
 
 // repositories
 
+
 builder.Services.AddScoped<IRepositoryAsync<CatalogDesign, Guid>, CatalogRepository>();
 
 builder.Services.AddScoped<IRepositoryAsync<Order, Guid>, OrderRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
-
+//builder.Services.RegisterRepositories(typeof(ICategoryRepository).Assembly);
 // services
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<ICatalogService, CatalogService>();
-builder.Services.AddScoped<IOrderService, OrderService>();
+//builder.Services.AddScoped<ICategoryService, CategoryService>();
+//builder.Services.AddScoped<ICatalogService, CatalogService>();
+//builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.RegisterServices(typeof(ICategoryService).Assembly);
 
 
 
 
 
-// ===== Build App =====
+// Build App 
 var app = builder.Build();
 
-// ===== Seed Roles and Users =====
+//  Seed Roles and Users
 using (var scope = app.Services.CreateScope())
 {
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
@@ -70,7 +73,7 @@ using (var scope = app.Services.CreateScope())
     await IdentitySeeder.SeedManagerAsync(userManager);
 }
 
-// ===== Middleware =====
+//  Middleware 
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -97,7 +100,7 @@ app.UseAuthorization();
 
 
 
-// ====== Routing ======
+//  Routing 
 
 app.MapControllerRoute(
     name: "default",

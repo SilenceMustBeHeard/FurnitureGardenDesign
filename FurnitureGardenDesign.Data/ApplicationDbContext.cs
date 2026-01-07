@@ -29,7 +29,7 @@ namespace FurnitureGardenDesign.Data
             // Apply all configurations from assembly
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-            // ========== GLOBAL QUERY FILTERS ==========
+            //  GLOBAL QUERY FILTERS 
 
             // Soft delete
             builder

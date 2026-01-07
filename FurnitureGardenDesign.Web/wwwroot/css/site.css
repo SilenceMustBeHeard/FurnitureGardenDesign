@@ -32,9 +32,9 @@ body {
     text-align: start;
 }
 
-/* ===============================
-   DARK THEME
-================================ */
+ 
+ /*  DARK THEME*/
+ 
 
 html[data-bs-theme="dark"] body {
     background: linear-gradient(0deg, #010817, #010817);
@@ -121,9 +121,9 @@ html[data-bs-theme="dark"] .glass {
         box-shadow: 0 50px 80px rgba(0, 0, 0, 0.5);
     }
 
-/* ===============================
+/* 
    LIGHT THEME
-================================ */
+ */
 
 html[data-bs-theme="light"] body {
     background: linear-gradient(60deg, #f3f1f1, #f6df6670,#ffd70060);
@@ -191,9 +191,9 @@ html[data-bs-theme="light"] .glass {
         box-shadow: 0 20px 60px rgba(255, 180, 60, 0.3);
     }
 
-/* ===============================
+/* 
    HERO & GENERAL
-================================ */
+ */
 
 .hero-section {
     min-height: 80vh;
@@ -245,9 +245,9 @@ html[data-bs-theme="light"] .glass {
         max-height: 800px;
         object-fit: fill;
     }
-/* ===============================
+/* 
    GLASS CARD
-================================ */
+ */
 .glass-card {
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(20px);
