@@ -29,8 +29,8 @@ namespace FurnitureGardenDesign.Web.Controllers
             _categoryService = categoryService;
         }
 
-        // GET: Orders/Create
-       
+
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
            
@@ -40,7 +40,7 @@ namespace FurnitureGardenDesign.Web.Controllers
 
 
 
-        // POST : Orders
+   
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OrderFormViewModel model)
@@ -63,9 +63,9 @@ namespace FurnitureGardenDesign.Web.Controllers
 
 
 
-        // GET: Orders/Manage
 
         [Authorize(Roles = "Admin,Manager")]
+        [HttpGet]
         public async Task<IActionResult> Manage()
         {
             var orders = await _orderService.GetPendingOrdersAsync();
@@ -73,7 +73,7 @@ namespace FurnitureGardenDesign.Web.Controllers
         }
 
 
-        // Helper
+     
 
         private async Task LoadCategoriesAsync()
         {
