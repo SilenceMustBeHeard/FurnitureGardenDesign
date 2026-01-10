@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FurnitureGardenDesign.Web.Controllers
 {
 
-    [Authorize]
+
     public class CatalogController : Controller
     {
         private readonly ICatalogService _catalogService;
@@ -17,9 +17,22 @@ namespace FurnitureGardenDesign.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
+     
         public async Task<IActionResult> Index()
         {
             var designs = await _catalogService.GetAllActiveAsync();
+
+
+            if (!User.Identity!.IsAuthenticated)
+            {
+                designs = designs.Take(3).ToList();
+                ViewData["IsGuest"] = true;
+            }
+            else
+            {
+                ViewData["IsGuest"] = false;
+            }
 
             var model = designs.Select(d => new CatalogDesignViewModel
             {
@@ -38,6 +51,7 @@ namespace FurnitureGardenDesign.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddFavorite(Guid id)
         {
             var model = _catalogService.GetByIdAsync(id);
@@ -51,6 +65,7 @@ namespace FurnitureGardenDesign.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> RemoveFavorite(Guid id)
         {
             var model = _catalogService.GetByIdAsync(id);
@@ -65,6 +80,7 @@ namespace FurnitureGardenDesign.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddReview(Guid id, int rating, string? comment)
         {
             var model = _catalogService.GetByIdAsync(id);
@@ -79,6 +95,7 @@ namespace FurnitureGardenDesign.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(Guid id)
         {
             var model1 = _catalogService.GetByIdAsync(id);
@@ -89,6 +106,9 @@ namespace FurnitureGardenDesign.Web.Controllers
             var design = await _catalogService.GetByIdAsync(id);
             if (design == null)
                 return NotFound();
+
+          
+
 
             var model = new CatalogDesignViewModel
             {
