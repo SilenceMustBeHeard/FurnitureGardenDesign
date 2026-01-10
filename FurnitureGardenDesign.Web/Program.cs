@@ -80,7 +80,7 @@ var app = builder.Build();
 //  Seed Roles and Users
 using (var scope = app.Services.CreateScope())
 {
-    //var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
@@ -88,12 +88,10 @@ using (var scope = app.Services.CreateScope())
     await IdentitySeeder.SeedAdminAsync(userManager);
     await IdentitySeeder.SeedManagerAsync(userManager);
 
-
-    //if (!await context.CatalogDesigns.AnyAsync())
-    //{
-    //    await DbSeeder.SeedCatalogAsync(context);
-    //}
+    
+    await DbSeeder.SeedCatalogAsync(context);
 }
+
 
 //  Middleware 
 if (app.Environment.IsDevelopment())
