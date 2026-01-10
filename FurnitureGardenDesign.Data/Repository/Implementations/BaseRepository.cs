@@ -90,10 +90,13 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
 
 
    
-            public IQueryable<TEntity> GetAllAttached()
+            public IQueryable<TEntity> GetAllAttachedAsync()
                 => _dbSet.AsQueryable();
 
-            public TEntity? GetById(TKey id)
+        public IQueryable<TEntity> GetAllAttached()
+            => _dbSet.AsQueryable();
+
+        public TEntity? GetById(TKey id)
                 => _dbSet.Find(id);
 
 

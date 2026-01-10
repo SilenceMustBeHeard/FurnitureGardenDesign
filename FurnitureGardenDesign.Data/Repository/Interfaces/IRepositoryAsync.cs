@@ -32,7 +32,7 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
         Task SaveChangesAsync();
 
 
-        IQueryable<TEntity> GetAllAttached();
+        IQueryable<TEntity> GetAllAttachedAsync();
 
 
 

@@ -27,7 +27,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
         public async Task<IEnumerable<CatalogDesign>> GetAllActiveAsync()
         
-            => await _catalogRepo.GetAllAttached()
+            => await _catalogRepo.GetAllAttachedAsync()
                 .Where(c => c.IsActive)
                 .Include(c => c.Category)
                 .Include(c => c.Materials)
@@ -37,7 +37,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
         public async Task<CatalogDesign?> GetByIdAsync(Guid id)
         
-            => await _catalogRepo.GetAllAttached()
+            => await _catalogRepo.GetAllAttachedAsync()
                 .Include(c => c.Category)
                 .Include(c => c.Materials)
                 .Include(c => c.Reviews)
@@ -47,7 +47,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
         public async Task AddToFavoritesAsync(string userId, Guid designId)
         {
-            var exists = _favoriteRepo.GetAllAttached()
+            var exists = _favoriteRepo.GetAllAttachedAsync()
                 .Any(f => f.UserId == userId && f.CatalogDesignId == designId);
 
             if (!exists)
@@ -62,7 +62,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
         public async Task RemoveFromFavoritesAsync(string userId, Guid designId)
         {
-            var favorite = _favoriteRepo.GetAllAttached()
+            var favorite = _favoriteRepo.GetAllAttachedAsync()
                 .FirstOrDefault(f => f.UserId == userId && f.CatalogDesignId == designId);
 
             if (favorite != null)
@@ -85,7 +85,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
         public async Task<IEnumerable<Review>> GetReviewsAsync(Guid designId)
         
-            => await _reviewRepo.GetAllAttached()
+            => await _reviewRepo.GetAllAttachedAsync()
                 .Where(r => r.CatalogDesignId == designId)
                 .Include(r => r.User)
                 .ToListAsync();

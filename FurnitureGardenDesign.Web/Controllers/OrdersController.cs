@@ -3,6 +3,7 @@ using FurnitureGardenDesign.Data;
 using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Implementations;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
+using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -86,9 +87,20 @@ namespace FurnitureGardenDesign.Web.Controllers
                     Value = c.Id.ToString()
                 })
                 .ToList();
+        }   
+
+
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var order = await _orderService.GetByIdAsync(id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
         }
-
-
 
 
     }

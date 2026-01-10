@@ -1,0 +1,47 @@
+[
+  {
+    "id": "b1f8a7c3-1e9a-4c6b-bf8f-9f7b6a1d0001",
+    "title": "Modern Garden Chair",
+    "categoryId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "description": "A modern outdoor chair designed for comfort and durability, perfect for gardens and terraces.",
+    "imageUrl": "/images/sample1.jpg",
+    "price": 189.99,
+    "isActive": true
+  },
+  {
+    "id": "b1f8a7c3-1e9a-4c6b-bf8f-9f7b6a1d0002",
+    "title": "Minimalist Wooden Table",
+    "categoryId": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+    "description": "Minimalist wooden table made from solid oak, suitable for both indoor and outdoor use.",
+    "imageUrl": "/images/sample1.jpg",
+    "price": 499.00,
+    "isActive": true
+  },
+  {
+    "id": "b1f8a7c3-1e9a-4c6b-bf8f-9f7b6a1d0003",
+    "title": "Luxury Garden Lounge Set",
+    "categoryId": "cccccccc-cccc-cccc-cccc-cccccccccccc",
+    "description": "Luxury lounge set with weather-resistant materials, designed for premium garden spaces.",
+    "imageUrl": "/images/sample1.jpg",
+    "price": 1299.50,
+    "isActive": true
+  },
+  {
+    "id": "b1f8a7c3-1e9a-4c6b-bf8f-9f7b6a1d0004",
+    "title": "Scandinavian Armchair",
+    "categoryId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "description": "Scandinavian-style armchair with clean lines, natural wood and soft upholstery.",
+    "imageUrl": "/images/sample1.jpg",
+    "price": 349.90,
+    "isActive": true
+  },
+  {
+    "id": "b1f8a7c3-1e9a-4c6b-bf8f-9f7b6a1d0005",
+    "title": "Rustic Garden Bench",
+    "categoryId": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+    "description": "Rustic wooden bench ideal for gardens, patios and outdoor relaxation areas.",
+    "imageUrl": "/images/sample1.jpg",
+    "price": 259.00,
+    "isActive": true
+  }
+]

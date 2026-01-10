@@ -10,6 +10,7 @@ using FurnitureGardenDesign.Web.Infrastructure.Extensions;
 using FurnitureGardenDesign.Web.Infrastructure.MiddleWare;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,11 +34,19 @@ builder.Services.AddDefaultIdentity<AppUser>(options =>
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+
+
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminPolicy", policy =>
         policy.RequireRole("Admin"));
 });
+
+
+
 
 // repositories
 
@@ -71,12 +80,19 @@ var app = builder.Build();
 //  Seed Roles and Users
 using (var scope = app.Services.CreateScope())
 {
+    //var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
     await IdentitySeeder.SeedRolesAsync(roleManager);
     await IdentitySeeder.SeedAdminAsync(userManager);
     await IdentitySeeder.SeedManagerAsync(userManager);
+
+
+    //if (!await context.CatalogDesigns.AnyAsync())
+    //{
+    //    await DbSeeder.SeedCatalogAsync(context);
+    //}
 }
 
 //  Middleware 

@@ -5,6 +5,8 @@ using FurnitureGardenDesign.Data.Repository.Implementations.FurnitureGardenDesig
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels;
+using FurnitureGardenDesign.Web.ViewModels.Orders;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -46,9 +48,9 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
         public async Task<IEnumerable<Order>> GetPendingOrdersAsync()
         {
-            var orders =  _orderRepo.GetAll();
+            var orders = _orderRepo.GetAll();
             return orders
-                .Where(o => o.Status ==OrderStatus.Pending) 
+                .Where(o => o.Status == OrderStatus.Pending)
                 .Select(o => new Order
                 {
                     Id = o.Id,
@@ -59,5 +61,26 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 })
                 .ToList();
         }
+
+        public async Task<DetailsOrderViewModel?> GetByIdAsync(Guid id)
+        {
+            var order = await _orderRepo.GetByIdAsync(id);
+
+            if (order == null) return null;
+
+            return new DetailsOrderViewModel
+            {
+                Id = order.Id,
+                UserId = order.UserId,
+                CategoryId = order.CategoryId,
+                FurnitureType = order.FurnitureType,
+                Dimensions = order.Dimensions,
+                Description = order.Description,
+                ReferenceImageUrl = order.ReferenceImageUrl,
+                Status = order.Status
+            };
+        }
+
+
     }
 }
