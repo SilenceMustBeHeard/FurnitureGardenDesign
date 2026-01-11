@@ -1,0 +1,57 @@
+﻿@model FurnitureGardenDesign.Web.ViewModels.Category.CategoryViewModelEdit
+
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-6 col-md-8 col-12">
+            <div class="glass p-4 p-md-5 rounded-4 shadow-lg">
+
+                <h2 class="text-center mb-4 hero-title text-warning">
+                    <i class="bi bi-pencil-square me-2"></i> Edit Category
+                </h2>
+
+                <form asp-controller="Category" asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
+
+                   
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-semibold"></label>
+                        <input asp-for="Name" class="form-control glass-input" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Description" rows="3" class="form-control glass-input"></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input asp-for="IsActive" class="form-check-input" />
+                        <label asp-for="IsActive" class="form-check-label fw-semibold"></label>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-glass">
+                            ← Back
+                        </a>
+
+                        <button type="submit" class="btn btn-warning-glass fw-semibold">
+                            💾 Save Changes
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

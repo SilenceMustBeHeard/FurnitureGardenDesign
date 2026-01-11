@@ -15,6 +15,7 @@ namespace FurnitureGardenDesign.Web.Controllers
    
 
     [Authorize(Roles = "Admin")]
+
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -34,6 +35,7 @@ namespace FurnitureGardenDesign.Web.Controllers
 
         // GET: /Category/Create
         [HttpGet]
+       
         public IActionResult Create()
         {
             return View();
@@ -52,7 +54,11 @@ namespace FurnitureGardenDesign.Web.Controllers
             TempData["SuccessMessage"] = "Category created successfully!";
             return RedirectToAction("Index");
         }
+
+
+        // GET: /Category/Edit
         [HttpGet]
+
         public async Task<IActionResult> Edit(Guid id)
         {
             var model = await _categoryService.GetCategoryForEditByIdAsync(id);
@@ -62,12 +68,15 @@ namespace FurnitureGardenDesign.Web.Controllers
                 return NotFound();
             }
 
+            TempData["SuccessMessage"] = "Category edited!";
+
             return View(model);
         }
 
-
+        // POST: /Category/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Edit(CategoryViewModelEdit model)
         {
             if (!ModelState.IsValid)
@@ -80,8 +89,8 @@ namespace FurnitureGardenDesign.Web.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
         [HttpGet]
+        // GET: /Category/Edit (List of categories)
         public async Task<IActionResult> EditList()
         {
             var categories = await _categoryService.GetAllActiveCategoriesAsync();
