@@ -22,7 +22,14 @@ namespace FurnitureGardenDesign.Web.Controllers
 
         private readonly UserManager<AppUser> _userManager;
 
-        protected string GetUserId() => _userManager.GetUserId(User);
+        protected string? GetUserId()
+        {
+            if (User?.Identity == null || !User.Identity.IsAuthenticated)
+                return null;
+
+            return _userManager.GetUserId(User);
+        }
+
         protected async Task<AppUser?> GetCurrentUserAsync()
         {
             return await _userManager.GetUserAsync(User);

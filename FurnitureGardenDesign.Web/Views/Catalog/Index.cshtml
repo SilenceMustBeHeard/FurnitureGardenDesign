@@ -6,22 +6,36 @@
     @foreach (var item in Model)
     {
         <div class="col-md-4 mb-4">
-            <div class="card">
-                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Title">
-                <div class="card-body">
+            <div class="card shadow-sm h-100">
+                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Title" style="height:200px; object-fit:cover;">
+                <div class="card-body d-flex flex-column">
                     <h5 class="card-title">@item.Title</h5>
                     <p class="card-text">@item.Description</p>
                     <p>Price: @item.Price.ToString("C")</p>
                     <p>Rating: @item.AverageRating (from @item.ReviewCount reviews)</p>
 
-                    <form asp-action="AddFavorite" method="post">
-                        <input type="hidden" name="id" value="@item.Id" />
-                        <button class="btn btn-sm btn-primary" type="submit" @(item.IsFavorited ? "disabled" : "")>
-                            @(item.IsFavorited ? "Favorited" : "Add to Favorites")
-                        </button>
-                    </form>
+                    <div class="mt-auto">
+                        <!-- Add to Favorites -->
+                        <form asp-action="AddFavorite" method="post" class="d-inline-block me-2">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button class="btn btn-sm btn-primary" type="submit" @(item.IsFavorited ? "disabled" : "")>
+                                @(item.IsFavorited ? "Favorited" : "Add to Favorites")
+                            </button>
+                        </form>
 
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">View Details</a>
+                        <!-- View Details -->
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary me-2">View Details</a>
+
+                        <!-- Add Review Button -->
+                        <form asp-controller="Review" asp-action="Post" method="post" class="d-inline-block">
+                            <input type="hidden" name="catalogDesignId" value="@item.Id" />
+                            <input type="hidden" name="rating" value="5" />
+                            <input type="hidden" name="comment" value="Great design!" />
+                            <button type="submit" class="btn btn-sm btn-warning text-dark fw-bold">
+                                Add Review
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

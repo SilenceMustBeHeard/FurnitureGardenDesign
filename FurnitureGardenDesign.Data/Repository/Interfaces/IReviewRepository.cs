@@ -1,10 +1,12 @@
-﻿using System;
+﻿using FurnitureGardenDesign.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace FurnitureGardenDesign.Data.Repository.Interfaces
 {
-    internal interface IReviewRepository
+    public interface IReviewRepository
+         : IRepository<Review, Guid>, IRepositoryAsync<Review, Guid>
     {
     }
 }

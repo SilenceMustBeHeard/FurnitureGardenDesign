@@ -18,7 +18,7 @@ namespace FurnitureGardenDesign.Data.Models
 
         public string? Comment { get; set; }
 
-        
+
 
         // Navigation
         public CatalogDesign CatalogDesign { get; set; } = null!;
