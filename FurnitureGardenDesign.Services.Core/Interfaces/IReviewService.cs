@@ -11,6 +11,9 @@ namespace FurnitureGardenDesign.Services.Core.Interfaces
 
         Task AddReviewAsync(string userId, AddReviewViewModel model);
 
+        Task<bool> HasUserReviewedAsync(string userId, Guid catalogDesignId);
+
+
 
     }
 }

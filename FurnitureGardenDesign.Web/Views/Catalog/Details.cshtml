@@ -1,30 +1,62 @@
 ﻿@model FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogDesignViewModel
 
-<h2>@Model.Title</h2>
-<img src="@Model.ImageUrl" class="img-fluid" alt="@Model.Title" />
+@{
+    ViewData["Title"] = Model.Title;
+}
 
-<p>@Model.Description</p>
-<p>Category: @Model.CategoryName</p>
-<p>Price: @Model.Price.ToString("C")</p>
-<p>Rating: @Model.AverageRating (from @Model.ReviewCount reviews)</p>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
 
-<form asp-action="AddFavorite" method="post">
-    <input type="hidden" name="id" value="@Model.Id" />
-    <button class="btn btn-primary" type="submit" @(Model.IsFavorited ? "disabled" : "")>
-        @(Model.IsFavorited ? "Favorited" : "Add to Favorites")
-    </button>
-</form>
+        <div class="card glass-card p-4 text-light">
 
-<h3>Reviews</h3>
-<form asp-action="AddReview" method="post" class="mb-4">
-    <input type="hidden" name="id" value="@Model.Id" />
-    <div class="mb-2">
-        <label>Rating (0-5)</label>
-        <input type="number" name="rating" min="0" max="5" class="form-control" required />
+               @* TempData Alerts *@
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+
+            <h2 class="glass-title mb-3">@Model.Title</h2>
+
+            <img src="@Model.ImageUrl" class="img-fluid details-img mb-4" alt="@Model.Title" />
+
+            <p class="glass-text-muted mb-3">@Model.Description</p>
+
+            <div class="mb-2">
+                <strong>Category:</strong> @Model.CategoryName
+            </div>
+
+            <div class="mb-2">
+                <strong>Price:</strong> <span class="text-success">@Model.Price.ToString("C")</span>
+            </div>
+
+            <div class="mb-4">
+                <strong>Rating:</strong>
+                <span class="text-warning">@Model.AverageRating ★</span>
+                <span class="glass-text-muted small">(@Model.ReviewCount reviews)</span>
+            </div>
+
+            <div class="d-flex gap-2 flex-wrap">
+
+           @* Add to Favorites *@
+                <form asp-controller="Catalog" asp-action="AddFavorite" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button class="btn btn-primary-glass" @(Model.IsFavorited ? "disabled" : "")>
+                        @(Model.IsFavorited ? "Favorited" : "Add to Favorites")
+                    </button>
+                </form>
+
+                <a asp-action="Index" class="btn btn-outline-glass">Back to Catalog</a>
+
+                <a asp-controller="Review" asp-action="Write" asp-route-id="@Model.Id" class="btn btn-outline-glass">
+                    Write Review
+                </a>
+
+            </div>
+
+        </div>
     </div>
-    <div class="mb-2">
-        <label>Comment</label>
-        <textarea name="comment" class="form-control"></textarea>
-    </div>
-    <button type="submit" class="btn btn-success">Submit Review</button>
-</form>
+</div>

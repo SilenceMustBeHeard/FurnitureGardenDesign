@@ -1,91 +1,75 @@
 ﻿using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Web.Controllers;
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Review;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FurnitureGardenDesign.Web.Controllers
+[Authorize]
+public class ReviewController : BaseController
 {
+    private readonly IReviewService _reviewService;
+    private readonly ICatalogService _catalogService;
 
-
-    [Authorize]
-    public class ReviewController :
-        BaseController
+    public ReviewController(
+        UserManager<AppUser> userManager,
+        IReviewService reviewService,
+        ICatalogService catalogService)
+        : base(userManager)
     {
-        private readonly IReviewService _reviewService;
-        private readonly ICatalogService _catalogService;
+        _reviewService = reviewService;
+        _catalogService = catalogService;
+    }
 
-        public ReviewController(
-      UserManager<AppUser> userManager,
-      IReviewService reviewService,
-      ICatalogService catalogService)
-      : base(userManager)
+    
+    [HttpGet]
+    public async Task<IActionResult> Write(Guid id)
+    {
+        var design = await _catalogService.GetByIdAsync(id);
+        if (design == null)
+            return NotFound();
+
+        var model = new CatalogDesignViewModel
         {
-            _reviewService = reviewService;
-            _catalogService = catalogService;
+            Id = design.Id,
+            Title = design.Title,
+            Description = design.Description,
+            ImageUrl = design.ImageUrl,
+            Price = design.Price,
+            AverageRating = design.Reviews.Any() ? design.Reviews.Average(r => r.Rating) : 0,
+            ReviewCount = design.Reviews.Count
+        };
+
+        return View(model); 
+    }
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken] 
+    public async Task<IActionResult> Post(Guid catalogDesignId, int rating, string? comment)
+    {
+        var userId = GetUserId(); 
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        if (await _reviewService.HasUserReviewedAsync(userId, catalogDesignId))
+        {
+            TempData["Error"] = "You have already reviewed this design.";
+            return RedirectToAction(nameof(Write), new { id = catalogDesignId });
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        var reviewModel = new AddReviewViewModel
         {
-            var designs = await _catalogService.GetAllActiveAsync();
+            CatalogDesignId = catalogDesignId,
+            Rating = rating,
+            Comment = comment
+        };
 
-            var model = designs.Select(d => new CatalogDesignViewModel
-            {
-                Id = d.Id,
-                Title = d.Title,
-                Description = d.Description,
-                ImageUrl = d.ImageUrl,
-                Price = d.Price,
-                AverageRating = d.Reviews.Any()
-                ? d.Reviews.Average(r => r.Rating) : 0,
-                ReviewCount = d.Reviews.Count
-            }).ToList();
+        await _reviewService.AddReviewAsync(userId, reviewModel);
 
-            return View(model);
-        }
-
-
-        [HttpPost]
-
-        public async Task<IActionResult> Post(Guid catalogDesignId, int rating, string? comment)
-        {
-            if (rating < 0 || rating > 5)
-                return RedirectToAction(nameof(Index));
-            var catalogDesign = await _catalogService.GetByIdAsync(catalogDesignId);
-            if (catalogDesign == null)
-            {
-                TempData["Error"] = "Catalog design not found!";
-                return RedirectToAction(nameof(Index));
-            }
-
-            var userId = GetUserId();
-            if (string.IsNullOrEmpty(userId))
-                return Unauthorized();
-
-            var reviewModel = new AddReviewViewModel
-            {
-                CatalogDesignId = catalogDesignId,
-                Rating = rating,
-                Comment = comment
-            };
-
-            await _reviewService.AddReviewAsync(userId, reviewModel);
-
-            TempData["Success"] = "Review added successfully!";
-            return RedirectToAction(nameof(Index));
-
-        }
-
-
-
-
-
-
-
+        TempData["Success"] = "Review added successfully!";
+        return RedirectToAction("Details", "Catalog", new { id = catalogDesignId });
     }
 }

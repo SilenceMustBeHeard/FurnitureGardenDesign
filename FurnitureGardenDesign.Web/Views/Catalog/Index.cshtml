@@ -1,41 +1,80 @@
 ﻿@model IEnumerable<FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogDesignViewModel>
 
-<h2>Catalog</h2>
+@{
+    ViewData["Title"] = "Catalog";
+}
 
-<div class="row">
+<h2 class="text-center mb-5 text-light fw-bold">
+    Catalog
+</h2>
+
+<div class="row g-4">
     @foreach (var item in Model)
     {
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm h-100">
-                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Title" style="height:200px; object-fit:cover;">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">@item.Title</h5>
-                    <p class="card-text">@item.Description</p>
-                    <p>Price: @item.Price.ToString("C")</p>
-                    <p>Rating: @item.AverageRating (from @item.ReviewCount reviews)</p>
+        <div class="col-lg-4 col-md-6">
+            <div class="card glass-card h-100">
 
-                    <div class="mt-auto">
-                        <!-- Add to Favorites -->
-                        <form asp-action="AddFavorite" method="post" class="d-inline-block me-2">
+                <img src="@item.ImageUrl"
+                     class="card-img-top catalog-img"
+                     alt="@item.Title" />
+
+                <div class="card-body d-flex flex-column text-light">
+
+                    <h5 class="glass-title mb-2">
+                        @item.Title
+                    </h5>
+
+                    <p class="glass-text-muted small mb-3">
+                        @item.Description
+                    </p>
+
+                    <div class="mb-1">
+                        <strong>Price:</strong>
+                        <span class="text-success">
+                            @item.Price.ToString("F2")
+                        </span>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Rating:</strong>
+                        <span class="text-warning">
+                            @item.AverageRating ★
+                        </span>
+                        <span class="glass-text-muted small">
+                            (@item.ReviewCount)
+                        </span>
+                    </div>
+
+                    <div class="mt-auto d-flex gap-2 flex-wrap">
+
+                        @*  Add to Favorites *@
+                        <form asp-action="AddFavorite" method="post">
                             <input type="hidden" name="id" value="@item.Id" />
-                            <button class="btn btn-sm btn-primary" type="submit" @(item.IsFavorited ? "disabled" : "")>
+                            <button class="btn btn-primary-glass btn-sm"
+                                    @(item.IsFavorited ? "disabled" : "")>
                                 @(item.IsFavorited ? "Favorited" : "Add to Favorites")
                             </button>
                         </form>
 
-                        <!-- View Details -->
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary me-2">View Details</a>
+                      @*    View Details *@
+                        <a asp-action="Details"
+                           asp-route-id="@item.Id"
+                           class="btn btn-outline-glass btn-sm">
+                            View Details
+                        </a>
 
-                        <!-- Add Review Button -->
-                        <form asp-controller="Review" asp-action="Post" method="post" class="d-inline-block">
-                            <input type="hidden" name="catalogDesignId" value="@item.Id" />
-                            <input type="hidden" name="rating" value="5" />
-                            <input type="hidden" name="comment" value="Great design!" />
-                            <button type="submit" class="btn btn-sm btn-warning text-dark fw-bold">
-                                Add Review
-                            </button>
-                        </form>
+                        @*   Write Review *@
+                        <a asp-controller="Review"
+                           asp-action="Write"
+                           asp-route-id="@item.Id"
+                           class="btn btn-outline-glass btn-sm">
+                            Write Review
+                        </a>
+
+
+
                     </div>
+
                 </div>
             </div>
         </div>

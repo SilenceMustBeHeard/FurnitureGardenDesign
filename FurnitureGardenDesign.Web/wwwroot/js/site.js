@@ -20,3 +20,20 @@
         toggle.textContent = next === "dark" ? "☀️" : "🌙";
     });
 })();
+
+document.querySelectorAll(".star-rating").forEach(rating => {
+    const designId = rating.dataset.designId;
+    const input = document.getElementById(`ratingInput-${designId}`);
+    const stars = rating.querySelectorAll(".star");
+
+    stars.forEach(star => {
+        star.addEventListener("click", () => {
+            const value = star.dataset.value;
+            input.value = value;
+
+            stars.forEach(s => {
+                s.classList.toggle("active", s.dataset.value <= value);
+            });
+        });
+    });
+});
