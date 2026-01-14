@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FurnitureGardenDesign.Common\FurnitureGardenDesign.Common.csproj" />
+    <ProjectReference Include="..\FurnitureGardenDesign.Data\FurnitureGardenDesign.Data.csproj" />
+    <ProjectReference Include="..\FurnitureGardenDesign.Services.Core\FurnitureGardenDesign.Services.Core.csproj" />
+    <ProjectReference Include="..\FurnitureGardenDesign.Web.Infrastructure\FurnitureGardenDesign.Web.Infrastructure.csproj" />
+    <ProjectReference Include="..\FurnitureGardenDesign.Web.ViewModels\FurnitureGardenDesign.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>
