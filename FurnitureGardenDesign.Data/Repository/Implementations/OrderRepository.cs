@@ -12,8 +12,6 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
 {
     
 
-    namespace FurnitureGardenDesign.Data.Repository.Implementations
-    {
         public class OrderRepository
             : BaseRepository<Order, Guid>, IOrderRepository
         {
@@ -29,6 +27,6 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
             }
 
         }
-    }
+    
 
 }

@@ -10,14 +10,14 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 {
     public class CatalogService : ICatalogService
     {
-        private readonly IRepositoryAsync<CatalogDesign, Guid> _catalogRepo;
-        private readonly IRepositoryAsync<Favorite, Guid> _favoriteRepo;
-        private readonly IRepositoryAsync<Review, Guid> _reviewRepo;
+        private readonly ICatalogRepository _catalogRepo;
+        private readonly IFavoriteRepository _favoriteRepo;
+        private readonly IReviewRepository _reviewRepo;
 
         public CatalogService(
-            IRepositoryAsync<CatalogDesign, Guid> catalogRepo,
-            IRepositoryAsync<Favorite, Guid> favoriteRepo,
-            IRepositoryAsync<Review, Guid> reviewRepo)
+            ICatalogRepository catalogRepo,
+            IFavoriteRepository favoriteRepo,
+            IReviewRepository reviewRepo)
         {
             _catalogRepo = catalogRepo;
             _favoriteRepo = favoriteRepo;

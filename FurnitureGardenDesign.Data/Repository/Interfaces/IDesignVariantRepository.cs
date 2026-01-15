@@ -1,10 +1,14 @@
-﻿using System;
+﻿using FurnitureGardenDesign.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace FurnitureGardenDesign.Data.Repository.Interfaces
 {
-    internal interface IDesignVariantRepository
+    public interface IDesignVariantRepository
+         : IRepository<DesignVariant, Guid>, IRepositoryAsync<DesignVariant, Guid>
     {
+    
     }
 }
+
