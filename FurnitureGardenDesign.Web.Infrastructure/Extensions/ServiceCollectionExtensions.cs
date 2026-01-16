@@ -1,4 +1,5 @@
-﻿using FurnitureGardenDesign.Services.Core;
+﻿using FurnitureGardenDesign.Data.Repository.Implementations;
+using FurnitureGardenDesign.Services.Core;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -45,7 +46,9 @@ namespace FurnitureGardenDesign.Web.Infrastructure.Extensions
                     .FirstOrDefault(i => i.Name == $"{InterfacePreffix}{implementation.Name}");
                 if (serviceInterface == null)
                 {
-                    throw new ArgumentException(string.Format(RepoInterfaceNotFound, implementation.Name));
+                    throw new RepositoryRegistrationException(
+                   string.Format(RepoInterfaceNotFound, implementation.Name));
+
                 }
 
                 services.AddScoped(serviceInterface, implementation);
@@ -75,7 +78,9 @@ namespace FurnitureGardenDesign.Web.Infrastructure.Extensions
                     .FirstOrDefault(i => i.Name == $"{InterfacePreffix}{implementation.Name}");
                 if (repoInterface == null)
                 {
-                    throw new ArgumentException(string.Format(RepoInterfaceNotFound, implementation.Name));
+
+                    throw new RepositoryRegistrationException(
+                   string.Format(RepoInterfaceNotFound, implementation.Name));
                 }
 
                 serviceCollection.AddScoped(repoInterface, implementation);

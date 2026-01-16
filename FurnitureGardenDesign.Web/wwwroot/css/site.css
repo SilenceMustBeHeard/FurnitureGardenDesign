@@ -345,3 +345,19 @@ html[data-bs-theme="dark"] .glass-card {
         color: gold;
         transform: scale(1.1);
     }
+
+
+.glass {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+    .glass img {
+        transition: transform 0.3s ease;
+    }
+
+        .glass img:hover {
+            transform: scale(1.05) rotate(-1deg);
+        }

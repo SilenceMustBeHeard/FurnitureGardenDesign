@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Not Implemented";
+}
+
+<div class="d-flex justify-content-center align-items-center min-vh-75">
+    <div class="card glass shadow-lg text-center p-5" style="max-width: 600px;">
+        
+       @* Error image *@
+        <img src="~/images/errors/dead-robot.png" />
+
+             alt="Dead robot"
+             class="img-fluid mb-4"
+             style="max-height: 220px;" />
+
+        <h1 class="fw-bold text-warning mb-3">
+            🚧 Feature Not Implemented
+        </h1>
+
+        <p class="text-light mb-4">
+            Something is missing...<br />
+            This part of the system is still under construction.
+        </p>
+
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="btn btn-primary-glass">
+            ⬅ Back to Home
+        </a>
+    </div>
+</div>

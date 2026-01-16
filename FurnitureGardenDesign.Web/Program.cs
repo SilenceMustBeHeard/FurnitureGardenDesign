@@ -42,30 +42,9 @@ builder.Services.AddAuthorization(options =>
 
 
 
-// repositories
-
-
-//builder.Services.AddScoped<IRepositoryAsync<CatalogDesign, Guid>, CatalogRepository>();
-
-//builder.Services.AddScoped<IRepositoryAsync<Order, Guid>, OrderRepository>();
-//builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-//builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-//builder.Services.AddScoped<IRepositoryAsync<CatalogDesign, Guid>, CatalogRepository>();
-//builder.Services.AddScoped<IRepositoryAsync<Favorite, Guid>, FavoriteRepository>();
-//builder.Services.AddScoped<IRepositoryAsync<Review, Guid>, ReviewRepository>();
-//builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
-
-//builder.Services.AddScoped<IRepositoryAsync<DesignVariant, Guid>, DesignVariantRepository>();
-//builder.Services.AddScoped<IDesignVariantRepository, DesignVariantRepository>();
-
-//builder.Services.AddScoped<ICatalogService, CatalogService>();
-
 
 builder.Services.RegisterRepositories(typeof(ICategoryRepository).Assembly);
-// services
-//builder.Services.AddScoped<ICategoryService, CategoryService>();
-//builder.Services.AddScoped<ICatalogService, CatalogService>();
-//builder.Services.AddScoped<IOrderService, OrderService>();
+
 
 builder.Services.RegisterServices(typeof(ICategoryService).Assembly);
 
@@ -93,13 +72,15 @@ using (var scope = app.Services.CreateScope())
 
 
 //  Middleware 
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Error/NotImplemented");
     app.UseHsts();
 }
 
@@ -128,4 +109,4 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-app.Run();
+await app.RunAsync();
