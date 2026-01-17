@@ -3,18 +3,6 @@
 
 <div class="d-flex align-items-center gap-2">
 
-    @* Always visible buttons *@
-    <a class="btn btn-outline-glass btn-sm"
-       asp-controller="Home"
-       asp-action="About">
-        About
-    </a>
-
-    <a class="btn btn-outline-glass btn-sm"
-       asp-controller="Home"
-       asp-action="Privacy">
-        Privacy
-    </a>
     @* Role-based buttons *@
 
     @if (Model.IsAdmin)

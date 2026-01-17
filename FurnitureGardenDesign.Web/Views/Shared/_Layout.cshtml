@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Furniture &amp; Garden Design</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
@@ -11,42 +12,74 @@
     <header>
         <nav class="navbar navbar-expand-sm glass-nav navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    Furniture &amp; Garden Design
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+               @* Logo *@
+                <div class="d-flex align-items-center gap-3">
+
+                    <a class="navbar-brand logo-wrapper"
+                       asp-controller="Home"
+                       asp-action="Index">
+
+                        <svg class="fgd-logo handwritten"
+                             width="360" height="56"
+                             viewBox="0 0 360 56"
+                             xmlns="http://www.w3.org/2000/svg">
+
+                           @* Collapsed *@
+                            <text x="0" y="38"
+                                  class="logo-short">
+                                F&amp;GD
+                            </text>
+                         @* Handwritten Path *@
+                            <path class="logo-path"
+                                  d="M4 34
+                                   C18 12, 40 12, 52 34
+                                   C66 52, 90 52, 104 34
+                                   C130 6, 160 6, 186 34
+                                   C210 56, 248 56, 274 34
+                                   C300 10, 330 10, 356 30" />
+
+                           @* Full text *@  
+                            <text x="4" y="38"
+                                  class="logo-full">
+                                Furniture &amp; Garden Design
+                            </text>
+
+                        </svg>
+                    </a>
+
+
+
+
+                    <div class="d-flex align-items-center gap-2">
+                        <a class="btn btn-outline-glass btn-sm" asp-controller="Home" asp-action="About">About</a>
+                        <a class="btn btn-outline-glass btn-sm" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </div>
+                </div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 
-                    <!-- central buttons all roles -->
-                    <div class="d-flex align-items-center gap-2 mx-auto">
+                    <div class="d-flex align-items-center gap-4 mx-auto">
                         @await Component.InvokeAsync("Navbar")
                     </div>
+
                     <div class="d-flex align-items-center gap-2">
-                        <button id="themeToggle"
-                                class="btn btn-outline-glass btn-sm"
-                                title="Toggle theme">
-                            🌙
-                        </button>
+                        <button id="themeToggle" class="btn btn-outline-glass btn-sm">🌙</button>
 
                         @if (User.IsInRole("Admin"))
                         {
-                            <a asp-area="Admin"
-                               asp-controller="Category"
-                               asp-action="Index"
+                            <a asp-area="Admin" asp-controller="Category" asp-action="Index"
                                class="btn btn-outline-glass btn-sm">
-                                <i class="bi bi-pencil-square me-1"></i> Edit Categories
+                                Edit Categories
                             </a>
-
                         }
 
                         <div class="dropdown">
-                            <button class="btn btn-primary-glass dropdown-toggle"
-                                    type="button"
-                                    data-bs-toggle="dropdown">
+                            <button class="btn btn-primary-glass dropdown-toggle" data-bs-toggle="dropdown">
                                 Account
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -55,7 +88,6 @@
                         </div>
                     </div>
 
-
                 </div>
             </div>
         </nav>
@@ -63,30 +95,16 @@
 
     <div class="container">
         <main role="main" class="pb-3">
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="container mt-4">
-                    <div class="alert alert-success glass text-center shadow-sm">
-                        <i class="bi bi-check-circle me-2"></i>
-                        @TempData["SuccessMessage"]
-                    </div>
-                </div>
-            }
-
-
             @RenderBody()
         </main>
     </div>
 
     <footer class="glass-footer border-top footer text-muted text-center">
-        <div class="container">
-            &copy; 2025 - Furniture &amp; Garden Design
-        </div>
+        <div class="container">&copy; 2025 - Furniture &amp; Garden Design</div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

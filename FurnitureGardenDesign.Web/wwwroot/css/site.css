@@ -376,3 +376,83 @@ html[data-bs-theme="dark"] .glass-card {
 .table-row:nth-child(even) {
     background: rgba(255, 255, 255, 0.04);
 }
+
+
+
+
+/*Site logo*/
+
+/*  Base  */
+.logo-wrapper {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.fgd-logo {
+    overflow: visible;
+    cursor: pointer;
+}
+
+/*  Auto colors Theme  */
+:root {
+    --logo-color: #f8f9fa;
+    --logo-glow: rgba(255,255,255,.55);
+}
+
+[data-bs-theme="light"] {
+    --logo-color: #212529;
+    --logo-glow: rgba(0,0,0,.25);
+}
+
+/* Collapsed */
+.logo-short {
+    fill: var(--logo-color);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: opacity .80s ease;
+}
+
+/*  Full text  */
+.logo-full {
+    fill: var(--logo-color);
+    font-size: 26px;
+    font-family: "Pacifico", "Segoe Script", cursive;
+    opacity: 0;
+    transition: opacity .20s ease .20s;
+}
+
+/* Handwritten line */
+.logo-path {
+    fill: none;
+    stroke: var(--logo-color);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    opacity: 0;
+}
+
+/* Annimation */
+.logo-wrapper:hover .logo-short {
+    opacity: 0;
+}
+
+.logo-wrapper:hover .logo-path {
+    opacity: 1;
+    animation: write-line 1.2s ease forwards;
+}
+
+.logo-wrapper:hover .logo-full {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px var(--logo-glow));
+}
+
+/* Keyframes  */
+@keyframes write-line {
+    to {
+        stroke-dashoffset: 2;
+    }
+}
