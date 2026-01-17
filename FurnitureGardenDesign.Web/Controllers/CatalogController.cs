@@ -49,6 +49,14 @@ namespace FurnitureGardenDesign.Web.Controllers
 
             return View(model);
         }
+        [HttpGet]
+        public async Task<IActionResult> Explore()
+        {
+            IEnumerable<CatalogDesignViewModel> model =
+                await _catalogService.GetPublicCatalogAsync();
+
+            return View(model);
+        }
 
         [HttpPost]
         [Authorize]

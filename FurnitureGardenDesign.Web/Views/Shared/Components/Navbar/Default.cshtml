@@ -1,64 +1,59 @@
-﻿@using FurnitureGardenDesign.Web.ViewModels
-@model NavbarButtonsViewModel
+﻿<div class="d-flex align-items-center gap-2">
 
-<div class="d-flex align-items-center gap-2">
+    @if (Model.IsAdmin)
+    {
+        @* Admin *@
+        <a class="btn btn-warning-glass"
+           asp-area="Admin"
+           asp-controller="Category"
+           asp-action="Create">
+            Add Category
+        </a>
 
+        <a class="btn btn-outline-glass"
+           asp-controller="Orders"
+           asp-action="Manage">
+            Orders (@Model.PendingOrdersCount)
+        </a>
+    }
+    else if (Model.IsManager)
+    {
+       @* Manager *@
+        <a class="btn btn-primary-glass"
+           asp-controller="Catalog"
+           asp-action="Index">
+            Catalogue
+        </a>
 
+        <a class="btn btn-outline-glass"
+           asp-controller="Orders"
+           asp-action="Manage">
+            Orders (@Model.PendingOrdersCount)
+        </a>
+    }
+    else if (Model.IsUser)
+    {
+        @* Ordinary user *@
+        <a class="btn btn-primary-glass"
+           asp-controller="Catalog"
+           asp-action="Index">
+            Catalogue
+        </a>
 
-@if (!Model.IsLoggedIn)
-{
-    <!-- Guest -->
-    <a class="btn btn-primary-glass"
-       asp-controller="Catalog"
-       asp-action="Index">
-        Catalogue
-    </a>
-}
-else if (Model.IsUser)
-{
-    <!-- Ordinary user -->
-    <a class="btn btn-primary-glass"
-       asp-controller="CatalogDesigns"
-       asp-action="Index">
-        Catalogue
-    </a>
-
-    <a class="btn btn-outline-glass"
-       asp-controller="Orders"
-       asp-action="Create">
-        New Order
-    </a>
-}
-else if (Model.IsManager)
-{
-    <!-- Manager -->
-    <a class="btn btn-primary-glass"
-       asp-controller="CatalogDesigns"
-       asp-action="Index">
-        Catalogue
-    </a>
-
-    <a class="btn btn-outline-glass"
-       asp-controller="Orders"
-       asp-action="Manage">
-        Orders (@Model.PendingOrdersCount)
-    </a>
-}
-else if (Model.IsAdmin)
-{
-    <!-- Admin -->
-    <a class="btn btn-warning-glass"
-       asp-area="Admin"
-       asp-controller="Category"
-       asp-action="Create">
-        Add Category
-    </a>
-
-    <a class="btn btn-outline-glass"
-       asp-controller="Orders"
-       asp-action="Manage">
-        Orders (@Model.PendingOrdersCount)
-    </a>
-}
+        <a class="btn btn-outline-glass"
+           asp-controller="Orders"
+           asp-action="Create">
+            New Order
+        </a>
+    }
+    else
+    {
+        @* Guest *@
+        <a class="btn btn-primary-glass"
+           asp-controller="Catalog"
+           asp-action="Explore">
+            Catalogue
+        </a>
+    }
 
 </div>

@@ -1,6 +1,7 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -89,7 +90,34 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 .Where(r => r.CatalogDesignId == designId)
                 .Include(r => r.User)
                 .ToListAsync();
+
+
+
+
+
+
+
+        public async Task<IEnumerable<CatalogDesignViewModel>> GetPublicCatalogAsync()
         
+            => await _catalogRepo
+                .GetAllAttached()
+                .Where(d => d.IsActive)
+                .Select(d => new CatalogDesignViewModel
+                {
+                    Id = d.Id,
+                    Title = d.Title,
+                    Description = d.Description,
+                    ImageUrl = d.ImageUrl,
+                    Price = d.Price,
+                    AverageRating = d.Reviews.Any()
+                        ? d.Reviews.Average(r => r.Rating)
+                        : 0,
+                    ReviewCount = d.Reviews.Count
+                })
+                .ToListAsync();
+        
+
+
     }
 }
 
