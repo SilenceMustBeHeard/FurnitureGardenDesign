@@ -4,65 +4,94 @@
     ViewData["Title"] = "Manage Orders";
 }
 
-<h2 class="mb-4">Pending Orders</h2>
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4 glass">
+        <div class="card-header btn-outline-glass text-white rounded-top-4">
+            <h4 class="mb-0">
+                <i class="bi bi-card-list"></i> Manage Orders
+            </h4>
+        </div>
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">
-        No pending orders at the moment.
+        <div class="card-body p-4">
+
+            <h5 class="mb-4">Pending Orders</h5>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info glass text-center">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No pending orders at the moment.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-responsive-md align-middle shadow-lg">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>User</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Created On</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model)
+                            {
+                                <tr>
+                                    <td>@order.Id</td>
+                                    <td>@order.UserId</td>
+                                    <td>@order.CategoryId</td>
+                                    <td>@order.Description</td>
+                                    <td>
+                                        <span class="badge bg-warning text-dark">
+                                            @order.Status
+                                        </span>
+                                    </td>
+                                    <td>@order.CreatedOn.ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-glass btn-sm dropdown-toggle"
+                                                    type="button"
+                                                    data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                       asp-action="Details"
+                                                       asp-route-id="@order.Id">
+                                                        <i class="bi bi-eye me-2"></i> View
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                       asp-action="Approve"
+                                                       asp-route-id="@order.Id">
+                                                        <i class="bi bi-check-circle me-2"></i> Approve
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                       asp-action="Reject"
+                                                       asp-route-id="@order.Id">
+                                                        <i class="bi bi-x-circle me-2"></i> Reject
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+        </div>
     </div>
-}
-else
-{
-    <div class="table-responsive">
-        <table class="table table-hover align-middle shadow-sm">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>User</th>
-                    <th>Category</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Created On</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in Model)
-                {
-                    <tr>
-                        <td>@order.Id</td>
-                        <td>@order.UserId</td>
-                        <td>@order.CategoryId</td>
-                        <td>@order.Description</td>
-                        <td>
-                            <span class="badge bg-warning text-dark">
-                                @order.Status
-                            </span>
-                        </td>
-                        <td>@order.CreatedOn.ToString("dd.MM.yyyy HH:mm")</td>
-                        <td>
-                            <a asp-action="Details"
-                               asp-route-id="@order.Id"
-                               class="btn btn-sm btn-outline-primary">
-                                View
-                            </a>
-
-                            <a asp-action="Approve"
-                               asp-route-id="@order.Id"
-                               class="btn btn-sm btn-success ms-1">
-                                Approve
-                            </a>
-
-                            <a asp-action="Reject"
-                               asp-route-id="@order.Id"
-                               class="btn btn-sm btn-danger ms-1">
-                                Reject
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
+</div>

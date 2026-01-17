@@ -361,3 +361,18 @@ html[data-bs-theme="dark"] .glass-card {
         .glass img:hover {
             transform: scale(1.05) rotate(-1deg);
         }
+
+
+
+
+
+        /*Edit categories*/
+/* Glass table row hover */
+.table-row:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Alternating glass rows */
+.table-row:nth-child(even) {
+    background: rgba(255, 255, 255, 0.04);
+}

@@ -1,8 +1,25 @@
-﻿<div class="d-flex align-items-center gap-2">
+﻿@using FurnitureGardenDesign.Web.ViewModels
+@model NavbarButtonsViewModel
+
+<div class="d-flex align-items-center gap-2">
+
+    @* Always visible buttons *@
+    <a class="btn btn-outline-glass btn-sm"
+       asp-controller="Home"
+       asp-action="About">
+        About
+    </a>
+
+    <a class="btn btn-outline-glass btn-sm"
+       asp-controller="Home"
+       asp-action="Privacy">
+        Privacy
+    </a>
+    @* Role-based buttons *@
 
     @if (Model.IsAdmin)
     {
-        @* Admin *@
+       @* Admin *@
         <a class="btn btn-warning-glass"
            asp-area="Admin"
            asp-controller="Category"
@@ -18,7 +35,7 @@
     }
     else if (Model.IsManager)
     {
-       @* Manager *@
+      @*   Manager *@
         <a class="btn btn-primary-glass"
            asp-controller="Catalog"
            asp-action="Index">
@@ -33,7 +50,8 @@
     }
     else if (Model.IsUser)
     {
-        @* Ordinary user *@
+        
+     @* Registered User *@  
         <a class="btn btn-primary-glass"
            asp-controller="Catalog"
            asp-action="Index">
@@ -55,5 +73,4 @@
             Catalogue
         </a>
     }
-
 </div>

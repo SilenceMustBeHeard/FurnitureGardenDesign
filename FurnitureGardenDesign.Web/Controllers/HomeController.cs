@@ -20,6 +20,10 @@ namespace FurnitureGardenDesign.Web.Controllers
         [AllowAnonymous]
         public IActionResult Index() => View();
 
+        [AllowAnonymous]
+        public IActionResult About() => View();
+
+        [AllowAnonymous]
         public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
