@@ -7,54 +7,30 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
 </head>
+
 <body>
+
     <header>
-        <nav class="navbar navbar-expand-sm glass-nav navbar-dark border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm glass-nav navbar-dark border-bottom mb-3">
             <div class="container-fluid">
 
-               @* Logo *@
+              @* Left/Logo *@
                 <div class="d-flex align-items-center gap-3">
-
                     <a class="navbar-brand logo-wrapper"
                        asp-controller="Home"
                        asp-action="Index">
 
-                        <svg class="fgd-logo handwritten"
-                             width="360" height="56"
-                             viewBox="0 0 360 56"
-                             xmlns="http://www.w3.org/2000/svg">
-
-                           @* Collapsed *@
-                            <text x="0" y="38"
-                                  class="logo-short">
-                                F&amp;GD
-                            </text>
-                         @* Handwritten Path *@
-                            <path class="logo-path"
-                                  d="M4 34
-                                   C18 12, 40 12, 52 34
-                                   C66 52, 90 52, 104 34
-                                   C130 6, 160 6, 186 34
-                                   C210 56, 248 56, 274 34
-                                   C300 10, 330 10, 356 30" />
-
-                           @* Full text *@  
-                            <text x="4" y="38"
-                                  class="logo-full">
+                        <svg class="fgd-logo" width="320" height="48" viewBox="0 0 320 48">
+                            <text x="0" y="34" class="logo-text">
                                 Furniture &amp; Garden Design
                             </text>
-
                         </svg>
                     </a>
 
-
-
-
-                    <div class="d-flex align-items-center gap-2">
-                        <a class="btn btn-outline-glass btn-sm" asp-controller="Home" asp-action="About">About</a>
-                        <a class="btn btn-outline-glass btn-sm" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </div>
+                    <a class="btn btn-outline-glass btn-sm" asp-controller="Home" asp-action="About">About</a>
+                    <a class="btn btn-outline-glass btn-sm" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </div>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
@@ -63,20 +39,14 @@
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 
-                    <div class="d-flex align-items-center gap-4 mx-auto">
+                  @*  Center/Navbar *@
+                    <div class="mx-auto d-flex gap-4">
                         @await Component.InvokeAsync("Navbar")
                     </div>
 
-                    <div class="d-flex align-items-center gap-2">
+                  @* Right/Account menu *@
+                    <div class="d-flex gap-2">
                         <button id="themeToggle" class="btn btn-outline-glass btn-sm">🌙</button>
-
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <a asp-area="Admin" asp-controller="Category" asp-action="Index"
-                               class="btn btn-outline-glass btn-sm">
-                                Edit Categories
-                            </a>
-                        }
 
                         <div class="dropdown">
                             <button class="btn btn-primary-glass dropdown-toggle" data-bs-toggle="dropdown">
@@ -93,18 +63,25 @@
         </nav>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+       @* Scene *@
+    <div class="scene-wrapper">
+        <div class="scene-bg"></div>
+
+        <div class="container scene-content">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
     </div>
 
-    <footer class="glass-footer border-top footer text-muted text-center">
+    <footer class="glass-footer text-center text-muted border-top">
         <div class="container">&copy; 2025 - Furniture &amp; Garden Design</div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

@@ -1,0 +1,26 @@
+/* LIGHT */
+html[data-bs-theme="light"] .scene-bg {
+    background-image: url("/images/theme/veranda-day.jpg");
+    filter: brightness(1.05) saturate(1.1);
+}
+
+.light-path {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 70% 60%, rgba(255,240,200,.25), transparent 60%);
+    opacity: 0;
+    z-index: 1;
+}
+
+html[data-bs-theme="light"] .light-path {
+    opacity: 1;
+}
+
+/* DARK */
+html[data-bs-theme="dark"] .scene-bg {
+    background-image: url("/images/theme/livingroom-night.jpg");
+    filter: brightness(0.70) contrast(1.20);
+}
+
+
+
