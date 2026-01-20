@@ -4,6 +4,20 @@
     ViewData["Title"] = "Catalog";
 }
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
 <h2 class="text-center mb-5 text-light fw-bold">
     Catalog
 </h2>
@@ -56,7 +70,7 @@
                             </button>
                         </form>
 
-                      @*    View Details *@
+                        @*    View Details *@
                         <a asp-action="Details"
                            asp-route-id="@item.Id"
                            class="btn btn-outline-glass btn-sm">
@@ -70,8 +84,6 @@
                            class="btn btn-outline-glass btn-sm">
                             Write Review
                         </a>
-
-
 
                     </div>
 

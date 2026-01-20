@@ -19,26 +19,17 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
         public async Task AddReviewAsync(string userId, AddReviewViewModel model)
         {
-            if (model.Rating < 0 
-                || model.Rating > 5)
-
-            {
-                throw new ArgumentOutOfRangeException(nameof(model.Rating));
-            }
-
             var review = new Review
             {
-                Id = Guid.NewGuid(),
-                UserId = userId,
                 CatalogDesignId = model.CatalogDesignId,
+                UserId = userId,
                 Rating = model.Rating,
-                Comment = model.Comment,
-                CreatedOn = DateTime.UtcNow
+                Comment = model.Comment
             };
 
             await _reviewRepo.AddAsync(review);
+            await _reviewRepo.SaveChangesAsync();
         }
-
 
 
 

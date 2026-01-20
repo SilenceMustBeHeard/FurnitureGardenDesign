@@ -430,11 +430,28 @@ html[data-bs-theme="light"] .logo-wrapper:hover .logo-text {
     inset: 0;
     background-size: cover;
     background-position: center;
-    min-height: inherit;
+    min-height: inherit;    
     z-index: 0;
 }
 
 .scene-content {
     position: relative;
     z-index: 2;
+}
+
+/*Immune navbar and dropdown ( always on top)*/
+
+
+header {
+    position: relative;
+    z-index: 1000;
+}
+
+.glass-nav {
+    position: relative;
+    z-index: 1001;
+}
+
+.dropdown-menu {
+    z-index: 2000;
 }

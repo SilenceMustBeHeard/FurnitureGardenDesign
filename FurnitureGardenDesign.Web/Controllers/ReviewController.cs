@@ -23,10 +23,21 @@ public class ReviewController : BaseController
         _catalogService = catalogService;
     }
 
-    
     [HttpGet]
+    
     public async Task<IActionResult> Write(Guid id)
     {
+        var userId = GetUserId();
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+      
+        if (await _reviewService.HasUserReviewedAsync(userId, id))
+        {
+            TempData["Error"] = "You have already reviewed this design.";
+            return RedirectToAction("Index", "Catalog");
+        }
+
         var design = await _catalogService.GetByIdAsync(id);
         if (design == null)
             return NotFound();
@@ -42,22 +53,21 @@ public class ReviewController : BaseController
             ReviewCount = design.Reviews.Count
         };
 
-        return View(model); 
+        return View(model);
     }
 
-
     [HttpPost]
-    [ValidateAntiForgeryToken] 
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Post(Guid catalogDesignId, int rating, string? comment)
     {
-        var userId = GetUserId(); 
+        var userId = GetUserId();
         if (string.IsNullOrEmpty(userId))
             return Unauthorized();
 
         if (await _reviewService.HasUserReviewedAsync(userId, catalogDesignId))
         {
             TempData["Error"] = "You have already reviewed this design.";
-            return RedirectToAction(nameof(Write), new { id = catalogDesignId });
+            return RedirectToAction("Index", "Catalog");
         }
 
         var reviewModel = new AddReviewViewModel
@@ -70,6 +80,6 @@ public class ReviewController : BaseController
         await _reviewService.AddReviewAsync(userId, reviewModel);
 
         TempData["Success"] = "Review added successfully!";
-        return RedirectToAction("Details", "Catalog", new { id = catalogDesignId });
+        return RedirectToAction("Index", "Catalog");
     }
 }
