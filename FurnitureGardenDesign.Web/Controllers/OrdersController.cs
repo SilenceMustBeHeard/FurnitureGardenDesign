@@ -56,7 +56,7 @@ namespace FurnitureGardenDesign.Web.Controllers
 
             await _orderService.CreateOrderAsync(userId, model);
 
-            TempData["SuccessMessage"] = "Your order has been submitted!";
+            TempData["Success"] = "Your order has been submitted!";
 
             return RedirectToAction("Index", "Home");
 
@@ -73,8 +73,23 @@ namespace FurnitureGardenDesign.Web.Controllers
             return View(orders);
         }
 
+        [Authorize(Roles = "Admin,Manager")]
+        public async Task<IActionResult> Reject(Guid id)
+        {
+            var result = await _orderService.RejectOrderAsync(id);
 
-     
+            if (result)
+            {
+                TempData["Success"] = "Order has been rejected.";
+            }
+            else
+            {
+                TempData["Error"] = "Failed to reject order.";
+            }
+
+            return RedirectToAction("Manage");
+        }
+
 
         private async Task LoadCategoriesAsync()
         {

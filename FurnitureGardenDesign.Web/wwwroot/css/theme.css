@@ -24,3 +24,10 @@ html[data-bs-theme="dark"] .scene-bg {
 
 
 
+.table-responsive {
+    overflow: visible !important;
+}
+
+.dropdown-menu {
+    z-index: 9999 !important;
+}

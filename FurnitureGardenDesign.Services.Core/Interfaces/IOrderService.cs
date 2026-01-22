@@ -20,6 +20,7 @@ namespace FurnitureGardenDesign.Services.Core.Interfaces
 
 
         Task<DetailsOrderViewModel?> GetByIdAsync(Guid id);
+        Task<bool> RejectOrderAsync(Guid id);
 
     }
 

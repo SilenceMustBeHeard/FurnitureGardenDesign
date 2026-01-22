@@ -81,6 +81,19 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             };
         }
 
+        public async Task<bool> RejectOrderAsync(Guid id)
+        {
+            var order = await _orderRepo.GetByIdAsync(id);
+            if (order == null)
+                return false;
+
+            order.Status = OrderStatus.Rejected;
+
+            await _orderRepo.SaveChangesAsync();
+            return true;
+        }
+
+
 
     }
 }

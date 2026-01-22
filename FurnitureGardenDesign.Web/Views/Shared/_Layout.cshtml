@@ -14,6 +14,7 @@
 
     <header>
         <nav class="navbar navbar-expand-sm glass-nav navbar-dark border-bottom mb-3">
+
             <div class="container-fluid">
 
               @* Left/Logo *@
@@ -63,7 +64,24 @@
         </nav>
     </header>
 
+    <!-- TEMP DATA ALERTS (GLOBAL) -->
+    <div class="container mt-3">
+        @if (TempData["Success"] != null)
+        {
+            <div id="tempSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
 
+        @if (TempData["Error"] != null)
+        {
+            <div id="tempError" class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
 
        @* Scene *@
     <div class="scene-wrapper">
@@ -84,6 +102,16 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        setTimeout(() => {
+            const success = document.getElementById("tempSuccess");
+            const error = document.getElementById("tempError");
+
+            if (success) success.style.display = "none";
+            if (error) error.style.display = "none";
+        }, 3500); // 3.5 seconds
+    </script>
+
 
 </body>
 </html>

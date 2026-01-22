@@ -25,8 +25,8 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
                 return await _dbSet
                     .CountAsync(o => o.Status == OrderStatus.Pending);
             }
-
-        }
+       
+    }
     
 
 }
