@@ -23,10 +23,12 @@ namespace Furniture_GardenDesign.Data.Configuration
 
             // User <= Favorites
             builder
-                .HasMany(u => u.Favorites)
-                .WithOne()
-                .HasForeignKey(f => f.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+      .HasMany(u => u.Favorites)
+      .WithOne(f => f.User)   // <-- IMPORTANT
+      .HasForeignKey(f => f.UserId)
+      .OnDelete(DeleteBehavior.Restrict);
+
+
         }
     }
 }

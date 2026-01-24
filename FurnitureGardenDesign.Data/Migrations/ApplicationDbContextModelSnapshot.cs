@@ -214,15 +214,9 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserId1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CatalogDesignId");
-
-                    b.HasIndex("UserId1");
 
                     b.HasIndex("UserId", "CatalogDesignId")
                         .IsUnique();
@@ -520,16 +514,10 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", null)
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "User")
                         .WithMany("Favorites")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CatalogDesign");

@@ -2,16 +2,19 @@
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FurnitureGardenDesign.Web.Controllers
 {
     public class CatalogController : Controller
     {
         private readonly ICatalogService _catalogService;
+        private readonly IFavoriteService _favoriteService;
 
-        public CatalogController(ICatalogService catalogService)
+        public CatalogController(ICatalogService catalogService, IFavoriteService favoriteService)
         {
             _catalogService = catalogService;
+            _favoriteService = favoriteService;
         }
 
         // Index
@@ -84,8 +87,13 @@ namespace FurnitureGardenDesign.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddFavorite(Guid id)
         {
-            await _catalogService.AddToFavoritesAsync(User.Identity!.Name!, id);
-            return RedirectToAction(nameof(Index));
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            await _catalogService.AddToFavoritesAsync(userId, id);
+
+            TempData["Success"] = "Design added to favorites successfully!";
+            return RedirectToAction("Index");
+    
         }
 
         //Remove Favorite
@@ -95,7 +103,9 @@ namespace FurnitureGardenDesign.Web.Controllers
         public async Task<IActionResult> RemoveFavorite(Guid id)
         {
             await _catalogService.RemoveFromFavoritesAsync(User.Identity!.Name!, id);
-            return RedirectToAction(nameof(Index));
+
+            TempData["Success"] = "Design removed from favorites successfully!";
+            return RedirectToAction("Index");
         }
 
         // Add Review

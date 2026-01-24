@@ -12,10 +12,10 @@ using FurnitureGardenDesign.Services.Core.Interfaces;
 
 namespace FurnitureGardenDesign.Web.Controllers
 {
-   
+
+
 
     [Authorize(Roles = "Admin")]
-
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -26,6 +26,7 @@ namespace FurnitureGardenDesign.Web.Controllers
         }
 
         // GET: /Category
+        
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -34,6 +35,7 @@ namespace FurnitureGardenDesign.Web.Controllers
         }
 
         // GET: /Category/Create
+  
         [HttpGet]
        
         public IActionResult Create()
@@ -42,6 +44,7 @@ namespace FurnitureGardenDesign.Web.Controllers
         }
 
         // POST: /Category/Create
+   
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryViewModelCreate model)
@@ -51,7 +54,7 @@ namespace FurnitureGardenDesign.Web.Controllers
 
             await _categoryService.AddCategoryAsync(model);
 
-            TempData["SuccessMessage"] = "Category created successfully!";
+            TempData["Success"] = "Category created successfully!";
             return RedirectToAction("Index");
         }
 
@@ -68,7 +71,7 @@ namespace FurnitureGardenDesign.Web.Controllers
                 return NotFound();
             }
 
-            TempData["SuccessMessage"] = "Category edited!";
+            TempData["Success"] = "Category edited!";
 
             return View(model);
         }
@@ -84,22 +87,22 @@ namespace FurnitureGardenDesign.Web.Controllers
 
             await _categoryService.EditCategoryAsync(model.Id, model);
 
-            TempData["SuccessMessage"] = "Category edited successfully!";
+            TempData["Success"] = "Category edited successfully!";
             return RedirectToAction("Index");
         }
 
 
         [HttpGet]
+
         // GET: /Category/Edit (List of categories)
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditList()
         {
             var categories = await _categoryService.GetAllActiveCategoriesAsync();
-
-
-
-            return View("Edit Categories"); 
+            return View("EditList", categories);
 
         }
+
 
     }
 }

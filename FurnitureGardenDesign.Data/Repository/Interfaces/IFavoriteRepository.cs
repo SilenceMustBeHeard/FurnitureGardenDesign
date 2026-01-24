@@ -8,6 +8,8 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
     public interface IFavoriteRepository
      : IRepository<Favorite, Guid>, IRepositoryAsync<Favorite, Guid>
     {
+
+        
     }
 }
 

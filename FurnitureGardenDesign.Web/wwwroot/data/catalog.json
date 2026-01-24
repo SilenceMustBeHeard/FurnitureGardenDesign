@@ -1,19 +1,31 @@
 [
- 
+
   {
-    
+
     "title": "Gaming Desk",
-    "categoryId": "58E41341-11AE-49E5-9698-719C89E1FFC3",
+    "categoryId": "6934F5DC-3F31-4831-A828-E224CDB9CD48",
     "description": "Modern RGB gaming desk with sleek design.",
     "imageUrl": "/images/sample1.jpg",
     "price": 965.040,
     "isActive": true
   },
- 
+
+
+
+
+  {
+
+    "title": "Gothic Gaming Bed",
+    "categoryId": "F5906796-8AD7-44DC-9F8B-077EBF2AC6C7",
+    "description": "Futuristic gaming bed with unique design and RGB lights.",
+    "imageUrl": "/images/sample5.jpg",
+    "price": 259.00,
+    "isActive": true
+  },
   {
 
     "title": "Japanese Style Training Cage",
-    "categoryId": "1053B58E-E8CA-4A91-BD5E-9FB52DC502C4",
+    "categoryId": "02A07360-2A28-4003-AE42-B98F79CBDFF9",
     "description": "Outdoor fitness cage.",
     "imageUrl": "/images/sample4.jpg",
     "price": 8787.90,
@@ -21,11 +33,12 @@
   },
   {
 
-    "title": "Gothic Gaming Bed",
-    "categoryId": "3FFBB017-CCC5-43D7-A571-2FB5E4BC3F9D",
-    "description": "Futuristic gaming bed with unique design and RGB lights.",
-    "imageUrl": "/images/sample5.jpg",
-    "price": 259.00,
+    "title": "Urban Style Garden Lounge",
+    "categoryId": "9244C888-95A0-40F4-A97F-B4EC6D2B64E0",
+    "description": "Outdoor fitness cage.",
+    "imageUrl": "/images/sample2.jpg",
+    "price": 877.90,
     "isActive": true
   }
+
 ]

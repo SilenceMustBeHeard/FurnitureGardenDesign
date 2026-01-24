@@ -32,14 +32,18 @@
                             <td>@c.Name</td>
                             <td>@(c.IsActive ? "Yes" : "No")</td>
                             <td class="text-end">
-                                <a asp-area="Admin"
-                                   asp-controller="Category"
-                                   asp-action="Edit"
-                                   asp-route-id="@c.Id"
-                                   class="btn btn-sm btn-primary-glass">
-                                    Edit
-                                </a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-area="Admin"
+                                       asp-controller="Category"
+                                       asp-action="Edit"
+                                       asp-route-id="@c.Id"
+                                       class="btn btn-sm btn-primary-glass">
+                                        Edit
+                                    </a>
+                                }
                             </td>
+
                         </tr>
                     }
                 </tbody>

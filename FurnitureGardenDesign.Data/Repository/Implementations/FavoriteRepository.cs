@@ -13,5 +13,7 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
             : base(context)
         {
         }
+
+      
     }
 }

@@ -273,7 +273,6 @@ namespace FurnitureGardenDesign.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CatalogDesignId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -285,12 +284,6 @@ namespace FurnitureGardenDesign.Data.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Favorites_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Favorites_CatalogDesigns_CatalogDesignId",
                         column: x => x.CatalogDesignId,
@@ -418,11 +411,6 @@ namespace FurnitureGardenDesign.Data.Migrations
                 table: "Favorites",
                 columns: new[] { "UserId", "CatalogDesignId" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Favorites_UserId1",
-                table: "Favorites",
-                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_CategoryId",
