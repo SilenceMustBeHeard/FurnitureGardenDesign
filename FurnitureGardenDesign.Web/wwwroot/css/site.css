@@ -93,6 +93,46 @@ html[data-bs-theme="dark"] .nav-link {
         box-shadow: 0 10px 30px rgba(56,189,248,.4);
     }
 
+
+/* 
+   ONLY LOGIN / REGISTER BUTTONS
+ */
+
+.btn-auth-glass {
+    background: linear-gradient(560deg, rgba(56,189,248,.4), #0f172a) !important;
+    border: #258dc8bb !important;
+    color: #57e5c2d6 !important;
+    font-weight: 140 !important;
+    padding: .6rem 1.4rem !important;
+    border-radius: 14px !important;
+    transition: transform .6s ease, box-shadow .6s ease, background .6s ease !important;
+}
+
+html[data-bs-theme="light"] .btn-auth-glass {
+    background: rgba(255, 255, 255, 0.75) !important;
+    border: 1px solid rgba(0,0,0,0.12) !important;
+    color: #3a1f00 !important;
+}
+
+html[data-bs-theme="dark"] .btn-auth-glass {
+    background: rgba(255, 255, 255, 0.10) !important;
+    border: 1px solid rgba(120, 200, 255, 0.25) !important;
+    color: #0d18448c ;
+}
+
+.btn-auth-glass:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 30px rgba(56,189,248,.25) !important;
+}
+
+
+
+
+
+
+
+
+
 /* HERO DARK */
 html[data-bs-theme="dark"] .hero-glass {
     background: #39b2e839;
@@ -100,11 +140,11 @@ html[data-bs-theme="dark"] .hero-glass {
 
 /* CAROUSEL DARK */
 html[data-bs-theme="dark"] .glass-caption {
-    background: rgba(15,23,42,0.75);
+    background: rgb(26, 48, 100, 0.29);
     backdrop-filter: blur(10px);
     border-radius: 10px;
     padding: 1rem 1.5rem;
-    color: #8B4000;
+    color: #10195189;
 }
 
 /* GLASS EFFECT DARK */
@@ -304,7 +344,7 @@ html[data-bs-theme="dark"] .glass-card {
     object-position: center;
     border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-}
+
 
 /* Form inputs */
 .glass-input {
@@ -455,3 +495,5 @@ header {
 .dropdown-menu {
     z-index: 2000;
 }
+
+

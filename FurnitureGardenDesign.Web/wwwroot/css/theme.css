@@ -1,26 +1,61 @@
-/* LIGHT */
+/* 
+   LIGHT MODE BACKGROUND
+ */
+
 html[data-bs-theme="light"] .scene-bg {
-    background-image: url("/images/theme/veranda-day.jpg");
-    filter: brightness(1.05) saturate(1.1);
-}
-
-.light-path {
-    position: absolute;
+    position: fixed;
     inset: 0;
-    background: radial-gradient(circle at 70% 60%, rgba(255,240,200,.25), transparent 60%);
-    opacity: 0;
-    z-index: 1;
+    background-image: url("/images/theme/dayMode.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
 }
 
-html[data-bs-theme="light"] .light-path {
-    opacity: 1;
+
+
+html[data-bs-theme="light"] .light-vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient( ellipse at center,
+    transparent 45%,
+    rgba(120, 120, 120, 0.18) 100% );
+    z-index: 2;
+    pointer-events: none;
 }
 
-/* DARK */
+
+
+
+/* 
+   DARK MODE BACKGROUND
+ */
+
 html[data-bs-theme="dark"] .scene-bg {
-    background-image: url("/images/theme/livingroom-night.jpg");
-    filter: brightness(0.70) contrast(1.20);
+    position: fixed;
+    inset: 0;
+    background-image: url("/images/theme/nightMode.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
 }
+
+
+
+html[data-bs-theme="dark"] .dark-vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient( ellipse at center, 
+    transparent 35%, 
+    rgb(5, 25, 143, 0.24) 100% );
+    z-index: 2;
+    pointer-events: none;
+}
+
+
+
+
 
 
 

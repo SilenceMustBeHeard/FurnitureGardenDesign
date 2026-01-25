@@ -46,7 +46,7 @@
                     </div>
 
                   @* Right/Account menu *@
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-3">
                         <button id="themeToggle" class="btn btn-outline-glass btn-sm">🌙</button>
 
                         <div class="dropdown">
@@ -83,16 +83,29 @@
         }
     </div>
 
-       @* Scene *@
+    @* Scene *@
     <div class="scene-wrapper">
+
+        <!-- Base image -->
         <div class="scene-bg"></div>
 
+        <!-- Light mode layers -->
+        <div class="light-path"></div>
+        <div class="light-vignette"></div>
+
+        <!-- Dark mode layers -->
+        <div class="dark-path"></div>
+        <div class="dark-vignette"></div>
+
+        <!-- Actual page content -->
         <div class="container scene-content">
             <main role="main" class="pb-3">
                 @RenderBody()
             </main>
         </div>
+
     </div>
+
 
     <footer class="glass-footer text-center text-muted border-top">
         <div class="container">&copy; 2025 - Furniture &amp; Garden Design</div>

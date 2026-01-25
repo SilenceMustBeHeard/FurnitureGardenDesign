@@ -1,17 +1,19 @@
 ﻿@model FurnitureGardenDesign.Web.ViewModels.Category.CategoryViewModelCreate
+
 @{
     ViewData["Title"] = "Add New Category";
 }
 
 <div class="container my-5">
     <div class="row justify-content-center">
-        <div class="col-xl-5 col-lg-6 col-md-8 col-12">
-            <div class="glass p-4 p-md-5 rounded-4 shadow-lg">
+        <div class="col-xl-6 col-lg-6 col-md-8 col-12">
+
+            <div class="glass p-4 p-md-5 rounded-7 shadow-lg">
 
                 <h2 class="text-center mb-4 hero-title">
                     <i class="bi bi-tags me-2"></i> Add New Category
                 </h2>
-             
+
                 <form asp-controller="Category" asp-action="Create" method="post">
                     @Html.AntiForgeryToken()
 
