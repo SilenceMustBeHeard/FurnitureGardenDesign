@@ -80,33 +80,25 @@ namespace FurnitureGardenDesign.Web.Controllers
 
             return View(model);
         }
-
-        //Add Favorite
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddFavorite(Guid id)
+        public async Task<IActionResult> ToggleFavorite(Guid id)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid Action.";
+                return RedirectToAction(nameof(Index));
+            }
+
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            await _catalogService.AddToFavoritesAsync(userId, id);
+            await _favoriteService.ToggleFavoriteAsync(userId, id);
 
-            TempData["Success"] = "Design added to favorites successfully!";
-            return RedirectToAction("Index");
-    
+            return RedirectToAction(nameof(Index));
         }
 
-        //Remove Favorite
-        [HttpPost]
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveFavorite(Guid id)
-        {
-            await _catalogService.RemoveFromFavoritesAsync(User.Identity!.Name!, id);
 
-            TempData["Success"] = "Design removed from favorites successfully!";
-            return RedirectToAction("Index");
-        }
 
         // Add Review
         [HttpPost]

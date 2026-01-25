@@ -9,7 +9,9 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
      : IRepository<Favorite, Guid>, IRepositoryAsync<Favorite, Guid>
     {
 
-        
+        Task<Favorite?> GetByCompositeKeyAsync(string userId, Guid designId);
+
+        Task<bool> ExistsAsync(string userId, Guid designId);
     }
 }
 

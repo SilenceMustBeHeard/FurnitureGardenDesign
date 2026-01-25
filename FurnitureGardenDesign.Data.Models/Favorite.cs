@@ -14,5 +14,8 @@ namespace FurnitureGardenDesign.Data.Models
 
    
         public virtual CatalogDesign CatalogDesign { get; set; } = null!;
+
+        public bool IsDeleted { get; set; } = false;
+
     }
 }

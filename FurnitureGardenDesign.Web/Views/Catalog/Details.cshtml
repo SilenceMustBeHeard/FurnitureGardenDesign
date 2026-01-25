@@ -32,11 +32,19 @@
 
             <div class="d-flex gap-2 flex-wrap">
 
-           @* Add to Favorites *@
-                <form asp-controller="Catalog" asp-action="AddFavorite" method="post">
+                @* Favorite toggle *@
+                <form asp-controller="Catalog"
+                      asp-action="ToggleFavorite"
+                      method="post"
+                      class="favorite-form">
+
                     <input type="hidden" name="id" value="@Model.Id" />
-                    <button class="btn btn-primary-glass" @(Model.IsFavorited ? "disabled" : "")>
-                        @(Model.IsFavorited ? "Favorited" : "Add to Favorites")
+
+                    <button type="submit"
+                            class="btn btn-glass-icon @(Model.IsFavorited ? "active" : "")"
+                            title="@(Model.IsFavorited ? "Remove from favorites" : "Add to favorites")">
+
+                        <i class="bi @(Model.IsFavorited ? "bi-heart-fill" : "bi-heart")"></i>
                     </button>
                 </form>
 

@@ -12,6 +12,9 @@ namespace FurnitureGardenDesign.Data.Configurations
 
             builder.HasIndex(f => new { f.UserId, f.CatalogDesignId })
                    .IsUnique();
+
+            builder.Property(f => f.IsDeleted)
+             .HasDefaultValue(false);
         }
     }
 }

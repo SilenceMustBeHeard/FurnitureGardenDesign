@@ -50,13 +50,23 @@
                     <div class="mt-auto d-flex gap-2 flex-wrap">
 
                         @*  Add to Favorites *@
-                        <form asp-action="AddFavorite" method="post">
+                        <form asp-controller="Catalog"
+                              asp-action="ToggleFavorite"
+                              method="post"
+                              class="favorite-form">
+
+                            @Html.AntiForgeryToken()
+
                             <input type="hidden" name="id" value="@item.Id" />
-                            <button class="btn btn-primary-glass btn-sm"
-                                    @(item.IsFavorited ? "disabled" : "")>
-                                @(item.IsFavorited ? "Favorited" : "Add to Favorites")
+
+                            <button type="submit"
+                                    class="btn btn-glass-icon btn-sm @(item.IsFavorited ? "active" : "")"
+                                    title="@(item.IsFavorited ? "Remove from favorites" : "Add to favorites")">
+
+                                <i class="bi @(item.IsFavorited ? "bi-heart-fill" : "bi-heart")"></i>
                             </button>
                         </form>
+
 
                         @*    View Details *@
                         <a asp-action="Details"

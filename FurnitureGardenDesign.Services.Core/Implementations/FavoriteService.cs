@@ -16,36 +16,38 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         {
             _favoriteRepository = favoriteRepository;
         }
-        public async Task AddToFavoritesAsync(string userId, Guid catalogDesignId)
+        public async Task ToggleFavoriteAsync(string userId, Guid designId)
         {
-            bool exists = await _favoriteRepository
-                .FirstOrDefaultAsync(f => f.UserId == userId
-                && f.CatalogDesignId == catalogDesignId) != null;
+            var favorite = await _favoriteRepository.GetByCompositeKeyAsync(userId, designId);
 
-
-
-            if (exists)
+            if (favorite == null)
             {
-                return;
+                favorite = new Favorite
+                {
+                    UserId = userId,
+                    CatalogDesignId = designId,
+                    IsDeleted = false
+                };
+
+                await _favoriteRepository.AddAsync(favorite);
+            }
+            else
+            {
+                favorite.IsDeleted = !favorite.IsDeleted;
             }
 
-            await _favoriteRepository.AddAsync(new Favorite
-            {
-                UserId = userId,
-                CatalogDesignId = catalogDesignId
-            });
-
-      
+            await _favoriteRepository.SaveChangesAsync();
         }
 
-        public IEnumerable<Favorite> GetFavoritesByUserId(string userId)
+
+
+        public async Task<bool> IsFavoriteAsync(string userId, Guid designId)
         {
-            throw new NotImplementedException();
+            return await _favoriteRepository.ExistsAsync(userId, designId);
         }
 
-        public Task RemoveFromFavoritesAsync(string userId, Guid catalogDesignId)
-        {
-            throw new NotImplementedException();
-        }
+
+
+
     }
 }
