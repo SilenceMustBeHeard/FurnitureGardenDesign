@@ -37,3 +37,4 @@ document.querySelectorAll(".star-rating").forEach(rating => {
         });
     });
 });
+

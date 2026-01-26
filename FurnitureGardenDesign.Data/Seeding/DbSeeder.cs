@@ -6,9 +6,64 @@ namespace FurnitureGardenDesign.Data.Seeding
 {
     public static class DbSeeder
     {
+        public static async Task SeedAsync(ApplicationDbContext context)
+        {
+            await SeedCategoriesAsync(context);
+            await SeedCatalogAsync(context);
+        }
 
+        public static async Task SeedCategoriesAsync(ApplicationDbContext context)
+        {
+            if (await context.Categories.AnyAsync())
+            {
+                return;
+            }
 
-        
+            var jsonPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                "data",
+                "categories.json"
+            );
+
+            if (!File.Exists(jsonPath))
+            {
+                throw new Exception($"categories.json NOT FOUND at: {jsonPath}");
+            }
+
+            var json = await File.ReadAllTextAsync(jsonPath);
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var categories = JsonSerializer.Deserialize<List<Category>>(json, options)
+                ?? throw new Exception("categories.json is empty or invalid");
+
+            foreach (var category in categories)
+            {
+                if (string.IsNullOrWhiteSpace(category.Name))
+                {
+                    throw new Exception("Category Name is NULL or EMPTY");
+                }
+
+                if (string.IsNullOrWhiteSpace(category.Description))
+                {
+                    throw new Exception($"Category Description is NULL for: {category.Name}");
+                }
+
+                if (category.Id == Guid.Empty)
+                {
+                    throw new Exception($"Category Id is EMPTY for: {category.Name}");
+                }
+
+                category.IsActive = true;
+            }
+
+            await context.Categories.AddRangeAsync(categories);
+            await context.SaveChangesAsync();
+        }
 
         public static async Task SeedCatalogAsync(ApplicationDbContext context)
         {
@@ -61,16 +116,21 @@ namespace FurnitureGardenDesign.Data.Seeding
                     throw new Exception($"CatalogDesign CategoryId is EMPTY for: {design.Title}");
                 }
 
+         
+                if (!await context.Categories.AnyAsync(c => c.Id == design.CategoryId))
+                {
+                    throw new Exception($"CategoryId {design.CategoryId} for {design.Title} does not exist.");
+                }
+
                 if (design.Price <= 0)
                 {
                     throw new Exception($"CatalogDesign Price is INVALID for: {design.Title}");
                 }
 
-
                 design.IsActive = true;
             }
 
-            context.CatalogDesigns.AddRange(designs);
+            await context.CatalogDesigns.AddRangeAsync(designs);
             await context.SaveChangesAsync();
         }
     }

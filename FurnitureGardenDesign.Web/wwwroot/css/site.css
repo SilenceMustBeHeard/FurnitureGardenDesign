@@ -497,43 +497,7 @@ header {
 }
 
 
-/* ===============================
-   GLASS ICON BUTTON (F&GD)
-================================ */
 
-.btn-glass-icon {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    color: #bbb;
-    transition: all 0.25s ease;
-}
 
-    .btn-glass-icon i {
-        font-size: 1.25rem;
-    }
 
-    /* Hover */
-    .btn-glass-icon:hover {
-        background: rgba(255, 255, 255, 0.15);
-        color: #fff;
-        transform: scale(1.05);
-    }
 
-    /* ACTIVE (Favorited) */
-    .btn-glass-icon.active {
-        background: rgba(220, 53, 69, 0.2);
-        border-color: rgba(220, 53, 69, 0.5);
-        color: #dc3545;
-    }
-
-        .btn-glass-icon.active:hover {
-            background: rgba(220, 53, 69, 0.3);
-        }

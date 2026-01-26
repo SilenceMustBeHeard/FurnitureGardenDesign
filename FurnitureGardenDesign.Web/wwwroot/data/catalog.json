@@ -3,7 +3,7 @@
   {
 
     "title": "Gaming Desk",
-    "categoryId": "6934F5DC-3F31-4831-A828-E224CDB9CD48",
+    "categoryId": "33333333-3333-3333-3333-333333333333",
     "description": "Modern RGB gaming desk with sleek design.",
     "imageUrl": "/images/sample1.jpg",
     "price": 965.040,
@@ -16,7 +16,7 @@
   {
 
     "title": "Gothic Gaming Bed",
-    "categoryId": "F5906796-8AD7-44DC-9F8B-077EBF2AC6C7",
+    "categoryId": "44444444-4444-4444-4444-444444444444",
     "description": "Futuristic gaming bed with unique design and RGB lights.",
     "imageUrl": "/images/sample5.jpg",
     "price": 259.00,
@@ -25,7 +25,7 @@
   {
 
     "title": "Japanese Style Training Cage",
-    "categoryId": "02A07360-2A28-4003-AE42-B98F79CBDFF9",
+    "categoryId": "11111111-1111-1111-1111-111111111111",
     "description": "Outdoor fitness cage.",
     "imageUrl": "/images/sample4.jpg",
     "price": 8787.90,
@@ -34,8 +34,8 @@
   {
 
     "title": "Urban Style Garden Lounge",
-    "categoryId": "9244C888-95A0-40F4-A97F-B4EC6D2B64E0",
-    "description": "Outdoor fitness cage.",
+    "categoryId": "22222222-2222-2222-2222-222222222222",
+    "description": "Simple garden set.",
     "imageUrl": "/images/sample2.jpg",
     "price": 877.90,
     "isActive": true

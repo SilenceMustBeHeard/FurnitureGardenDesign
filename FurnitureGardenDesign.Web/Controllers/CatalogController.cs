@@ -24,6 +24,8 @@ namespace FurnitureGardenDesign.Web.Controllers
         {
             var designs = await _catalogService.GetAllActiveAsync();
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (!User.Identity!.IsAuthenticated)
             {
                 designs = designs.Take(3).ToList();
@@ -42,8 +44,8 @@ namespace FurnitureGardenDesign.Web.Controllers
                 ImageUrl = d.ImageUrl,
                 Price = d.Price,
                 CategoryName = d.Category.Name,
-                IsFavorited = User.Identity.IsAuthenticated &&
-                              d.Favorites.Any(f => f.UserId == User.Identity!.Name),
+                IsFavorited = userId != null &&
+                              d.Favorites.Any(f => f.UserId == userId && !f.IsDeleted),
                 AverageRating = d.Reviews.Any()
                     ? d.Reviews.Average(r => r.Rating)
                     : 0,
@@ -53,7 +55,7 @@ namespace FurnitureGardenDesign.Web.Controllers
             return View(model);
         }
 
-       // Details
+        // Details
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Details(Guid id)
@@ -61,6 +63,8 @@ namespace FurnitureGardenDesign.Web.Controllers
             var design = await _catalogService.GetByIdAsync(id);
             if (design == null)
                 return NotFound();
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var model = new CatalogDesignViewModel
             {
@@ -70,8 +74,8 @@ namespace FurnitureGardenDesign.Web.Controllers
                 ImageUrl = design.ImageUrl,
                 Price = design.Price,
                 CategoryName = design.Category.Name,
-                IsFavorited = User.Identity.IsAuthenticated &&
-                              design.Favorites.Any(f => f.UserId == User.Identity!.Name),
+                IsFavorited = userId != null &&
+                              design.Favorites.Any(f => f.UserId == userId && !f.IsDeleted),
                 AverageRating = design.Reviews.Any()
                     ? design.Reviews.Average(r => r.Rating)
                     : 0,
@@ -80,6 +84,8 @@ namespace FurnitureGardenDesign.Web.Controllers
 
             return View(model);
         }
+
+        // Toggle Favorite(like/unlike)
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -93,7 +99,16 @@ namespace FurnitureGardenDesign.Web.Controllers
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            await _favoriteService.ToggleFavoriteAsync(userId, id);
+            bool isNowFavorited = await _favoriteService.ToggleFavoriteAsync(userId, id);
+
+            if (isNowFavorited)
+            {
+                TempData["Success"] = "You added this design to favorites!";
+            }
+            else
+            {
+                TempData["Success"] = "You removed this design from favorites.";
+            }
 
             return RedirectToAction(nameof(Index));
         }
@@ -116,7 +131,6 @@ namespace FurnitureGardenDesign.Web.Controllers
                 comment
             );
 
-           
             return RedirectToAction(nameof(Index));
         }
     }

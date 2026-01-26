@@ -15,6 +15,8 @@ namespace FurnitureGardenDesign.Data.Configurations
 
             builder.Property(f => f.IsDeleted)
              .HasDefaultValue(false);
+
+            builder.HasQueryFilter(f => !f.IsDeleted);
         }
     }
 }

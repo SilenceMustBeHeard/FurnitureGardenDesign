@@ -67,7 +67,7 @@ using (var scope = app.Services.CreateScope())
     await IdentitySeeder.SeedManagerAsync(userManager);
 
     
-    await DbSeeder.SeedCatalogAsync(context);
+    await DbSeeder.SeedAsync(context);
 }
 
 

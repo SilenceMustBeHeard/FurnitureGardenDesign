@@ -15,5 +15,7 @@ namespace FurnitureGardenDesign.Web.ViewModels.Catalog
         public bool IsFavorited { get; set; }
         public double AverageRating { get; set; }
         public int ReviewCount { get; set; }
+
+      
     }
 }

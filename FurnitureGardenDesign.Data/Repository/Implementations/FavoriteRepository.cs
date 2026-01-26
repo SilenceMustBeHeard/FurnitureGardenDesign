@@ -7,7 +7,7 @@ using System.Text;
 
 namespace FurnitureGardenDesign.Data.Repository.Implementations
 {
-    public class FavoriteRepository:
+    public class FavoriteRepository :
           BaseRepository<Favorite, Guid>, IFavoriteRepository
     {
         public FavoriteRepository(ApplicationDbContext context)
@@ -16,25 +16,21 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
         }
 
         public async Task<Favorite?> GetByCompositeKeyAsync(string userId, Guid designId)
-        {
-            return await _context.Favorites
+        
+            
+            => await _dbSet
+                .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(f =>
                     f.UserId == userId &&
-                    f.CatalogDesignId == designId &&
-                    !f.IsDeleted);
-        }
-
+                   f.CatalogDesignId == designId);
+        
 
 
         public async Task<bool> ExistsAsync(string userId, Guid designId)
-        {
-            return await _context.Favorites
+            => await _dbSet
                 .AnyAsync(f =>
                     f.UserId == userId &&
                     f.CatalogDesignId == designId &&
                     !f.IsDeleted);
-        }
-
-
     }
 }
