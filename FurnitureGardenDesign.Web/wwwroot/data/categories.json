@@ -28,7 +28,16 @@
     "name": "Outdoor Structures",
     "description": "Durable and stylish outdoor structures.",
     "isActive": true
+  },
+
+  {
+    "id": "66666666-6666-6666-6666-666666666666",
+    "name": "For Guests",
+    "description": "Comfortable and elegant massive table and benches for your guests.",
+    "isActive": true
   }
+
+
 
 
 

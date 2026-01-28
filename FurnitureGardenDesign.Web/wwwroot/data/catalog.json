@@ -39,6 +39,17 @@
     "imageUrl": "/images/sample2.jpg",
     "price": 877.90,
     "isActive": true
+  },
+
+
+  {
+
+    "title": "Massive Table for Guests",
+    "categoryId": "66666666-6666-6666-6666-666666666666",
+    "description": "Comfortable and elegant massive table and benches for your guests.",
+    "imageUrl": "/images/sample6.jpg",
+    "price": 2877.90,
+    "isActive": true
   }
 
 ]

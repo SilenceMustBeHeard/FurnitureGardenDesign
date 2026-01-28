@@ -65,26 +65,29 @@
                 </div>
             </div>
         </nav>
+
+
+  @*    Temp Data alerts *@
+        <div class="container mt-3">
+            @if (TempData["Success"] != null)
+            {
+                <div id="tempSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div id="tempError" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+        </div>
     </header>
 
-    <!-- TEMP DATA ALERTS (GLOBAL) -->
-    <div class="container mt-3">
-        @if (TempData["Success"] != null)
-        {
-            <div id="tempSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
-                @TempData["Success"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
 
-        @if (TempData["Error"] != null)
-        {
-            <div id="tempError" class="alert alert-danger alert-dismissible fade show" role="alert">
-                @TempData["Error"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
-    </div>
 
     @* Scene *@
     <div class="scene-wrapper">

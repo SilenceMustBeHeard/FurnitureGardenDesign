@@ -1,5 +1,17 @@
 ﻿@model IEnumerable<FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogDesignViewModel>
 
+@{
+    ViewData["Title"] = "Catalog";
+    var currentPage = (int)ViewData["CurrentPage"];
+    var pageSize = (int)ViewData["PageSize"];
+    var totalItems = (int)ViewData["TotalItems"];
+    var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+}
+
+<h2 class="text-center mb-4 text-light fw-bold">Catalog</h2>
+
+
+
 <div class="row g-4">
     @foreach (var item in Model)
     {
@@ -23,19 +35,20 @@
                     </div>
 
                     <div class="mt-auto d-flex gap-2 flex-wrap">
+
+                        @* Toggle Favorite *@
                         <form asp-controller="Catalog"
                               asp-action="ToggleFavorite"
                               method="post"
                               class="favorite-form">
 
                             @Html.AntiForgeryToken()
-
                             <input type="hidden" name="id" value="@item.Id" />
+                            <input type="hidden" name="returnUrl" value="@($"{ViewContext.HttpContext.Request.Path}{ViewContext.HttpContext.Request.QueryString}")" />
 
                             <button type="submit"
-                                    class="btn btn-glass-icon btn-sm @(item.IsFavorited ? "active" : "")"
+                                    class="btn btn-glass-icon btn-sm @(item.IsFavorited ? "active text-danger" : "")"
                                     title="@(item.IsFavorited ? "Remove from favorites" : "Add to favorites")">
-
                                 <i class="bi @(item.IsFavorited ? "bi-heart-fill" : "bi-heart")"></i>
                             </button>
                         </form>
@@ -53,3 +66,27 @@
         </div>
     }
 </div>
+
+@* Show more/ Pagination *@
+@if (currentPage < totalPages)
+{
+    <div class="text-center mt-4">
+        <a class="btn btn-outline-glass"
+           asp-action="Index"
+           asp-route-page="@(currentPage + 1)"
+           asp-route-pageSize="@pageSize">
+            Show more
+        </a>
+    </div>
+}
+
+
+@section Scripts {
+    <script>
+       
+        setTimeout(() => {
+            const alerts = document.querySelectorAll(".alert");
+            alerts.forEach(a => a.style.display = "none");
+        }, 3500);
+    </script>
+}

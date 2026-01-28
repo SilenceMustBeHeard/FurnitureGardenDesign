@@ -20,23 +20,31 @@ namespace FurnitureGardenDesign.Web.Controllers
         // Index
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 9)
         {
-            var designs = await _catalogService.GetAllActiveAsync();
-
+            var allDesigns = await _catalogService.GetAllActiveAsync();
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (!User.Identity!.IsAuthenticated)
+            // Total items before pagination
+            var totalItems = allDesigns.Count();
+
+            // Pagination
+            var pagedDesigns = allDesigns
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Restriction for guests - the first 3
+            if (!User.Identity!.IsAuthenticated && page == 1)
             {
-                designs = designs.Take(3).ToList();
-                ViewData["IsGuest"] = true;
-            }
-            else
-            {
-                ViewData["IsGuest"] = false;
+                pagedDesigns = pagedDesigns.Take(3).ToList();
             }
 
-            var model = designs.Select(d => new CatalogDesignViewModel
+            ViewData["CurrentPage"] = page;
+            ViewData["PageSize"] = pageSize;
+            ViewData["TotalItems"] = totalItems;
+
+            var model = pagedDesigns.Select(d => new CatalogDesignViewModel
             {
                 Id = d.Id,
                 Title = d.Title,
@@ -85,32 +93,29 @@ namespace FurnitureGardenDesign.Web.Controllers
             return View(model);
         }
 
-        // Toggle Favorite(like/unlike)
+
+        // Toggle Favorite
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ToggleFavorite(Guid id)
+        public async Task<IActionResult> ToggleFavorite(Guid id, string? returnUrl)
         {
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Invalid Action.";
-                return RedirectToAction(nameof(Index));
+                return Redirect(returnUrl ?? Url.Action("Index"));
             }
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
             bool isNowFavorited = await _favoriteService.ToggleFavoriteAsync(userId, id);
 
-            if (isNowFavorited)
-            {
-                TempData["Success"] = "You added this design to favorites!";
-            }
-            else
-            {
-                TempData["Success"] = "You removed this design from favorites.";
-            }
+            TempData["Success"] = isNowFavorited
+                ? "You added this design to favorites!"
+                : "You removed this design from favorites.";
 
-            return RedirectToAction(nameof(Index));
+            // if returnUrl is null, redirect to Index
+            return Redirect(returnUrl ?? Url.Action("Index"));
         }
 
 
@@ -130,7 +135,7 @@ namespace FurnitureGardenDesign.Web.Controllers
                 rating,
                 comment
             );
-
+            TempData["Success"] = "You added a review!";
             return RedirectToAction(nameof(Index));
         }
     }
