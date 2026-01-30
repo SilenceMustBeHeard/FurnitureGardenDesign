@@ -53,7 +53,7 @@ namespace FurnitureGardenDesign.Web.Controllers
                 Price = d.Price,
                 CategoryName = d.Category.Name,
                 IsFavorited = userId != null &&
-                              d.Favorites.Any(f => f.UserId == userId && !f.IsDeleted),
+                d.Favorites.Any(f => f.UserId == userId && !f.IsDeleted),
                 AverageRating = d.Reviews.Any()
                     ? d.Reviews.Average(r => r.Rating)
                     : 0,

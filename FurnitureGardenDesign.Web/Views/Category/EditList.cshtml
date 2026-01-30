@@ -4,51 +4,67 @@
     ViewData["Title"] = "Edit Categories";
 }
 
-<div class="container-fluid">
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-9 col-md-11 col-12">
 
-    <h2 class="fw-bold text-warning mb-4">Edit Categories</h2>
+            <div class="glass p-4 p-md-5 rounded-7 shadow-lg">
 
-    @if (!Model.Any())
-    {
-        <div class="glass-card p-4 text-center text-muted">
-            No categories loaded yet.
-        </div>
-    }
-    else
-    {
-        <div class="glass-card p-4">
-            <table class="table table-hover text-light">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Active</th>
-                        <th class="text-end">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var c in Model)
-                    {
-                        <tr>
-                            <td>@c.Name</td>
-                            <td>@(c.IsActive ? "Yes" : "No")</td>
-                            <td class="text-end">
-                                @if (User.IsInRole("Admin"))
+                <h2 class="text-center mb-4 hero-title">
+                    <i class="bi  me-2"></i> Edit Categories
+                </h2>
+
+                @if (!Model.Any())
+                {
+                    <div class="glass-card p-4 text-center text-muted">
+                        No categories loaded yet.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle glass-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Active</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var c in Model)
                                 {
-                                    <a asp-area="Admin"
-                                       asp-controller="Category"
-                                       asp-action="Edit"
-                                       asp-route-id="@c.Id"
-                                       class="btn btn-sm btn-primary-glass">
-                                        Edit
-                                    </a>
+                                    <tr>
+                                        <td>@c.Name</td>
+                                        <td>
+                                            <span class="badge @(c.IsActive ? "bg-success-glass" : "bg-danger-glass")">
+                                                @(c.IsActive ? "Yes" : "No")
+                                            </span>
+                                        </td>
+                                        <td class="text-end">
+                                            <a asp-area="Admin"
+                                               asp-controller="Category"
+                                               asp-action="Edit"
+                                               asp-route-id="@c.Id"
+                                               class="btn btn-sm btn-primary-glass">
+                                                Edit
+                                            </a>
+                                        </td>
+                                    </tr>
                                 }
-                            </td>
+                            </tbody>
+                        </table>
+                    </div>
+                }
 
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                <div class="mt-4">
+                    <a asp-action="Create" class="btn btn-outline-glass">
+                        + Add Category
+                    </a>
+                </div>
+
+            </div>
+
         </div>
-    }
-
+    </div>
 </div>

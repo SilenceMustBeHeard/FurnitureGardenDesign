@@ -33,6 +33,8 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
           .Include(c => c.Category)
           .Include(c => c.Materials)
           .Include(c => c.Reviews)
+          .Include(c => c.Favorites)
+
           .ToListAsync();
 
 
