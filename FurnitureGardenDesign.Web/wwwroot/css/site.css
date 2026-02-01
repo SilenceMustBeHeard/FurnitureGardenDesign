@@ -497,6 +497,20 @@ header {
 }
 
 
+/*Glass table for reviews*/
+
+
+.glass-table {
+    background: transparent;
+}
+
+.glass-row {
+    backdrop-filter: blur(10px);
+}
+
+.glass-collapse-row td {
+    background: transparent !important;
+}
 
 
 

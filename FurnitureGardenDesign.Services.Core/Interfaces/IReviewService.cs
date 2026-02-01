@@ -1,4 +1,5 @@
-﻿using FurnitureGardenDesign.Web.ViewModels;
+﻿using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Web.ViewModels;
 using FurnitureGardenDesign.Web.ViewModels.Review;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,6 @@ namespace FurnitureGardenDesign.Services.Core.Interfaces
         Task<bool> HasUserReviewedAsync(string userId, Guid catalogDesignId);
 
 
-
+        Task<IEnumerable<AddReviewViewModel>> GetReviewsByDesignIdAsync(Guid catalogDesignId);
     }
 }

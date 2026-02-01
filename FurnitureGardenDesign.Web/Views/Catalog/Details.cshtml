@@ -31,21 +31,40 @@
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="id" value="@Model.Id" />
                 <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-
+                  @* Toggle Favorite *@
+                        @if (User.Identity.IsAuthenticated)
+                        {
                 <button type="submit"
                         class="btn @(Model.IsFavorited ? "btn-danger" : "btn-outline-danger")">
                     @(Model.IsFavorited ? "❤️ Remove from favorites" : "🤍 Add to favorites")
                 </button>
 
+                    <a asp-controller="Review" asp-action="Write" asp-route-id="@Model.Id" class="btn btn-outline-glass">
+                        Write Review
+                    </a>
+
+                    <a asp-controller="Review" asp-action="Reviews" asp-route-id="@Model.Id" class="btn btn-outline-glass">
+                        View Reviews
+                    </a>
+
+
+
+
+
+
+
+
+
+
+
+                        }
 
             </form>
 
 
                 <a asp-action="Index" class="btn btn-outline-glass">Back to Catalog</a>
 
-                <a asp-controller="Review" asp-action="Write" asp-route-id="@Model.Id" class="btn btn-outline-glass">
-                    Write Review
-                </a>
+               
             </div>
         </div>
     </div>

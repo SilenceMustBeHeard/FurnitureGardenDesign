@@ -12,8 +12,8 @@ namespace FurnitureGardenDesign.Web.ViewModels.Review
 
         public Guid CatalogDesignId { get; set; }
 
-      
 
+        public string CatalogDesignTitle { get; set; } = null!;
 
         [Range(0, 5)]
         public int Rating { get; set; }

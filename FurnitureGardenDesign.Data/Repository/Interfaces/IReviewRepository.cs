@@ -10,5 +10,11 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
     {
     
       Task<bool> HasUserReviewedAsync(string userId, Guid catalogDesignId);
+
+
+
+
+
+        Task<IEnumerable<Review>> GetReviewsByDesignIdAsync(Guid catalogDesignId);
     }
 }

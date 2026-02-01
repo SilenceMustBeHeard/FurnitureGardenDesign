@@ -1,10 +1,11 @@
-﻿using Furniture_GardenDesign.Data.Enums;
-using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Data.Repository.Implementations;
+﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Review;
-using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Services.Core.Implementations
 {
@@ -31,17 +32,23 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             await _reviewRepo.SaveChangesAsync();
         }
 
-
-
-
-
-
         public async Task<bool> HasUserReviewedAsync(string userId, Guid catalogDesignId)
         {
             return await _reviewRepo.HasUserReviewedAsync(userId, catalogDesignId);
         }
 
+        public async Task<IEnumerable<AddReviewViewModel>> GetReviewsByDesignIdAsync(Guid catalogDesignId)
+        {
+            var reviews = await _reviewRepo.GetReviewsByDesignIdAsync(catalogDesignId);
+
+            return reviews.Select(r => new AddReviewViewModel
+            {
+                CatalogDesignId = r.CatalogDesignId,
+                CatalogDesignTitle = r.CatalogDesign.Title,
+                Rating = r.Rating,
+                Comment = r.Comment
+            }).ToList(); 
+        }
 
     }
-
 }

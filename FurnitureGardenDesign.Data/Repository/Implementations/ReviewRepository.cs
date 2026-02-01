@@ -19,6 +19,17 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
             return await _dbSet
                 .AnyAsync(r => r.UserId == userId && r.CatalogDesignId == catalogDesignId);
         }
+
+
+
+        public async Task<IEnumerable<Review>> GetReviewsByDesignIdAsync(Guid catalogDesignId)
+        {
+            
+            return await _dbSet
+                .Include(r => r.CatalogDesign)
+                .Where(r => r.CatalogDesignId == catalogDesignId)
+                .ToListAsync();
+        }
     }
 }
 
