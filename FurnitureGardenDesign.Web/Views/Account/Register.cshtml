@@ -1,4 +1,4 @@
-﻿@model CinemaApp.Web.ViewModels.Account.RegisterViewModel
+﻿@model FurnitureGardenDesign.Web.ViewModels.Account.RegisterViewModel
 @{
     ViewData["Title"] = "Register";
 }
@@ -7,9 +7,9 @@
     <div class="auth-card glass-card">
 
         <h2 class="auth-title">Create account</h2>
-        <p class="auth-subtitle">Join Furniture & Garden Design</p>
+        <p class="auth-subtitle">Join Furniture &amp; Garden Design</p>
 
-        <form asp-action="Register" method="post">
+        <form asp-action="Register" method="post" novalidate>
             @Html.AntiForgeryToken()
 
             <div class="mb-3">
@@ -30,8 +30,9 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
             </div>
 
-            <button type="submit" class="btn btn-auth-glass w-100">
-                Register
+           @*  MPORTANT: no .btn here  *@
+            <button type="submit" class="auth-btn-glass w-100">
+                Create Account
             </button>
         </form>
     </div>

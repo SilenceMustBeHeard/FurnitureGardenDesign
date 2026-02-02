@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using System.ComponentModel.DataAnnotations;
 
-namespace CinemaApp.Web.ViewModels.Account
+namespace FurnitureGardenDesign.Web.ViewModels.Account
 {
     public class RegisterViewModel
     {

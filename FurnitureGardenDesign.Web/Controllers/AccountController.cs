@@ -1,4 +1,4 @@
-﻿using CinemaApp.Web.ViewModels.Account;
+﻿
 using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Web.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
@@ -70,7 +70,7 @@ namespace FurnitureGardenDesign.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index","Home");
         }
     }
 }

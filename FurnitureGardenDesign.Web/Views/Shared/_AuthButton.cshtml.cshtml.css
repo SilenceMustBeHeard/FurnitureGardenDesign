@@ -18,20 +18,11 @@ a {
    Buttons (theme-safe)
    - these are the only buttons that should stay solid
 ------------------------- */
-.btn-primary-glass {
-    background: linear-gradient(50deg, rgba(56,189,248,.4), #0f172a);
-    border: none;
-    color: #258cfb;
-    font-weight: 140;
-    padding: .6rem 1.4rem;
-    border-radius: 14px;
-    transition: transform .6s ease, box-shadow .6s ease, background .6s ease;
+.btn-primary {
+    color: #0f246769;
+    background-color: #06112fb9;
+    border-color: #06112fb9;
 }
-
-    .btn-primary-glass:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(56,189,248,.4);
-    }
 
 /* -------------------------
    Nav pills (theme-safe)

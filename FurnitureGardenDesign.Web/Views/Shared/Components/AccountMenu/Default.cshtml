@@ -1,12 +1,36 @@
-﻿@model bool
+﻿@using FurnitureGardenDesign.Data.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 
-@if (Model)
+@{
+    string userName = null;
+
+    if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        userName = user?.UserName ?? user?.Email;
+    }
+}
+
+@if (SignInManager.IsSignedIn(User))
 {
     <li>
-        <form method="post"
-              asp-area="Identity"
-              asp-page="/Account/Logout">
-            <button type="submit" class="dropdown-item">
+        <span class="dropdown-item text-muted" style="cursor:default;">
+             Hello @userName !
+        </span>
+    </li>
+
+    <li><hr class="dropdown-divider" /></li>
+
+    <li>
+        <form asp-controller="Account"
+              asp-action="Logout"
+              method="post"
+              class="px-3">
+            @Html.AntiForgeryToken()
+            <button type="submit"
+                    class="btn btn-auth-glass w-100">
                 Logout
             </button>
         </form>
@@ -16,15 +40,16 @@ else
 {
     <li>
         <a class="dropdown-item"
-           asp-area="Identity"
-           asp-page="/Account/Login">
+           asp-controller="Account"
+           asp-action="Login">
             Login
         </a>
     </li>
+
     <li>
         <a class="dropdown-item"
-           asp-area="Identity"
-           asp-page="/Account/Register">
+           asp-controller="Account"
+           asp-action="Register">
             Register
         </a>
     </li>

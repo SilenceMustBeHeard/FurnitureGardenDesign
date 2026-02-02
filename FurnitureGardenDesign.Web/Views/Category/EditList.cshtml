@@ -4,67 +4,79 @@
     ViewData["Title"] = "Edit Categories";
 }
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-xl-8 col-lg-9 col-md-11 col-12">
+<div class="row justify-content-center">
+    <div class="col-lg-10">
 
-            <div class="glass p-4 p-md-5 rounded-7 shadow-lg">
+        <div class="card glass-card p-4 text-light">
+            <h2 class="glass-title mb-4 text-center">
+                Manage Categories
+            </h2>
 
-                <h2 class="text-center mb-4 hero-title">
-                    <i class="bi  me-2"></i> Edit Categories
-                </h2>
+            @if (!Model.Any())
+            {
+                <p class="text-center glass-text-muted">
+                    No categories loaded yet.
+                </p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-borderless align-middle glass-table text-light">
+                        <thead>
+                            <tr class="glass-text-muted">
+                                <th style="width: 45%">Name</th>
+                                <th style="width: 20%">Active</th>
+                                <th style="width: 35%" class="text-end">Actions</th>
+                            </tr>
+                        </thead>
 
-                @if (!Model.Any())
-                {
-                    <div class="glass-card p-4 text-center text-muted">
-                        No categories loaded yet.
-                    </div>
-                }
-                else
-                {
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle glass-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Active</th>
-                                    <th class="text-end">Actions</th>
+                        <tbody>
+                            @foreach (var c in Model)
+                            {
+                                <tr class="glass-row">
+                                    <td class="glass-text-muted fw-semibold">
+                                        @c.Name
+                                    </td>
+
+                                    <td>
+                                        <span class="badge @(c.IsActive ? "bg-success-glass" : "bg-danger-glass")">
+                                            @(c.IsActive ? "Active" : "Inactive")
+                                        </span>
+                                    </td>
+
+                                    <td class="text-end">
+                                        <a asp-area="Admin"
+                                           asp-controller="Category"
+                                           asp-action="Edit"
+                                           asp-route-id="@c.Id"
+                                           class="btn btn-outline-glass btn-sm me-2">
+                                            Edit
+                                        </a>
+
+                                        <a asp-area="Admin"
+                                           asp-controller="Category"
+                                           asp-action="Toggle"
+                                           asp-route-id="@c.Id"
+                                           class="btn btn-outline-glass btn-sm">
+                                            @(c.IsActive ? "Disable" : "Enable")
+                                        </a>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var c in Model)
-                                {
-                                    <tr>
-                                        <td>@c.Name</td>
-                                        <td>
-                                            <span class="badge @(c.IsActive ? "bg-success-glass" : "bg-danger-glass")">
-                                                @(c.IsActive ? "Yes" : "No")
-                                            </span>
-                                        </td>
-                                        <td class="text-end">
-                                            <a asp-area="Admin"
-                                               asp-controller="Category"
-                                               asp-action="Edit"
-                                               asp-route-id="@c.Id"
-                                               class="btn btn-sm btn-primary-glass">
-                                                Edit
-                                            </a>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                }
-
-                <div class="mt-4">
-                    <a asp-action="Create" class="btn btn-outline-glass">
-                        + Add Category
-                    </a>
+                            }
+                        </tbody>
+                    </table>
                 </div>
+            }
 
+            <div class="text-center mt-4">
+                <a asp-area="Admin"
+                   asp-controller="Category"
+                   asp-action="Create"
+                   class="btn btn-outline-glass">
+                    + Add Category
+                </a>
             </div>
-
         </div>
+
     </div>
 </div>
