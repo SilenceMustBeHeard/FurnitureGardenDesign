@@ -129,7 +129,7 @@ html[data-bs-theme="light"] .auth-btn-glass {
 html[data-bs-theme="dark"] .auth-btn-glass {
     background: rgba(255,255,255,0.10);
     border: 1px solid rgba(120,200,255,0.25);
-    color: #0d18448c;
+    color: #16f5d999;
 }
 
 

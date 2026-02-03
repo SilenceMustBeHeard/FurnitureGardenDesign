@@ -31,6 +31,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Controllers\" />
     <Folder Include="Areas\Admin\Controllers\" />
+    <Folder Include="Areas\Admin\Controller\" />
     <Folder Include="Areas\Admin\Views\NewFolder\" />
     <Folder Include="wwwroot\images\errors\" />
     <Folder Include="wwwroot\images\theme\" />

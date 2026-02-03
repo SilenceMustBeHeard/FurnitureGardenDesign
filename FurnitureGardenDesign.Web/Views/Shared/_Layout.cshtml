@@ -48,6 +48,15 @@
                         @await Component.InvokeAsync("Navbar")
                     </div>
 
+                    @* Temp button for Admin Panel *@
+
+                    <a class="btn btn-outline-glass btn-sm"
+                       asp-area="Admin"
+                       asp-controller="Home"
+                       asp-action="Index">
+                        Admin Panel
+                    </a>
+
                   @* Right/Account menu *@
                     <div class="d-flex gap-3">
                         <button id="themeToggle" class="btn btn-outline-glass btn-sm">🌙</button>

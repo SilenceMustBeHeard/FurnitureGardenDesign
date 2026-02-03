@@ -273,7 +273,8 @@ namespace FurnitureGardenDesign.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CatalogDesignId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CatalogDesignId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
