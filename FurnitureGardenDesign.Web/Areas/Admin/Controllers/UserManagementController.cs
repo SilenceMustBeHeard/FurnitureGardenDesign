@@ -1,0 +1,63 @@
+﻿using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
+using FurnitureGardenDesign.Web.ViewModels.Admin;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
+{
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
+    public class UserManagementController : BaseAdminController
+    {
+        private readonly IUserService _userService;
+
+        public UserManagementController(
+            IUserService userService,
+            UserManager<AppUser> userManager) : base(userManager)
+        {
+            _userService = userService;
+        }
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var allUsers = await _userService
+                .GetUserManagmentBoardDataAsync(this.GetUserId());
+
+            return View(allUsers);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignRole(ChangeUserRoleViewModel model)
+        {
+            if (!ModelState.IsValid
+                || string.IsNullOrWhiteSpace(model.NewRole))
+            {
+                TempData["ErrorMessage"] = "Please select a valid role.";
+                return RedirectToAction("Index");
+            }
+
+            var result = await _userService.ChangeUserRoleAsync(model, this.GetUserId());
+
+            if (result.Failed)
+                TempData["ErrorMessage"] = result.ErrorMessage;
+            else
+                TempData["SuccessMessage"] = "User role changed successfully.";
+
+            return RedirectToAction("Index");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+}

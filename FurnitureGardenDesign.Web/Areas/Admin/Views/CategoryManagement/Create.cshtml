@@ -14,7 +14,7 @@
                     <i class="bi  me-2"></i> Add New Category
                 </h2>
 
-                <form asp-controller="Category" asp-action="Create" method="post">
+                <form asp-area="Admin" asp-controller="CategoryManagement" asp-action="Create" method="post">
                     @Html.AntiForgeryToken()
 
                     <div class="mb-3">

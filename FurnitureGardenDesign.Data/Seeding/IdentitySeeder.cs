@@ -10,7 +10,7 @@ namespace FurnitureGardenDesign.Data.Seeding
         // 1️⃣ Seed Roles
         public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
         {
-            string[] roles = { "Admin", "Manager" };
+            string[] roles = { "Admin", "Manager", "User" };
 
             foreach (var role in roles)
             {

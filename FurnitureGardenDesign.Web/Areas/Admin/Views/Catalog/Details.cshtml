@@ -1,0 +1,71 @@
+﻿@model FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogDesignViewModel
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card glass-card p-4 text-light">
+            <h2 class="glass-title mb-3">@Model.Title</h2>
+
+            <img src="@Model.ImageUrl" class="img-fluid details-img mb-4" alt="@Model.Title" />
+
+            <p class="glass-text-muted mb-3">@Model.Description</p>
+
+            <div class="mb-2">
+                <strong>Category:</strong> @Model.CategoryName
+            </div>
+
+            <div class="mb-2">
+                <strong>Price:</strong> <span class="text-success">@Model.Price.ToString("C")</span>
+            </div>
+
+            <div class="mb-4">
+                <strong>Rating:</strong>
+                <span class="text-warning">@Model.AverageRating ★</span>
+                <span class="glass-text-muted small">(@Model.ReviewCount reviews)</span>
+            </div>
+
+            <form asp-controller="Catalog"
+                   asp-action="ToggleFavorite"
+                   method="post"
+                   class="favorite-form">
+
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                  @* Toggle Favorite *@
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                <button type="submit"
+                        class="btn @(Model.IsFavorited ? "btn-danger" : "btn-outline-danger")">
+                    @(Model.IsFavorited ? "❤️ Remove from favorites" : "🤍 Add to favorites")
+                </button>
+
+                    <a asp-controller="Review" asp-action="Write" asp-route-id="@Model.Id" class="btn btn-outline-glass">
+                        Write Review
+                    </a>
+
+                    <a asp-controller="Review" asp-action="Reviews" asp-route-id="@Model.Id" class="btn btn-outline-glass">
+                        View Reviews
+                    </a>
+
+
+
+
+
+
+
+
+
+
+
+                        }
+
+            </form>
+
+
+                <a asp-action="Index" class="btn btn-outline-glass">Back to Catalog</a>
+
+               
+            </div>
+        </div>
+    </div>
+</div>

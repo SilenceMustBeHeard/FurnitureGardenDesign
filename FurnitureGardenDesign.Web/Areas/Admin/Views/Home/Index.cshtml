@@ -1,10 +1,16 @@
-﻿@{
+﻿
+
+@{
     ViewData["Title"] = "Admin Dashboard";
 }
+
 
 <h2 class="text-center mb-5 text-light fw-bold">
     Furniture & Garden Design – Admin Panel
 </h2>
+
+
+<div class="card glass-card p-4 text-light">
 <p class="text-center lead mb-5 text-light">
     Manage your platform content and users
 </p>
@@ -31,9 +37,9 @@
             <div class="card-body d-flex flex-column align-items-center text-center">
                 <h5 class="glass-title mb-2">Orders</h5>
                 <p class="glass-text-muted small mb-3">View & process orders</p>
-                <a asp-area="Admin" asp-controller="OrderManagement" asp-action="Index"
+                <a asp-area="Admin" asp-controller="OrdersManagement" asp-action="Manage"
                    class="btn btn-primary-glass fw-bold w-300 mt-auto">
-                    Manage Orders
+                    Manage Orders 
                 </a>
             </div>
         </div>
@@ -45,7 +51,7 @@
             <div class="card-body d-flex flex-column align-items-center text-center">
                 <h5 class="glass-title mb-2">Categories</h5>
                 <p class="glass-text-muted small mb-3">Furniture & garden types</p>
-                <a asp-area="Admin" asp-controller="CategoryManagement" asp-action="Index"
+                <a asp-area="Admin" asp-controller="CategoryManagement" asp-action="EditList"
                    class="btn btn-primary-glass fw-bold w-300 mt-auto">
                     Manage Categories
                 </a>
@@ -67,4 +73,5 @@
         </div>
     </div>
 
+</div>
 </div>

@@ -7,13 +7,13 @@
 <div class="container mt-5">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-warning">🗂 Categories</h2>
+        <h2 class="fw-bold text-warning"> Categories</h2>
 
         <a asp-area="Admin"
-           asp-controller="Category"
+           asp-controller="CategoryManagement"
            asp-action="Create"
            class="btn btn-warning-glass fw-semibold">
-            ➕ Add Category
+             Add Category
         </a>
 
     </div>
@@ -43,7 +43,7 @@
                             <td>@(c.IsActive ? "Yes" : "No")</td>
                             <td class="text-end">
                                 <a asp-action="Edit" asp-route-id="@c.Id"
-                                   class="btn btn-sm btn-outline-warning">
+                                   class="btn btn-sm btn-outline-glass">
                                     Edit
                                 </a>
                             </td>

@@ -9,23 +9,21 @@ using FurnitureGardenDesign.Services.Core.Interfaces;
 
 
 
-
-namespace FurnitureGardenDesign.Web.Controllers
+namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 {
-
-
-
+    [Area("Admin")]
     [Authorize(Roles = "Admin")]
-    public class CategoryController : Controller
+    
+    public class CategoryManagementController : Controller
     {
         private readonly ICategoryService _categoryService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryManagementController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
 
-        // GET: /Category
+        
         
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -34,7 +32,7 @@ namespace FurnitureGardenDesign.Web.Controllers
             return View(categories);
         }
 
-        // GET: /Category/Create
+       
   
         [HttpGet]
        
@@ -43,10 +41,10 @@ namespace FurnitureGardenDesign.Web.Controllers
             return View();
         }
 
-        // POST: /Category/Create
+    
    
         [HttpPost]
-        [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Create(CategoryViewModelCreate model)
         {
             if (!ModelState.IsValid)
@@ -59,7 +57,7 @@ namespace FurnitureGardenDesign.Web.Controllers
         }
 
 
-        // GET: /Category/Edit
+ 
         [HttpGet]
 
         public async Task<IActionResult> Edit(Guid id)
@@ -76,9 +74,9 @@ namespace FurnitureGardenDesign.Web.Controllers
             return View(model);
         }
 
-        // POST: /Category/Edit
+  
         [HttpPost]
-        [ValidateAntiForgeryToken]
+
 
         public async Task<IActionResult> Edit(CategoryViewModelEdit model)
         {
@@ -94,8 +92,8 @@ namespace FurnitureGardenDesign.Web.Controllers
 
         [HttpGet]
 
-        // GET: /Category/Edit (List of categories)
-        [Authorize(Roles = "Admin")]
+      
+    
         public async Task<IActionResult> EditList()
         {
             var categories = await _categoryService.GetAllActiveCategoriesAsync();

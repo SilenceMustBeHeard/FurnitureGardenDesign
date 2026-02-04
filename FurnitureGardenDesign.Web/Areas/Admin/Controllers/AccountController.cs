@@ -1,11 +1,15 @@
 ﻿
 using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Web.ViewModels.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FurnitureGardenDesign.Web.Controllers
+
+namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class AccountController : Controller
     {
         private readonly UserManager<AppUser> _userManager;

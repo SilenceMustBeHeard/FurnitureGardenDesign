@@ -8,14 +8,14 @@
     <div class="row justify-content-center">
         <div class="col-xl-5 col-lg-6 col-md-8 col-12">
 
-            <div class="glass p-4 p-md-5 rounded-7 shadow-lg">
+            <div class="glass p-4 p-md-5 rounded-4 shadow-lg">
 
 
                 <h2 class="text-center mb-4 hero-title">
                     <i class="bi  me-2"></i> Edit Category
                 </h2>
 
-                <form asp-controller="Category" asp-action="Edit" method="post">
+                <form asp-area="Admin"  asp-controller="CategoryManagement" asp-action="Edit" method="post">
                     @Html.AntiForgeryToken()
 
                     <input type="hidden" asp-for="Id" />
@@ -38,9 +38,13 @@
                     </div>
 
                     <div class="d-flex justify-content-between">
-                        <a asp-action="Index" class="btn btn-outline-glass">
+                        <a asp-area="Admin"
+                           asp-controller="CategoryManagement"
+                           asp-action="EditList"
+                           class="btn btn-outline-glass">
                             ← Back
                         </a>
+
 
                         <button type="submit" class="btn btn-outline-glass fw-semibold">
                              Save Changes

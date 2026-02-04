@@ -46,7 +46,7 @@
 
                                     <td class="text-end">
                                         <a asp-area="Admin"
-                                           asp-controller="Category"
+                                           asp-controller="CategoryManagement"
                                            asp-action="Edit"
                                            asp-route-id="@c.Id"
                                            class="btn btn-outline-glass btn-sm me-2">
@@ -64,16 +64,28 @@
                                 </tr>
                             }
                         </tbody>
+
+                      
+
                     </table>
                 </div>
             }
 
             <div class="text-center mt-4">
                 <a asp-area="Admin"
-                   asp-controller="Category"
+                   asp-controller="CategoryManagement"
                    asp-action="Create"
                    class="btn btn-outline-glass">
-                    + Add Category
+                    Add Category
+                </a>
+
+
+
+                <a asp-area="Admin"
+                   asp-controller="CategoryManagement"
+                   asp-action="Index"
+                   class="btn btn-outline-glass">
+                    ← Back
                 </a>
             </div>
         </div>

@@ -1,22 +1,22 @@
-﻿using FurnitureGardenDesign.Services.Core.Interfaces;
+﻿
+using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-namespace FurnitureGardenDesign.Web.Controllers
+
+namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 {
-    [Authorize]
-    public class OrdersController : Controller
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
+    public class OrdersManagementController : Controller
     {
         private readonly IOrderService _orderService;
         private readonly ICategoryService _categoryService;
 
 
-        public OrdersController(
+        public OrdersManagementController(
             IOrderService orderService,
             ICategoryService categoryService)
         {
@@ -59,6 +59,28 @@ namespace FurnitureGardenDesign.Web.Controllers
 
 
 
+       
+        [HttpGet]
+        public async Task<IActionResult> Manage()
+        {
+            var orders = await _orderService.GetPendingOrdersAsync();
+            return View(orders);
+        }
+
+        [HttpPost]
+      
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reject(Guid id)
+        {
+            var result = await _orderService.RejectOrderAsync(id);
+
+            TempData[result ? "Success" : "Error"] =
+                result ? "Order has been rejected." : "Failed to reject order.";
+
+            return RedirectToAction(nameof(Manage));
+        }
+
+
 
         private async Task LoadCategoriesAsync()
         {
@@ -74,7 +96,17 @@ namespace FurnitureGardenDesign.Web.Controllers
         }   
 
 
-       
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var order = await _orderService.GetByIdAsync(id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
+        }
 
 
     }

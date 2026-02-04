@@ -91,7 +91,7 @@ namespace FurnitureGardenDesign.Web.Controllers
         }
 
 
-        [HttpGet]
+
 
         [HttpGet]
         public async Task<IActionResult> Reviews(Guid id)
