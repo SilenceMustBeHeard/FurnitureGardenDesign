@@ -40,6 +40,9 @@ namespace FurnitureGardenDesign.Web.Controllers
                     await _userManager.AddToRoleAsync(user, "User");
                 }
 
+                if (await _userManager.IsInRoleAsync(user, "Admin"))
+                    return RedirectToAction("Login", "Account", new { area = "Admin" });
+
                 // sign the user in
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
@@ -56,22 +59,32 @@ namespace FurnitureGardenDesign.Web.Controllers
         //  LOGIN 
         [HttpGet]
         public IActionResult Login() => View();
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
+          
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return RedirectToAction("NotAllowed", "Error", new { area = "Admin" });
+
+           
+            if (!await _userManager.IsInRoleAsync(user, "Admin"))
+                return RedirectToAction("NotAllowed", "Error", new { area = "Admin" });
+
+          
             var result = await _signInManager.PasswordSignInAsync(
-                model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                user, model.Password, model.RememberMe, lockoutOnFailure: false);
 
             if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
 
-            ModelState.AddModelError("", "Invalid login attempt.");
-            return View(model);
+         
+            return RedirectToAction("NotAllowed", "Error", new { area = "Admin" });
         }
+
 
 
         //  LOGOUT 
@@ -80,7 +93,7 @@ namespace FurnitureGardenDesign.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

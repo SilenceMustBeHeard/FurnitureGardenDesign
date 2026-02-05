@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-
-namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
+namespace FurnitureGardenDesign.Web.Controllers
 {
     
 
@@ -9,10 +8,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
     {
         [Route("Error/NotImplemented")]
         public IActionResult NotImplemented()
-        {
-            return View();
-        }
-        public IActionResult NotAllowed()
         {
             return View();
         }

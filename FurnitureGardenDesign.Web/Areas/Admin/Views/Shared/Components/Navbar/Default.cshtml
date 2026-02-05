@@ -17,17 +17,19 @@
         </a>
 
       
-        <a class="btn btn-outline-glass"
+      <a class="btn btn-outline-glass"
+           asp-area="Admin"
            asp-controller="OrdersManagement"
            asp-action="Manage">
             Orders (@Model.PendingOrdersCount)
         </a> 
-
+ 
         <a class="btn btn-primary-glass"
+           asp-area=""
            asp-controller="Catalog"
            asp-action="Index">
             Catalogue
-        </a>
+        </a> 
     }
     else if (Model.IsManager)
     {

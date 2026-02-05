@@ -17,20 +17,20 @@
 {
     <li>
         <span class="dropdown-item text-muted" style="cursor:default;">
-             Hello @userName !
+            Hello @userName!
         </span>
     </li>
 
     <li><hr class="dropdown-divider" /></li>
 
     <li>
-        <form asp-controller="Account"
+        <form asp-area="Admin"
+              asp-controller="Account"
               asp-action="Logout"
               method="post"
               class="px-3">
             @Html.AntiForgeryToken()
-            <button type="submit"
-                    class="btn btn-auth-glass w-100">
+            <button type="submit" class="btn btn-auth-glass w-100">
                 Logout
             </button>
         </form>
@@ -40,6 +40,7 @@ else
 {
     <li>
         <a class="dropdown-item"
+           asp-area="Admin"
            asp-controller="Account"
            asp-action="Login">
             Login
@@ -48,6 +49,7 @@ else
 
     <li>
         <a class="dropdown-item"
+           asp-area="Admin"
            asp-controller="Account"
            asp-action="Register">
             Register
