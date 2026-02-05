@@ -34,16 +34,14 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
 
                 var roles = await _userManager.GetRolesAsync(user);
 
-                // only include users with role user
-                if (roles.Contains("User"))
-                {
-                    result.Add(new UserManagmentIndexViewModel
+                // all roles except "Admin"
+                result.Add(new UserManagmentIndexViewModel
                     {
                         Id = Guid.Parse(user.Id),  // <-- convert back to Guid if needed
                         Email = user.Email!,
                         Roles = roles
                     });
-                }
+                
             }
 
             return result;
@@ -62,9 +60,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            // ensure the user currently has "User" role
-            if (!roles.Contains("User"))
-                return (true, "Only users with role 'User' can be updated.");
+       
 
             // remove existing roles
             var removeResult = await _userManager.RemoveFromRolesAsync(user, roles);
