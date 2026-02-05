@@ -55,45 +55,38 @@ namespace FurnitureGardenDesign.Web.Controllers
             return View(model);
         }
 
-
-        //  LOGIN 
         [HttpGet]
         public IActionResult Login() => View();
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+                return View(model);
 
-          
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
-                return RedirectToAction("NotAllowed", "Error", new { area = "Admin" });
+                return View(model);
 
-           
-            if (!await _userManager.IsInRoleAsync(user, "Admin"))
-                return RedirectToAction("NotAllowed", "Error", new { area = "Admin" });
 
-          
+
             var result = await _signInManager.PasswordSignInAsync(
                 user, model.Password, model.RememberMe, lockoutOnFailure: false);
 
             if (result.Succeeded)
-                return RedirectToAction("Index", "Home", new { area = "Admin" });
+                return RedirectToAction("Index", "Home", new { area = "" });
 
-         
-            return RedirectToAction("NotAllowed", "Error", new { area = "Admin" });
+            ModelState.AddModelError("", "Invalid login attempt.");
+            return View(model);
         }
 
-
-
-        //  LOGOUT 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { area = "" }); // public home page
         }
     }
 }

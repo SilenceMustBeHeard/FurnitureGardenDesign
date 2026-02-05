@@ -4,11 +4,10 @@
     ViewData["Title"] = "Catalog";
     bool isLoggedIn = User.Identity?.IsAuthenticated ?? false;
 }
-
-<h2 class="text-center mb-5 text-light fw-bold">
-    Catalog
-</h2>
-
+<div class="card glass-card p-4 text-light">
+    <h2 class="text-center mb-5 text-light fw-bold">
+        Catalog
+    </h2>
 <div class="row g-4">
     @foreach (var item in Model)
     {
@@ -51,4 +50,5 @@
             </div>
         </div>
     }
+</div>
 </div>
