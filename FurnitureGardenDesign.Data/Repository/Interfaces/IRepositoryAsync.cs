@@ -8,7 +8,7 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
     public interface IRepositoryAsync<TEntity, TKey>
     {
         Task<TEntity?> GetByIdAsync(TKey id);
-
+        IQueryable<TEntity> GetAllIncludingDeleted();
         Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 
         Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
@@ -33,7 +33,7 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
 
 
         IQueryable<TEntity> GetAllAttachedAsync();
-
+        Task<bool> ToggleStatusAsync(TEntity entity);
 
 
 

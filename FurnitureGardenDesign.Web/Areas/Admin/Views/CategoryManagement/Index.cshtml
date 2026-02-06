@@ -42,7 +42,7 @@
                     {
                         <tr>
                             <td>@c.Name</td>
-                            <td>@(c.IsActive ? "Yes" : "No")</td>
+                            <td>@(c.IsDeleted ? "Yes" : "No")</td>
                             <td class="text-end">
                                 <a asp-action="Edit" asp-route-id="@c.Id"
                                    class="btn btn-sm btn-outline-glass">

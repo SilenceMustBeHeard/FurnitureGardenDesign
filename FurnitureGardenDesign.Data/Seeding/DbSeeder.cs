@@ -58,7 +58,7 @@ namespace FurnitureGardenDesign.Data.Seeding
                     throw new Exception($"Category Id is EMPTY for: {category.Name}");
                 }
 
-                category.IsActive = true;
+                category.IsDeleted = true;
             }
 
             await context.Categories.AddRangeAsync(categories);

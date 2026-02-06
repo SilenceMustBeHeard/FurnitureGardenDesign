@@ -15,7 +15,7 @@ namespace FurnitureGardenDesign.Data.Models
 
         public string? Description { get; set; }
         //flag
-        public bool IsActive { get; set; } = true;
+        public bool IsDeleted { get; set; } = true;
 
         public virtual ICollection<Order> Orders { get; set; }
         = new HashSet<Order>();

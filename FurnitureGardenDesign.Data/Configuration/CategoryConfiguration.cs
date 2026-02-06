@@ -14,7 +14,9 @@ namespace FurnitureGardenDesign.Data.Configuration
         {
             builder.HasKey(c => c.Id);
 
-       
+            builder.Property(c => c.IsDeleted)
+                   .HasDefaultValue(false);
+            builder.HasQueryFilter(f => !f.IsDeleted);
 
             builder.HasMany(c => c.Orders)
                    .WithOne(o => o.Category)
@@ -25,6 +27,8 @@ namespace FurnitureGardenDesign.Data.Configuration
                    .WithOne(d => d.Category)
                    .HasForeignKey(d => d.CategoryId)
                    .OnDelete(DeleteBehavior.Restrict);
+
+
         }
     }
 }

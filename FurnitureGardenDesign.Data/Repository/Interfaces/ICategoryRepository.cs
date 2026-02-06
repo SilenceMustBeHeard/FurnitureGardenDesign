@@ -8,7 +8,13 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
     public interface ICategoryRepository:
          IRepository<Category, Guid>, IRepositoryAsync<Category, Guid>
     {
+        Task<Category?> GetByIdIncludingDeletedAsync(Guid id);
         Task<IEnumerable<Category>> GetAllActiveAsync();
-        Category? GetByName(string name);
+
+        Task<IEnumerable<Category>> GetAllForAdminAsync();
+        Task ToggleCategoryStatusAsync(Category category);
+            Category? GetByName(string name);
+
+
     }
 }

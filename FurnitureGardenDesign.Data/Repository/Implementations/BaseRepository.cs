@@ -88,9 +88,13 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
         public async Task<IEnumerable<TEntity>> GetCategoriesAsync()
          => await _dbSet.ToListAsync();
 
+        public IQueryable<TEntity> GetAllIncludingDeleted()
+        {
+            return _dbSet.IgnoreQueryFilters().AsQueryable();
+        }
 
-   
-            public IQueryable<TEntity> GetAllAttachedAsync()
+
+        public IQueryable<TEntity> GetAllAttachedAsync()
                 => _dbSet.AsQueryable();
 
         public IQueryable<TEntity> GetAllAttached()
@@ -173,7 +177,23 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
                 throw new InvalidOperationException(ExceptionMessages.SoftDeleteNotSupported);
             }
 
-            private async Task<int> SoftDeleteAsync(TEntity entity)
+        public async Task<bool> ToggleStatusAsync(TEntity entity)
+        {
+            var entry = _context.Entry(entity);
+
+            if (entry.State == EntityState.Detached)
+                _dbSet.Attach(entity);
+
+            var property = entry.Property("IsDeleted");
+            property.CurrentValue = !(bool)property.CurrentValue!;
+            property.IsModified = true;
+
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+
+
+        private async Task<int> SoftDeleteAsync(TEntity entity)
             {
                 var flagProperty = GetFlagProperty();
                 if (flagProperty != null && flagProperty.PropertyType == typeof(bool))

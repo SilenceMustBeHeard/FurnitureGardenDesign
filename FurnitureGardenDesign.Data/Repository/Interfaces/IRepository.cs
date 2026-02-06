@@ -9,6 +9,7 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
         TEntity? GetById(TKey id);
 
         int Count();
+        IQueryable<TEntity> GetAllIncludingDeleted();
         TEntity? SingleOrDefault(Func<TEntity, bool> predicate);
 
         TEntity? FirstOrDefault(Func<TEntity, bool> predicate);
