@@ -1,0 +1,35 @@
+﻿using FurnitureGardenDesign.Data.Repository.Interfaces;
+using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
+using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Web.ViewModels.Category;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace FurnitureGardenDesign.Services.Core.Implementations
+{
+    public class CategoryServiceClient : ICategoryServiceClient
+    {
+        private readonly ICategoryRepository _categoryRepository;
+
+        public CategoryServiceClient(ICategoryRepository categoryRepository)
+        {
+            _categoryRepository = categoryRepository;
+        }
+
+
+
+        public async Task<IEnumerable<CategoryViewModelList>> GetAllActiveCategoriesForClientAsync()
+        {
+            var categories = await _categoryRepository.GetAllActiveAsync();
+
+            return categories.Select(c => new CategoryViewModelList
+            {
+                Id = c.Id,
+                Name = c.Name
+            });
+        }
+
+    }
+
+}

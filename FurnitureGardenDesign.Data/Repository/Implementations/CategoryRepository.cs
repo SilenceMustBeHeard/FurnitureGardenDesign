@@ -14,7 +14,7 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
 
         // Only active 
         public async Task<IEnumerable<Category>> GetAllActiveAsync()
-            => await _dbSet.Where(c => !c.IsDeleted).ToListAsync();
+            => await _dbSet.Where(c => c.IsDeleted).ToListAsync();
 
         // All categories for admin
         public async Task<IEnumerable<Category>> GetAllForAdminAsync()

@@ -3,6 +3,8 @@ using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Data.Seeding;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
+using FurnitureGardenDesign.Services.Core.Implementations;
+using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +50,9 @@ builder.Services.RegisterRepositories(typeof(ICategoryRepository).Assembly);
 
 
 builder.Services.RegisterServices(typeof(ICategoryService).Assembly);
+builder.Services.AddScoped<ICategoryServiceClient, CategoryServiceClient>();
+
+
 
 
 

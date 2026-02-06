@@ -29,7 +29,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
             foreach (var user in allUsers)
             {
                 // skip the  admin
-                if (user.Id == adminId.ToString()) 
+                if (user.Id == adminId.ToString())
                     continue;
 
                 var roles = await _userManager.GetRolesAsync(user);
@@ -60,7 +60,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
 
             var roles = await _userManager.GetRolesAsync(user);
 
-       
+
 
             // remove existing roles
             var removeResult = await _userManager.RemoveFromRolesAsync(user, roles);
