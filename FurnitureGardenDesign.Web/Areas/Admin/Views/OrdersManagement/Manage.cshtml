@@ -1,5 +1,6 @@
-﻿@model IEnumerable<FurnitureGardenDesign.Data.Models.Order>
+﻿@using FurnitureGardenDesign.Web.ViewModels.Admin.Order
 
+@model IEnumerable<AdminOrderListViewModel>
 @{
     ViewData["Title"] = "Manage Orders";
 }
@@ -43,8 +44,8 @@
                             {
                                 <tr>
                                     <td>@order.Id</td>
-                                    <td>@order.UserId</td>
-                                    <td>@order.CategoryId</td>
+                                    <td>@order.UserEmail</td>
+                                    <td>@order.CategoryName</td>
                                     <td>@order.Description</td>
                                     <td>
                                         <span class="badge bg-warning text-dark">

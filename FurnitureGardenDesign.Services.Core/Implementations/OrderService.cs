@@ -5,6 +5,7 @@ using FurnitureGardenDesign.Data.Repository.Implementations;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels;
+using FurnitureGardenDesign.Web.ViewModels.Admin.Order;
 using FurnitureGardenDesign.Web.ViewModels.Orders;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -46,21 +47,26 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             return await _orderRepo.CountPendingAsync();
         }
 
-        public async Task<IEnumerable<Order>> GetPendingOrdersAsync()
+        public async Task<IEnumerable<AdminOrderListViewModel>> GetPendingOrdersAsync()
         {
-            var orders = _orderRepo.GetAll();
-            return orders
+            return await _orderRepo
+                .GetAllAttached()
                 .Where(o => o.Status == OrderStatus.Pending)
-                .Select(o => new Order
+                .Include(o => o.User)
+                .Include(o => o.Category)
+                .Select(o => new AdminOrderListViewModel
                 {
                     Id = o.Id,
-                    UserId = o.UserId,
-                    CategoryId = o.CategoryId,
+                    UserEmail = o.User.Email,
+                    CategoryName = o.Category.Name,
                     Description = o.Description,
-                    Status = o.Status
+                    Status = o.Status,
+                    CreatedOn = o.CreatedOn
                 })
-                .ToList();
+                .ToListAsync();
         }
+
+        
 
         public async Task<DetailsOrderViewModel?> GetByIdAsync(Guid id)
         {

@@ -1,5 +1,6 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Web.ViewModels;
+using FurnitureGardenDesign.Web.ViewModels.Admin.Order;
 using FurnitureGardenDesign.Web.ViewModels.Orders;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace FurnitureGardenDesign.Services.Core.Interfaces
         Task<int> GetPendingOrdersCountAsync();
 
        
-        Task<IEnumerable<Order>> GetPendingOrdersAsync();
+        Task<IEnumerable<AdminOrderListViewModel>> GetPendingOrdersAsync();
 
         // create new order
         Task CreateOrderAsync(string userId, OrderFormViewModel model);

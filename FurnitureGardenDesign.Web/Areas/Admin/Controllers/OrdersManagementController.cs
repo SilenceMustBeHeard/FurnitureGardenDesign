@@ -41,13 +41,13 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OrderFormViewModel model)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             if (!ModelState.IsValid)
             {
                 await LoadCategoriesAsync();
                 return View(model); 
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
             await _orderService.CreateOrderAsync(userId, model);
 
@@ -67,6 +67,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
             var orders = await _orderService.GetPendingOrdersAsync();
             return View(orders);
         }
+
 
         [HttpPost]
       
