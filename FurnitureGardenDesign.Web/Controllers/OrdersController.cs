@@ -23,12 +23,20 @@ namespace FurnitureGardenDesign.Web.Controllers
             _categoryServiceClient = categoryServiceClient;
         }
 
+
+
+
+
+        // show order form for submission
         [HttpGet]
         public async Task<IActionResult> Create()
         {
             await LoadCategoriesAsync();
             return View(new OrderFormViewModel());
         }
+
+
+        // create order (submit)
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -47,6 +55,9 @@ namespace FurnitureGardenDesign.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        // load categories for the dropdown
+
+        [HttpPost]
         private async Task LoadCategoriesAsync()
         {
             var categories = await _categoryServiceClient.GetAllActiveCategoriesForClientAsync();

@@ -4,7 +4,6 @@
 
 @inject RoleManager<IdentityRole> RoleManager;
 
-
 @{
     ViewData["Title"] = "Admin Dashboard";
 }
@@ -13,88 +12,129 @@
     Furniture & Garden Design – Admin Panel
 </h2>
 
-
 <div class="card glass-card p-4 text-light">
-    <h2 class="text-center mb-4 text-light fw-bold"> Manage your platform users</h2>
+    <h2 class="text-center mb-4 text-light fw-bold">
+        Manage your platform users
+    </h2>
 
+    <div class="d-flex justify-content-start mb-4">
+        <a asp-area="Admin"
+           asp-controller="UserManagement"
+           asp-action="Index"
+           class="btn btn-secondary-glass fw-bold">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
 
+    <div class="row g-4">
+        @foreach (var user in Model)
+        {
+            var isBanned = user.LockoutEnd != null && user.LockoutEnd > DateTimeOffset.UtcNow;
 
-<div class="d-flex justify-content-start mb-4">
-    <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="btn btn-secondary-glass fw-bold">
-        <i class="bi bi-arrow-left"></i> Back to Dashboard
-    </a>
-</div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card glass-card h-100 text-light shadow-sm position-relative">
 
-<div class="row g-4">
-    @foreach (var user in Model)
-    {
-        <div class="col-lg-4 col-md-6">
-            <div class="card glass-card h-100 text-light shadow-sm">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="glass-title mb-2">@user.Email</h5>
-                    <div class="mb-3">
-                        @foreach (var role in user.Roles)
+                    @*  Banned Badge  *@
+
+                    @if (isBanned)
+                    {
+                        <div class="position-absolute top-0 start-0 w-100 text-center py-2 bg-danger text-white fw-bold rounded-top">
+                            🚫 USER BANNED
+                        </div>
+                    }
+
+                    <div class="card-body d-flex flex-column @(isBanned ? "pt-5" : "")">
+                        <h5 class="glass-title mb-2">@user.Email</h5>
+                         
+
+                     
+                        <div class="mb-3">
+                            @foreach (var role in user.Roles)
+                            {
+                                <span class="badge bg-warning text-dark fw-bold px-3 py-1 rounded-pill me-1">
+                                    @role
+                                </span>
+                            }
+                        </div>
+
+                        @if (!user.Roles.Contains("Admin"))
                         {
-                            <span class="badge bg-warning text-dark fw-bold px-3 py-1 rounded-pill me-1">@role</span>
+                           @* Role management for non-admin users *@
+                            <div class="mb-3">
+                                <select id="roleDropdown-@user.Id"
+                                        class="form-select form-select-sm w-100"
+                                        @(isBanned ? "disabled" : "")>
+                                    @foreach (var role in RoleManager.Roles)
+                                    {
+                                        <option value="@role.Name"
+                                                selected="@(user.Roles.Contains(role.Name) ? "selected" : null)">
+                                            @role.Name
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="d-flex justify-content-between flex-wrap gap-2 mt-auto">
+
+                             @* Assign Role To User *@
+                                <form method="post"
+                                      asp-action="AssignRole"
+                                      asp-controller="UserManagement"
+                                      asp-area="Admin"
+                                      class="d-inline flex-fill">
+                                    <input type="hidden" name="UserId" value="@user.Id" />
+                                    <input type="hidden" name="NewRole" id="assignRoleInput-@user.Id" />
+                                    <button type="submit"
+                                            class="btn btn-primary-glass fw-bold w-100"
+                                            onclick="setRoleValue('@user.Id', 'assignRoleInput')"
+                                            @(isBanned ? "disabled" : "")>
+                                        <i class="bi bi-person-plus-fill"></i> Assign
+                                    </button>
+                                </form>
+
+                                @* Remove Role *@
+                          @*       <form method="post"
+                                      asp-action="RemoveRole"
+                                      asp-controller="UserManagement"
+                                      asp-area="Admin"
+                                      class="d-inline flex-fill">
+                                    <input type="hidden" name="UserId" value="@user.Id" />
+                                    <input type="hidden" name="Role" id="removeRoleInput-@user.Id" />
+                                    <button type="submit"
+                                            class="btn btn-warning-glass fw-bold w-100"
+                                            onclick="setRoleValue('@user.Id', 'removeRoleInput')"
+                                            @(isBanned ? "disabled" : "")>
+                                        <i class="bi bi-person-x-fill"></i> Remove
+                                    </button>
+                                </form> *@
+
+                              @* Ban User *@
+                                <form asp-area="Admin"
+                                      asp-controller="UserManagement"
+                                      asp-action="DisableUser"
+                                      method="post"
+                                      class="d-inline flex-fill">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="userId" value="@user.Id" />
+
+                                    <button class="btn btn-outline-danger w-100"
+                                            @(isBanned ? "disabled" : "")>
+                                        <i class="bi bi-person-x"></i> Ban User
+                                    </button>
+                                </form>
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="text-muted fw-bold">Cannot edit Admin</span>
                         }
                     </div>
-
-                    @if (!user.Roles.Contains("Admin"))
-                    {
-                        <!-- Role dropdown -->
-                        <div class="mb-3">
-                            <select id="roleDropdown-@user.Id" class="form-select form-select-sm w-100">
-                                @foreach (var role in RoleManager.Roles)
-                                {
-                                    <option value="@role.Name" selected="@(user.Roles.Contains(role.Name) ? "selected" : null)">
-                                        @role.Name
-                                    </option>
-                                }
-                            </select>
-                        </div>
-
-                        <div class="d-flex justify-content-between flex-wrap gap-2 mt-auto">
-                            <!-- Assign Role Form -->
-                            <form method="post" asp-action="AssignRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline flex-fill">
-                                <input type="hidden" name="UserId" value="@user.Id" />
-                                <input type="hidden" name="NewRole" id="assignRoleInput-@user.Id" />
-                                <button type="submit" class="btn btn-primary-glass fw-bold w-100"
-                                        onclick="setRoleValue('@user.Id', 'assignRoleInput')">
-                                    <i class="bi bi-person-plus-fill"></i> Assign
-                                </button>
-                            </form>
-
-                            <!-- Remove Role Form -->
-                            <form method="post" asp-action="RemoveRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline flex-fill">
-                                <input type="hidden" name="UserId" value="@user.Id" />
-                                <input type="hidden" name="Role" id="removeRoleInput-@user.Id" />
-                                <button type="submit" class="btn btn-warning-glass fw-bold w-100"
-                                        onclick="setRoleValue('@user.Id', 'removeRoleInput')">
-                                    <i class="bi bi-person-x-fill"></i> Remove
-                                </button>
-                            </form>
-
-                            <!-- Delete User Form -->
-                            <form method="post" asp-action="DeleteUser" asp-controller="UserManagement" asp-area="Admin" class="d-inline flex-fill">
-                                <input type="hidden" name="UserId" value="@user.Id" />
-                                <button type="submit" class="btn btn-danger-glass fw-bold w-100">
-                                    <i class="bi bi-trash-fill"></i> Delete
-                                </button>
-                            </form>
-                        </div>
-                    }
-                    else
-                    {
-                        <span class="text-muted fw-bold">Cannot edit Admin</span>
-                    }
                 </div>
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
 </div>
 
-<!-- JS to set hidden input values -->
 <script>
     function setRoleValue(userId, inputIdPrefix) {
         const dropdown = document.getElementById(`roleDropdown-${userId}`);

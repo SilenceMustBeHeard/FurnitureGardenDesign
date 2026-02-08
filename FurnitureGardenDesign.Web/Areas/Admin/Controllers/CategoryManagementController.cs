@@ -34,7 +34,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ToggleActive(Guid id)
         {
             await _categoryService.ToggleCategoryAsync(id);
-            TempData["Success"] = "Category status toggled!";
+            TempData["Success"] = "Category status changed!";
             return RedirectToAction(nameof(EditList));
         }
 
@@ -42,6 +42,9 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
         // GET: Admin/CategoryManagement/Create
         [HttpGet]
         public IActionResult Create() => View();
+
+
+
 
 
         // POST: Admin/CategoryManagement/Create

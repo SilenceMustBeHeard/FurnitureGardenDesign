@@ -36,12 +36,13 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
 
                 // all roles except "Admin"
                 result.Add(new UserManagmentIndexViewModel
-                    {
-                        Id = Guid.Parse(user.Id),  // <-- convert back to Guid if needed
-                        Email = user.Email!,
-                        Roles = roles
-                    });
-                
+                {
+                    Id = Guid.Parse(user.Id),  // <-- convert back to Guid if needed
+                    Email = user.Email!,
+                    Roles = roles,
+                    LockoutEnd = user.LockoutEnd
+                });
+
             }
 
             return result;
@@ -75,5 +76,42 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
             return (false, string.Empty);
         }
 
+        // finds the user by id and returns the user data with the roles
+        public async Task<UserManagmentIndexViewModel> FindUserByIdAsync(string userId)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+                return null;
+            var roles = await _userManager.GetRolesAsync(user);
+            return new UserManagmentIndexViewModel
+            {
+                Id = Guid.Parse(user.Id),
+                Email = user.Email!,
+                Roles = roles,
+                LockoutEnd = user.LockoutEnd
+            };
+        }
+
+        // Delete user by id
+
+        public async Task<(bool Failed, string ErrorMessage)> DisableUser(string userId)
+        {
+            var user = await _userManager.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return (true, "User not found.");
+
+            // sets the value to the maximum possible date, effectively locking the user out indefinitely
+            // it can also be used for kick/ban user for set amount of time by setting the value to DateTimeOffset.UtcNow.AddMinutes(30) for example
+
+            user.LockoutEnd = DateTimeOffset.MaxValue;
+
+            await _userManager.UpdateAsync(user);
+
+            return (false, string.Empty);
+        }
+
     }
+
 }

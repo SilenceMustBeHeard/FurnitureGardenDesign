@@ -16,12 +16,15 @@ namespace FurnitureGardenDesign.Data.Configuration
 
             builder.Property(c => c.IsDeleted)
                    .HasDefaultValue(false);
+
+
             builder.HasQueryFilter(f => !f.IsDeleted);
 
             builder.HasMany(c => c.Orders)
                    .WithOne(o => o.Category)
                    .HasForeignKey(o => o.CategoryId)
                    .OnDelete(DeleteBehavior.Restrict);
+
 
             builder.HasMany(c => c.CatalogDesigns)
                    .WithOne(d => d.Category)

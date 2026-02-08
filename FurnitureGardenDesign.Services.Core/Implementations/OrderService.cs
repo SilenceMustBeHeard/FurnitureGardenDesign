@@ -1,6 +1,5 @@
 ﻿using Furniture_GardenDesign.Data.Enums;
 using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Data.Repository.Implementations;
 
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
@@ -8,9 +7,6 @@ using FurnitureGardenDesign.Web.ViewModels;
 using FurnitureGardenDesign.Web.ViewModels.Admin.Order;
 using FurnitureGardenDesign.Web.ViewModels.Orders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FurnitureGardenDesign.Services.Core.Implementations
 {
@@ -22,6 +18,10 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         {
             _orderRepo = orderRepo;
         }
+
+
+
+        // creates new order 
 
         public async Task CreateOrderAsync(string userId, OrderFormViewModel model)
         {
@@ -41,12 +41,16 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         }
 
 
-
+        // gets the count of all pending orders for admin or manager view
         public async Task<int> GetPendingOrdersCountAsync()
         {
             return await _orderRepo.CountPendingAsync();
         }
 
+
+
+
+        // gets all pending orders for admin or manager view
         public async Task<IEnumerable<AdminOrderListViewModel>> GetPendingOrdersAsync()
         {
             return await _orderRepo
@@ -66,8 +70,8 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 .ToListAsync();
         }
 
-        
 
+        // gets order details by id for admin or manager
         public async Task<DetailsOrderViewModel?> GetByIdAsync(Guid id)
         {
             var order = await _orderRepo.GetByIdAsync(id);
@@ -87,6 +91,8 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             };
         }
 
+
+        // reject order by id for admin or manager(sets status to rejected, imitates soft delete)
         public async Task<bool> RejectOrderAsync(Guid id)
         {
             var order = await _orderRepo.GetByIdAsync(id);
@@ -95,9 +101,42 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
             order.Status = OrderStatus.Rejected;
 
+          
+
+
+
             await _orderRepo.SaveChangesAsync();
             return true;
         }
+
+
+
+
+
+
+
+
+
+        // deletes the order (still in developement, not used in the application, but can be used for hard delete if needed)
+        public async Task<bool> DeleteOrderAsync(Guid id)
+        {
+            var order = await _orderRepo.GetByIdAsync(id);
+            if (order == null)
+                return false;
+
+        
+
+        
+            await _orderRepo.DeleteAsync(order);
+
+
+
+            await _orderRepo.SaveChangesAsync();
+            return true;
+        }
+
+
+
 
 
 

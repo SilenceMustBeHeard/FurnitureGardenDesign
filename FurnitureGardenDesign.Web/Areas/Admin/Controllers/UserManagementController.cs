@@ -19,6 +19,11 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
         {
             _userService = userService;
         }
+
+
+
+
+        // gets all users with their roles except the  admin
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -27,6 +32,8 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 
             return View(allUsers);
         }
+
+        // add role to user
 
         [HttpPost]
         public async Task<IActionResult> AssignRole(ChangeUserRoleViewModel model)
@@ -51,6 +58,23 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 
 
 
+
+
+
+        // Ban user (soft delete)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DisableUser(string userId)
+        {
+            var result = await _userService.DisableUser(userId);
+
+            if (result.Failed)
+                TempData["ErrorMessage"] = result.ErrorMessage;
+            else
+                TempData["SuccessMessage"] = "User disabled successfully.";
+
+            return RedirectToAction(nameof(Index));
+        }
 
 
 

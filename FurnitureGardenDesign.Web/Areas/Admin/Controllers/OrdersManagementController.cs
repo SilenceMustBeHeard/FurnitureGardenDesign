@@ -26,6 +26,9 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
         }
 
 
+
+
+       
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -36,9 +39,9 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 
 
 
-   
+      // creates a new order
         [HttpPost]
-        [ValidateAntiForgeryToken]
+      
         public async Task<IActionResult> Create(OrderFormViewModel model)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -59,9 +62,10 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 
 
 
+        // GET: Admin/OrdersManagement/Manage
 
-       
         [HttpGet]
+   
         public async Task<IActionResult> Manage()
         {
             var orders = await _orderService.GetPendingOrdersAsync();
@@ -69,9 +73,9 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
         }
 
 
+        // POST: Admin/OrdersManagement/Reject or view for further details /{id}
         [HttpPost]
-      
-        [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Reject(Guid id)
         {
             var result = await _orderService.RejectOrderAsync(id);
@@ -83,7 +87,8 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
         }
 
 
-
+        // gets all categories for the dropdown in the create order form
+        [HttpPost]
         private async Task LoadCategoriesAsync()
         {
             var categories = await _categoryService.GetAllActiveCategoriesAsync();
@@ -97,10 +102,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
                 .ToList();
         }   
 
-
+      // view the details of current order  
         public async Task<IActionResult> Details(Guid id)
         {
             var order = await _orderService.GetByIdAsync(id);
+
+        
 
             if (order == null)
             {
