@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FurnitureGardenDesign.Data.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,8 +25,14 @@ namespace FurnitureGardenDesign.Data.Models
         [MinLength(5)]
         public string Description { get; set; } = null!;
 
+        // URLs for 2D image 
         [Url]
-        public string ImageUrl { get; set; } = null!;
+        public string Image2DUrl { get; set; } = null!;
+
+        // URL for 3D model (optional)
+        [Url]
+        public string? Model3DUrl { get; set; }
+
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
@@ -35,7 +42,12 @@ namespace FurnitureGardenDesign.Data.Models
 
         public bool IsActive { get; set; } = true;
 
-               // materials used
+        // flag to indicate if the design has a 3D model
+        public Model3DStatus Model3DStatus { get; set; } = Model3DStatus.None;  
+
+
+
+        // materials used
         public virtual ICollection<Material> Materials { get; set; }
          = new HashSet<Material>();
 

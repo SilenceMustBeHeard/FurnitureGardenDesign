@@ -106,7 +106,7 @@ namespace FurnitureGardenDesign.Data.Seeding
                     throw new Exception($"CatalogDesign Description is NULL for: {design.Title}");
                 }
 
-                if (string.IsNullOrWhiteSpace(design.ImageUrl))
+                if (string.IsNullOrWhiteSpace(design.Image2DUrl))
                 {
                     throw new Exception($"CatalogDesign ImageUrl is NULL for: {design.Title}");
                 }

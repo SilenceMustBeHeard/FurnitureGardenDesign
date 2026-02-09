@@ -54,7 +54,7 @@ namespace FurnitureGardenDesign.Web.Controllers
                 Id = design.Id,
                 Title = design.Title,
                 Description = design.Description,
-                ImageUrl = design.ImageUrl,
+                Image2DUrl = design.Image2DUrl,
                 Price = design.Price,
                 AverageRating = design.Reviews.Any() ? design.Reviews.Average(r => r.Rating) : 0,
                 ReviewCount = design.Reviews.Count

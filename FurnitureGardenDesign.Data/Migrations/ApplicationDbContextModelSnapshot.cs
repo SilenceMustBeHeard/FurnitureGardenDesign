@@ -125,7 +125,7 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("Image2DUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -134,6 +134,12 @@ namespace FurnitureGardenDesign.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<int>("Model3DStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Model3DUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)

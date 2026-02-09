@@ -22,76 +22,36 @@ namespace FurnitureGardenDesign.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(int page = 1, int pageSize = 9)
         {
-            var allDesigns = await _catalogService.GetAllActiveAsync();
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            bool isGuest = !User.Identity!.IsAuthenticated;
 
-            // Total items before pagination
-            var totalItems = allDesigns.Count();
+            var designs = await _catalogService.GetPublicCatalogAsync(userId, page, pageSize, isGuest);
 
-            // Pagination
-            var pagedDesigns = allDesigns
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            // Restriction for guests - the first 3
-            if (!User.Identity!.IsAuthenticated && page == 1)
-            {
-                pagedDesigns = pagedDesigns.Take(3).ToList();
-            }
-
+            // За pagination
             ViewData["CurrentPage"] = page;
             ViewData["PageSize"] = pageSize;
-            ViewData["TotalItems"] = totalItems;
+            ViewData["TotalItems"] = await _catalogService.GetTotalActiveDesignsAsync(); 
 
-            var model = pagedDesigns.Select(d => new CatalogDesignViewModel
-            {
-                Id = d.Id,
-                Title = d.Title,
-                Description = d.Description,
-                ImageUrl = d.ImageUrl,
-                Price = d.Price,
-                CategoryName = d.Category.Name,
-                IsFavorited = userId != null &&
-                d.Favorites.Any(f => f.UserId == userId && !f.IsDeleted),
-                AverageRating = d.Reviews.Any()
-                    ? d.Reviews.Average(r => r.Rating)
-                    : 0,
-                ReviewCount = d.Reviews.Count
-            });
-
-            return View(model);
+            return View(designs);
         }
+
+
 
         // Details
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Details(Guid id)
         {
-            var design = await _catalogService.GetByIdAsync(id);
-            if (design == null)
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var model = await _catalogService.GetDetailsAsync(id, userId);
+
+            if (model == null)
                 return NotFound();
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var model = new CatalogDesignViewModel
-            {
-                Id = design.Id,
-                Title = design.Title,
-                Description = design.Description,
-                ImageUrl = design.ImageUrl,
-                Price = design.Price,
-                CategoryName = design.Category.Name,
-                IsFavorited = userId != null &&
-                              design.Favorites.Any(f => f.UserId == userId && !f.IsDeleted),
-                AverageRating = design.Reviews.Any()
-                    ? design.Reviews.Average(r => r.Rating)
-                    : 0,
-                ReviewCount = design.Reviews.Count
-            };
 
             return View(model);
         }
+
 
 
         // Toggle Favorite

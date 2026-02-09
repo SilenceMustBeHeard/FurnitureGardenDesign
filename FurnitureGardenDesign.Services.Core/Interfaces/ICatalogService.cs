@@ -13,7 +13,14 @@ namespace FurnitureGardenDesign.Services.Core.Interfaces
         Task AddToFavoritesAsync(string userId, Guid designId);
         Task RemoveFromFavoritesAsync(string userId, Guid designId);
         Task AddReviewAsync(string userId, Guid designId, int rating, string? comment);
-      
-        Task<IEnumerable<CatalogDesignViewModel>> GetPublicCatalogAsync();
+
+        Task<IEnumerable<CatalogDesignViewModel>> GetPublicCatalogAsync(string? userId, int page, int pageSize, bool isGuest);
+
+        Task<CatalogDesignViewModel?> GetDetailsAsync(Guid id, string? userId);
+
+
+        Task<int> GetTotalActiveDesignsAsync();
+
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using FurnitureGardenDesign.Data.Models;
+﻿using FurnitureGardenDesign.Data.Common.Enums;
+using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
@@ -25,7 +26,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             _reviewRepo = reviewRepo;
         }
 
-
+        // gets all active catalog designs with related data for admin panel or internal use
         public async Task<IEnumerable<CatalogDesign>> GetAllActiveAsync()
       => await _catalogRepo
           .GetAllAttached()
@@ -38,7 +39,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
           .ToListAsync();
 
 
-
+        // For admin panel or internal use
         public async Task<CatalogDesign?> GetByIdAsync(Guid id)
         {
             return await _catalogRepo
@@ -51,7 +52,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-
+        // Add to favorites
         public async Task AddToFavoritesAsync(string userId, Guid designId)
         {
             bool exists = await _favoriteRepo
@@ -70,6 +71,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             }
         }
 
+        // Soft delete from favorites
         public async Task RemoveFromFavoritesAsync(string userId, Guid designId)
         {
             var favorite = await _favoriteRepo
@@ -84,20 +86,8 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         }
 
 
-
+        // Add review
         public async Task AddReviewAsync(string userId, Guid designId, int rating, string? comment)
-        {
-            var review = new Review
-            {
-                CatalogDesignId = designId,
-                UserId = userId,
-                Rating = rating,
-                Comment = comment
-            };
-            await _reviewRepo.AddAsync(review);
-        }
-
-        public async Task AddReviewsAsync(string userId, Guid designId, int rating, string? comment)
         {
             var review = new Review
             {
@@ -111,32 +101,108 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             await _reviewRepo.SaveChangesAsync();
         }
 
-        
 
 
 
 
 
 
-        public async Task<IEnumerable<CatalogDesignViewModel>> GetPublicCatalogAsync()
-        
-            => await _catalogRepo
+        // For public catalog listing with pagination
+        public async Task<IEnumerable<CatalogDesignViewModel>> GetPublicCatalogAsync(
+    string? userId,
+    int page,
+    int pageSize,
+    bool isGuest)
+        {
+            var query = _catalogRepo
                 .GetAllAttached()
-                .Where(d => d.IsActive)
+                .Where(d => d.IsActive);
+
+            var designs = await query
+                .OrderByDescending(d => d.CreatedOn)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .Select(d => new CatalogDesignViewModel
                 {
                     Id = d.Id,
                     Title = d.Title,
                     Description = d.Description,
-                    ImageUrl = d.ImageUrl,
+                    Image2DUrl = d.Image2DUrl,
+
+                    Model3DUrl = d.Model3DStatus == Model3DStatus.Ready
+                        ? d.Model3DUrl
+                        : null,
+
+                    Model3DStatus = d.Model3DStatus,
+
                     Price = d.Price,
+                    CategoryName = d.Category.Name,
+
+                    IsFavorited = userId != null &&
+                        d.Favorites.Any(f => f.UserId == userId && !f.IsDeleted),
+
                     AverageRating = d.Reviews.Any()
                         ? d.Reviews.Average(r => r.Rating)
                         : 0,
+
                     ReviewCount = d.Reviews.Count
                 })
                 .ToListAsync();
-        
+
+            // guest restriction
+            if (isGuest && page == 1)
+            {
+                designs = designs.Take(3).ToList();
+            }
+
+            return designs;
+        }
+
+
+        // get total count for pagination
+        public async Task<int> GetTotalActiveDesignsAsync()
+        {
+            return await _catalogRepo
+                .GetAllAttached()
+                .Where(d => d.IsActive)
+                .CountAsync();
+        }
+
+
+        // For details page
+        public async Task<CatalogDesignViewModel?> GetDetailsAsync(
+    Guid id,
+    string? userId)
+        {
+            return await _catalogRepo
+                .GetAllAttached()
+                .Where(d => d.Id == id && d.IsActive)
+                .Select(d => new CatalogDesignViewModel
+                {
+                    Id = d.Id,
+                    Title = d.Title,
+                    Description = d.Description,
+                    Image2DUrl = d.Image2DUrl,
+                    Model3DUrl = d.Model3DStatus == Model3DStatus.Ready
+                        ? d.Model3DUrl
+                        : null,
+                    Model3DStatus = d.Model3DStatus,
+                    Price = d.Price,
+                    CategoryName = d.Category.Name,
+
+                    IsFavorited = userId != null &&
+                        d.Favorites.Any(f => f.UserId == userId && !f.IsDeleted),
+
+                    AverageRating = d.Reviews.Any()
+                        ? d.Reviews.Average(r => r.Rating)
+                        : 0,
+
+                    ReviewCount = d.Reviews.Count
+                })
+                .FirstOrDefaultAsync();
+        }
+
+
 
 
     }
