@@ -5,10 +5,14 @@
     "title": "Gaming Desk",
     "categoryId": "33333333-3333-3333-3333-333333333333",
     "description": "Modern RGB gaming desk with sleek design.",
-    "imageUrl": "/images/sample1.jpg",
+    "image2DUrl": "/images/2D/sample1.jpg",
+    "model3DUrl": "/images/3D/gamingDesk.glb",
+    "model3DStatus": 2,
     "price": 965.040,
     "isActive": true
   },
+
+
 
 
 
@@ -18,7 +22,9 @@
     "title": "Gothic Gaming Bed",
     "categoryId": "44444444-4444-4444-4444-444444444444",
     "description": "Futuristic gaming bed with unique design and RGB lights.",
-    "imageUrl": "/images/sample5.jpg",
+    "image2DUrl": "/images/2D/sample5.jpg",
+    "model3DUrl": "/images/3D/gothicGamingBed.glb",
+    "model3DStatus": 2,
     "price": 259.00,
     "isActive": true
   },
@@ -27,16 +33,21 @@
     "title": "Japanese Style Training Cage",
     "categoryId": "11111111-1111-1111-1111-111111111111",
     "description": "Outdoor fitness cage.",
-    "imageUrl": "/images/sample4.jpg",
+    "image2DUrl": "/images/2D/sample4.jpg",
+    "model3DUrl": "/images/3D/fitnessCage.glb",
+    "model3DStatus": 2,
     "price": 8787.90,
     "isActive": true
   },
+
+
+
   {
 
     "title": "Urban Style Garden Lounge",
     "categoryId": "22222222-2222-2222-2222-222222222222",
     "description": "Simple garden set.",
-    "imageUrl": "/images/sample2.jpg",
+    "image2DUrl": "/images/2D/sample2.jpg",
     "price": 877.90,
     "isActive": true
   },
@@ -47,7 +58,7 @@
     "title": "Massive Table for Guests",
     "categoryId": "66666666-6666-6666-6666-666666666666",
     "description": "Comfortable and elegant massive table and benches for your guests.",
-    "imageUrl": "/images/sample6.jpg",
+    "image2DUrl": "/images/2D/sample6.jpg",
     "price": 2877.90,
     "isActive": true
   }

@@ -108,7 +108,7 @@ namespace FurnitureGardenDesign.Data.Seeding
 
                 if (string.IsNullOrWhiteSpace(design.Image2DUrl))
                 {
-                    throw new Exception($"CatalogDesign ImageUrl is NULL for: {design.Title}");
+                    throw new Exception($"CatalogDesign Image2DUrl is NULL for: {design.Title}");
                 }
 
                 if (design.CategoryId == Guid.Empty)

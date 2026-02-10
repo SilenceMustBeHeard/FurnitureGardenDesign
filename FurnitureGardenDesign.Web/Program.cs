@@ -7,8 +7,8 @@ using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,36 +32,22 @@ builder.Services.AddDefaultIdentity<AppUser>(options =>
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
-
-
-
+// Authorization
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminPolicy", policy =>
         policy.RequireRole("Admin"));
 });
 
-
-
-
-
+// Repositories & Services
 builder.Services.RegisterRepositories(typeof(ICategoryRepository).Assembly);
-
-
 builder.Services.RegisterServices(typeof(ICategoryService).Assembly);
 builder.Services.AddScoped<ICategoryServiceClient, CategoryServiceClient>();
-
-
-
-
-
-
 
 // Build App 
 var app = builder.Build();
 
-//  Seed Roles and Users
+//  Seed Roles, Users and Data
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -72,14 +58,19 @@ using (var scope = app.Services.CreateScope())
     await IdentitySeeder.SeedAdminAsync(userManager);
     await IdentitySeeder.SeedManagerAsync(userManager);
 
-    
     await DbSeeder.SeedAsync(context);
 }
 
+//  Static files with .glb support for 3D models
+var provider = new FileExtensionContentTypeProvider();
+provider.Mappings[".glb"] = "model/gltf-binary";
 
-//  Middleware 
+app.UseStaticFiles(new StaticFileOptions
+{
+    ContentTypeProvider = provider
+});
 
-
+// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -91,33 +82,18 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthentication();
-
 app.UseAuthorization();
 
-// Middleware for /manager routes
-//app.UseMiddleware<ManagerAccessMiddleware>();
-
-
-
-
-
-//  Routing 
-
-
+// Routing
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area}/{controller=Home}/{action=Index}/{id?}");
 
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"
-);
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
 

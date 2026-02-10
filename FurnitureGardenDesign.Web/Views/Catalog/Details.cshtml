@@ -75,29 +75,50 @@
             </form>
 
             <a asp-action="Index" class="btn btn-outline-glass mt-3">Back to Catalog</a>
-        </div>
+        </div>  
     </div>
 </div>
+
 
 @* ---------------- 3D Modal ---------------- *@
 @if (Model.Model3DStatus == FurnitureGardenDesign.Data.Common.Enums.Model3DStatus.Ready)
 {
     <div class="modal fade" id="model3DModal" tabindex="-1" aria-labelledby="model3DModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content bg-dark text-light">
+            <div class="modal-content bg-white text-dark">
                 <div class="modal-header">
                     <h5 class="modal-title" id="model3DModalLabel">@Model.Title - 3D View</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <small class="position-absolute top-0 start-50 translate-middle-x mt-2 text-bg-dark">
+                        Press Esc to leave
+                    </small>
+                @*     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
                 </div>
-                <div class="modal-body">
+
+                <div class="modal-body p-0 position-relative">
+             
+
                     <model-viewer src="@Model.Model3DUrl"
-                                  camera-controls
+                    @* for future add of manual rotation*@
+                    @* camera-controls *@
                                   auto-rotate
-                                  style="width:100%; height:600px;">
+                                  interaction-prompt="manual"
+                                  style="width:100%; height:700px; background-color:white;">
                     </model-viewer>
+
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // press ESC to close
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                var modalEl = document.getElementById('model3DModal');
+                var modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            }
+        });
+    </script>
 }
 
