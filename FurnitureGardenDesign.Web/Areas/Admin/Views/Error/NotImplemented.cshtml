@@ -1,30 +1,49 @@
 ﻿@{
-    ViewData["Title"] = "Not Implemented";
+    ViewData["Title"] = "Feature Under Construction";
+    var featureName = ViewBag.FeatureName as string ?? "This feature";
 }
 
 <div class="d-flex justify-content-center align-items-center min-vh-75">
-    <div class="card glass shadow-lg text-center p-5" style="max-width: 600px;">
-        
-       @* Error image *@
-        <img src="~/images/errors/dead-robot.png" />
+    <div class="card glass shadow-lg text-center p-5" style="max-width: 850px;">
 
-             alt="Dead robot"
+
+        <img src="~/images/errors/dead-robot.png"
+             alt="Under construction"
              class="img-fluid mb-4"
-             style="max-height: 220px;" />
+             style="max-height: 700px;" />
 
         <h1 class="fw-bold text-warning mb-3">
-            🚧 Feature Not Implemented
+            🚧 @featureName
         </h1>
 
+        <h4 class="text-light mb-4">
+            is still being crafted.
+        </h4>
+
         <p class="text-light mb-4">
-            Something is missing...<br />
-            This part of the system is still under construction.
+            Our workshop is currently designing and refining this module.<br />
+            Quality takes time — and we build things properly.
         </p>
 
-        <a asp-controller="Home"
-           asp-action="Index"
-           class="btn btn-primary-glass">
-            ⬅ Back to Home
-        </a>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn btn-primary-glass px-4">
+                ⬅ Back to Home
+            </a>
+
+            <a asp-controller="Catalog"
+               asp-action="Index"
+               class="btn btn-outline-glass px-4">
+                Browse Catalog
+            </a>
+
+        </div>
+
+        <p class="text-muted small mt-4">
+            System Status: 501 – Not Implemented
+        </p>
+
     </div>
 </div>

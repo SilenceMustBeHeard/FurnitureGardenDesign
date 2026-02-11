@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
 
-namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
+namespace FurnitureGardenDesign.Web.Controllers
 {
     
 
     public class ErrorController : Controller
     {
-        [Route("Error/NotImplemented")]
-        public IActionResult NotImplemented()
+        public IActionResult NotImplemented(string? feature)
         {
+            ViewBag.FeatureName = feature ?? "This feature";
             return View();
         }
         public IActionResult NotAllowed()
