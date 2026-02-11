@@ -192,12 +192,12 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                // Only return Model3DUrl if it exists, otherwise null
                // used to control frontend rendering and loading of 3D model
                Model3DUrl = !string.IsNullOrWhiteSpace(d.Model3DUrl)
-        ? d.Model3DUrl
-        : null,
+               ? d.Model3DUrl
+               : null,
                // Determine 3D model status based on presence of URL
                Model3DStatus = !string.IsNullOrWhiteSpace(d.Model3DUrl)
-        ? Model3DStatus.Ready
-        : Model3DStatus.None,
+              ? Model3DStatus.Ready
+               : Model3DStatus.None,
 
                Price = d.Price,
                CategoryName = d.Category.Name,
@@ -211,7 +211,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
                ReviewCount = d.Reviews.Count
            })
-.FirstOrDefaultAsync();
+              .FirstOrDefaultAsync();
 
             
         }

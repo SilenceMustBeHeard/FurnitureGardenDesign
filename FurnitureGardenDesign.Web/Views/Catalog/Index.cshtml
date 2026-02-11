@@ -82,20 +82,38 @@
         </div>
     }
 </div>
-</div>
+
 
 @* Show more/ Pagination *@
+@*Back button*@
+@if (currentPage > 1)
+{
+    <a class="btn btn-outline-glass"
+       asp-action="Index"
+       asp-route-page="@(currentPage - 1)"
+       asp-route-pageSize="@pageSize">
+        Back
+    </a>
+}
+
+@*Show more button*@
 @if (currentPage < totalPages)
 {
     <div class="text-center mt-4">
+
         <a class="btn btn-outline-glass"
            asp-action="Index"
            asp-route-page="@(currentPage + 1)"
            asp-route-pageSize="@pageSize">
             Show more
         </a>
+
+       
+
     </div>
+
 }
+</div>
 
 
 @section Scripts {

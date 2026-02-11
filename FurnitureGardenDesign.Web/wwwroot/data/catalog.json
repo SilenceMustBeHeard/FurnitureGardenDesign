@@ -14,6 +14,24 @@
 
 
 
+  {
+
+    "title": "Floating Bed",
+    "categoryId": "44444444-4444-4444-4444-444444444444",
+    "description": "Stylish floating bed with modern design.",
+    "image2DUrl": "/images/2D/floatingPlatformBed.jpg",
+    "price": 3259.00,
+    "isActive": true
+  },
+  {
+
+    "title": "Beautiful Sideboard Cabinet",
+    "categoryId": "44444444-4444-4444-4444-444444444444",
+    "description": "Stylish sideboard cabinet with modern design.",
+    "image2DUrl": "/images/2D/sideboardCabinet.jpg",
+    "price": 1259.00,
+    "isActive": true
+  },
 
 
 
@@ -40,6 +58,36 @@
     "isActive": true
   },
 
+  {
+
+    "title": "Floating Lounge Chair",
+    "categoryId": "66666666-6666-6666-6666-666666666666",
+    "description": "Exquisite floating lounge chair with modern design.",
+    "image2DUrl": "/images/2D/floatinLoungeChair.jpg",
+    "price": 1877.90,
+    "isActive": true
+  },
+
+  {
+
+    "title": "Fluid TV Stand",
+    "categoryId": "66666666-6666-6666-6666-666666666666",
+    "description": "Sleek and modern fluid TV stand.",
+    "image2DUrl": "/images/2D/fluidTvStand.jpg",
+    "price": 1877.90,
+    "isActive": true
+  },
+
+
+  {
+
+    "title": "Modular Sofa",
+    "categoryId": "66666666-6666-6666-6666-666666666666",
+    "description": "Stylish and versatile modular sofa.",
+    "image2DUrl": "/images/2D/modularSofa.jpg",
+    "price": 1877.90,
+    "isActive": true
+  },
 
 
   {
@@ -48,6 +96,15 @@
     "categoryId": "22222222-2222-2222-2222-222222222222",
     "description": "Simple garden set.",
     "image2DUrl": "/images/2D/sample2.jpg",
+    "price": 877.90,
+    "isActive": true
+  },
+  {
+
+    "title": "Sculptural Coffee Table",
+    "categoryId": "22222222-2222-2222-2222-222222222222",
+    "description": "Brilliantly designed coffee table.",
+    "image2DUrl": "/images/2D/sculpturalCoffeeTable.jpg",
     "price": 877.90,
     "isActive": true
   },
