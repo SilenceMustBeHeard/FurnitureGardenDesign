@@ -1,4 +1,5 @@
 ﻿using FurnitureGardenDesign.Data;
+using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.EntityFrameworkCore;
@@ -10,66 +11,79 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 {
     public class ProfileService : IProfileService
     {
-        private readonly ApplicationDbContext context;
 
-        public ProfileService(ApplicationDbContext context)
+        // seed repositories
+        private readonly IAppUserRepository userRepository;
+        private readonly IInboxMessageRepository messageRepository;
+      
+
+        public ProfileService(
+            IAppUserRepository userRepository,
+            IInboxMessageRepository messageRepository
+             )
         {
-            this.context = context;
+            this.userRepository = userRepository;
+            this.messageRepository = messageRepository;
         }
 
 
-        // TODO: Map the rest of the properties (FirstName, LastName, Address) when they are added to the AppUser model
-        // get the user profile along with their inbox messages, ordered by most recent first
+        // gets the profile data for the user, including their inbox messages
+        // this is used in the profile page to display user information and messages
         public async Task<ProfileViewModel?> GetProfileAsync(string userId)
         {
-            var user = await context.Users
-                .Include(u => u.InboxMessages)
-                    .ThenInclude(m => m.DesignVariant)
-                .FirstOrDefaultAsync(u => u.Id == userId);
+            var model = await userRepository
+                .GetAllAttached()
+                .Where(u => u.Id == userId)
+                .Select(u => new ProfileViewModel
+                {
+                    Id = u.Id,
+                    Email = u.Email!,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Address = u.Address,
 
-            if (user == null) return null;
+                    Inbox = u.InboxMessages
+                        .OrderByDescending(x => x.CreatedOn)
+                        .Select(x => new InboxMessageViewModel
+                        {
+                            Id = x.Id,
+                            DesignImageUrl = x.DesignVariant!.ImageUrl,
+                            Notes = x.DesignVariant!.Notes,
+                            IsRead = x.IsRead,
+                            CreatedOn = x.CreatedOn
+                        })
+                        .ToList()
+                })
+                .FirstOrDefaultAsync();
 
-            return new ProfileViewModel
-            {
-                Id = user.Id,
-                Email = user.Email!,
-            
-
-                Inbox = user.InboxMessages
-                    .OrderByDescending(x => x.CreatedOn)
-                    .Select(x => new InboxMessageViewModel
-                    {
-                        Id = x.Id,
-                        DesignImageUrl = x.DesignVariant!.ImageUrl,
-                        Notes = x.DesignVariant!.Notes,
-                        IsRead = x.IsRead,
-                        CreatedOn = x.CreatedOn
-                    })
-                    .ToList()
-            };
+            return model;
         }
 
-        // mark a specific message as read for the admin,
-        // ensuring that only the intended recipient can mark it as read
+
+        // marks a message as read when the user views it in their inbox,
+        // this is used to update the message status in the database and reflect it in the UI
         public async Task MarkMessageAsReadAsync(Guid messageId, string userId)
         {
-            var message = await context.InboxMessages
+            var message = await messageRepository
                 .FirstOrDefaultAsync(x => x.Id == messageId && x.ReceiverId == userId);
 
-            if (message == null) return;
+            if (message == null)
+                return;
 
             message.IsRead = true;
-            await context.SaveChangesAsync();
+
+            await messageRepository.UpdateAsync(message);
+
         }
 
-
-        // get the count of unread messages for the user,
-        // which can be displayed in the UI to notify them of new messages
+        // gets the count of unread messages for the user, this is used to display a notification badge in the UI
         public async Task<int> GetUnreadCountAsync(string userId)
         {
-            return await context.InboxMessages
+            return await messageRepository
+                .GetAllAttached()
                 .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
         }
     }
+
 
 }

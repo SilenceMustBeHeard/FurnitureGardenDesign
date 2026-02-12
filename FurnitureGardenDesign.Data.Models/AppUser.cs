@@ -7,7 +7,8 @@ namespace FurnitureGardenDesign.Data.Models
     public class AppUser : IdentityUser
     {
 
-        public string? FullName { get; set; }    // Personalization Purposes
+        public string? FirstName { get; set; }    // Personalization Purposes
+        public string? LastName { get; set; }     // by choice
         public string? Address { get; set; }     // by choice
 
         // Navigation

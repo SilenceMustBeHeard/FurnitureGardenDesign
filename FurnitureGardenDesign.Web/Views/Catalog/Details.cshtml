@@ -1,84 +1,111 @@
 ﻿@model FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogDesignViewModel
 
-<div class="row justify-content-center">
-    <div class="col-lg-8">
-        <div class="card glass-card p-4 text-light position-relative">
+<div class="container py-5">
+    <div class="card glass-card p-4 text-light shadow-lg border-0 rounded-4">
 
-            @* ---------------- 3D Button ---------------- *@
-            <div class="position-absolute top-0 end-0 p-3">
-                @if (Model.Model3DStatus == FurnitureGardenDesign.Data.Common.Enums.Model3DStatus.Ready && !string.IsNullOrEmpty(Model.Model3DUrl))
-                {
-                  @*   if render uploaded and ready, show the button to open the 3D modal *@
-                    <button class="btn btn-outline-light"
-                            data-bs-toggle="modal"
-                            data-bs-target="#model3DModal">
-                        View in 3D
-                    </button>
-                }
-                else
-                {
-                    @* if not - show disabled button with message *@
-                    <button class="btn btn-danger" disabled>
-                        No Render uploaded yet!
-                    </button>
-                }
+        @*  Back Button  *@
+        <a asp-action="Index" class="btn btn-sm btn-outline-glass">
+            ← Back
+        </a>
+
+        <div class="row g-4">
+
+          @*   LEFT: IMAGE *@
+            <div class="col-lg-9 text-center">
+                <img src="@Model.Image2DUrl"
+                     class="img-fluid rounded-4 shadow details-img"
+                     alt="@Model.Title" />
             </div>
 
+            @* RIGHT: DETAILS *@
+            <div class="col-lg-4">
 
-      
+                <h2 class="fw-bold mb-3">@Model.Title</h2>
 
-            <h2 class="glass-title mb-3">@Model.Title</h2>
+                <p class="glass-text-muted">@Model.Description</p>
 
-            <img src="@Model.Image2DUrl" class="img-fluid details-img mb-4" alt="@Model.Title" />
+                <hr class="border-light opacity-25" />
 
-            <p class="glass-text-muted mb-3">@Model.Description</p>
+                <div class="mb-2">
+                    <span class="text-secondary">Category:</span>
+                    <strong>@Model.CategoryName</strong>
+                </div>
 
-            <div class="mb-2">
-                <strong>Category:</strong> @Model.CategoryName
+                <div class="mb-2">
+                    <span class="text-secondary">Price:</span>
+                    <span class="text-success fs-5 fw-bold">
+                        @Model.Price.ToString("C")
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <span class="text-secondary">Rating:</span>
+                    <span class="text-warning fw-semibold">
+                        @Model.AverageRating ★
+                    </span>
+                    <span class="small text-muted">
+                        (@Model.ReviewCount reviews)
+                    </span>
+                </div>
+
+                @* ACTION BUTTONS *@
+                <div class="d-flex flex-wrap gap-2 mt-4">
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-controller="Catalog"
+                              asp-action="ToggleFavorite"
+                              method="post"
+                              class="d-inline">
+
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+
+                            <button type="submit"
+                                  class="btn btn-outline-glass" @(Model.IsFavorited ? "btn-danger" : "btn-outline-danger")">
+                                @(Model.IsFavorited ? "❤️ Remove" : "🤍 Favorite")
+                            </button>
+                        </form>
+
+                        <a asp-controller="Review"
+                           asp-action="Write"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-outline-glass">
+                            Write Review
+                        </a>
+
+                        <a asp-controller="Review"
+                           asp-action="Reviews"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-outline-glass">
+                            Reviews
+                        </a>
+                    }
+
+                    @* 3D Button *@
+                    @if (Model.Model3DStatus == FurnitureGardenDesign.Data.Common.Enums.Model3DStatus.Ready
+                                        && !string.IsNullOrEmpty(Model.Model3DUrl))
+                    {
+                        <button class="btn btn-outline-glass"
+                                data-bs-toggle="modal"
+                                data-bs-target="#model3DModal">
+                            View in 3D
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-secondary" disabled>
+                            3D Not Available
+                        </button>
+                    }
+
+                </div>
+
             </div>
-
-            <div class="mb-2">
-                <strong>Price:</strong> <span class="text-success">@Model.Price.ToString("C")</span>
-            </div>
-
-            <div class="mb-4">
-                <strong>Rating:</strong>
-                <span class="text-warning">@Model.AverageRating ★</span>
-                <span class="glass-text-muted small">(@Model.ReviewCount reviews)</span>
-            </div>
-
-            <form asp-controller="Catalog"
-                  asp-action="ToggleFavorite"
-                  method="post"
-                  class="favorite-form">
-
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="id" value="@Model.Id" />
-                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <button type="submit"
-                            class="btn @(Model.IsFavorited ? "btn-danger" : "btn-outline-danger")">
-                        @(Model.IsFavorited ? "❤️ Remove from favorites" : "🤍 Add to favorites")
-                    </button>
-
-                    <a asp-controller="Review" asp-action="Write" asp-route-id="@Model.Id" class="btn btn-outline-glass">
-                        Write Review
-                    </a>
-
-                    <a asp-controller="Review" asp-action="Reviews" asp-route-id="@Model.Id" class="btn btn-outline-glass">
-                        View Reviews
-                    </a>
-                }
-
-            </form>
-
-            <a asp-action="Index" class="btn btn-outline-glass mt-3">Back to Catalog</a>
-        </div>  
+        </div>
     </div>
 </div>
-
 
 @* ---------------- 3D Modal ---------------- *@
 @if (Model.Model3DStatus == FurnitureGardenDesign.Data.Common.Enums.Model3DStatus.Ready)
@@ -91,15 +118,15 @@
                     <small class="position-absolute top-0 start-50 translate-middle-x mt-2 text-bg-dark">
                         Press Esc to leave
                     </small>
-                @*     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+                    @*     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
                 </div>
 
                 <div class="modal-body p-0 position-relative">
-             
+
 
                     <model-viewer src="@Model.Model3DUrl"
-                    @* for future add of manual rotation*@
-                    @* camera-controls *@
+                                  @* for future add of manual rotation*@
+                                  @* camera-controls *@
                                   auto-rotate
                                   interaction-prompt="manual"
                                   style="width:100%; height:700px; background-color:white;">
