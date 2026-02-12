@@ -1,0 +1,45 @@
+﻿@using FurnitureGardenDesign.Web.ViewModels.User
+
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container mt-4">
+
+    <div class="row">
+
+      @*  user info *@
+        <div class="col-lg-4 mb-4">
+            <div class="card glass-card p-4">
+                <h4><i class="bi bi-person-circle"></i> Profile</h4>
+                <hr />
+                <p><strong>Name:</strong> @Model.FirstName @Model.LastName  Not Set</p>
+                <p><strong>Email:</strong> @Model.Email</p>
+                <p><strong>Address:</strong> @Model.Address  Not Set</p>
+            </div>
+        </div>
+
+      @*  inbox *@
+        <div class="col-lg-8">
+            <div class="card glass-card p-4">
+                <h4><i class="bi bi-inbox"></i> Inbox</h4>
+                <hr />
+
+                @if (!Model.Inbox.Any())
+                {
+                    <p class="text-muted">No messages yet.</p>
+                }
+                else
+                {
+                    @foreach (var message in Model.Inbox)
+                    {
+                        @await Html.PartialAsync("_InboxItem", message)
+                    }
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+

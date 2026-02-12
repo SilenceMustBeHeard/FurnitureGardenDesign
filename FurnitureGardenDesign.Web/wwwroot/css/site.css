@@ -121,15 +121,20 @@ html[data-bs-theme="dark"] .nav-link {
     }
 
 html[data-bs-theme="light"] .auth-btn-glass {
-    background: rgba(255,255,255,0.75);
-    border: 1px solid rgba(0,0,0,0.12);
-    color: #3a1f00;
+       background: linear-gradient(50deg, #db87409f, #FFD700);
+    border: none;
+    color: #8B4000;
+    transition: transform .4s ease, box-shadow .4s ease;
 }
 
 html[data-bs-theme="dark"] .auth-btn-glass {
-    background: rgba(255,255,255,0.10);
-    border: 1px solid rgba(120,200,255,0.25);
-    color: #16f5d999;
+    background: linear-gradient(50deg, rgba(56,189,248,.4), #0f172a);
+    border: none;
+    color: #258cfb;
+    font-weight: 140;
+    padding: .6rem 1.4rem;
+    border-radius: 14px;
+    transition: transform .6s ease, box-shadow .6s ease, background .6s ease;
 }
 
 
@@ -141,9 +146,13 @@ html[data-bs-theme="light"] .btn-auth-glass {
 }
 
 html[data-bs-theme="dark"] .btn-auth-glass {
-    background: rgba(255, 255, 255, 0.10) !important;
-    border: 1px solid rgba(120, 200, 255, 0.25) !important;
-    color: #0d18448c ;
+    background: linear-gradient(50deg, rgba(56,189,248,.4), #0f172a);
+    border: none;
+    color: #258cfb;
+    font-weight: 140;
+    padding: .6rem 1.4rem;
+    border-radius: 14px;
+    transition: transform .6s ease, box-shadow .6s ease, background .6s ease;
 }
 
 .btn-auth-glass:hover {

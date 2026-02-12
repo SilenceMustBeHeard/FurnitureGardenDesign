@@ -1,0 +1,36 @@
+﻿@using FurnitureGardenDesign.Web.ViewModels.User
+
+@model InboxMessageViewModel
+
+<div class="glass-list-item p-3 mb-3 @(Model.IsRead ? "" : "border border-warning")">
+    <div class="d-flex justify-content-between align-items-start">
+
+        <div>
+            <small class="text-muted">
+                @Model.CreatedOn.ToLocalTime().ToString("dd MMM yyyy HH:mm")
+            </small>
+
+            <div class="mt-2">
+                <img src="@Model.DesignImageUrl"
+                     class="img-fluid rounded"
+                     style="max-height:150px;" />
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Notes))
+            {
+                <p class="mt-2">@Model.Notes</p>
+            }
+        </div>
+
+        @if (!Model.IsRead)
+        {
+            <form asp-action="MarkAsRead"
+                  method="post" class="ms-2">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button class="btn btn-outline-glass btn-sm">
+                    Mark as read
+                </button>
+            </form>
+        }
+    </div>
+</div>
