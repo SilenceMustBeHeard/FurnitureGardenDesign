@@ -16,5 +16,10 @@ namespace FurnitureGardenDesign.Data.Models
 
         public virtual ICollection<Favorite> Favorites { get; set; } 
             = new HashSet<Favorite>();
+
+
+
+        public ICollection<InboxMessage> InboxMessages { get; set; }
+    = new HashSet<InboxMessage>();
     }
 }

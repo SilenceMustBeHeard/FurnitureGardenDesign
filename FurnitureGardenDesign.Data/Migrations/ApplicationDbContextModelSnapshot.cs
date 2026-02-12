@@ -237,6 +237,37 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.ToTable("Favorites");
                 });
 
+            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.InboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DesignVariantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DesignVariantId");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.ToTable("InboxMessage");
+                });
+
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Material", b =>
                 {
                     b.Property<Guid>("Id")
@@ -538,6 +569,23 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.InboxMessage", b =>
+                {
+                    b.HasOne("FurnitureGardenDesign.Data.Models.DesignVariant", "DesignVariant")
+                        .WithMany()
+                        .HasForeignKey("DesignVariantId");
+
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "Receiver")
+                        .WithMany("InboxMessages")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DesignVariant");
+
+                    b.Navigation("Receiver");
+                });
+
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Order", b =>
                 {
                     b.HasOne("FurnitureGardenDesign.Data.Models.Category", "Category")
@@ -630,6 +678,8 @@ namespace FurnitureGardenDesign.Data.Migrations
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.AppUser", b =>
                 {
                     b.Navigation("Favorites");
+
+                    b.Navigation("InboxMessages");
 
                     b.Navigation("Orders");
                 });
