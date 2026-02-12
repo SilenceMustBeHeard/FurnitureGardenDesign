@@ -1,4 +1,6 @@
 ﻿using FurnitureGardenDesign.Data.Models;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
@@ -6,12 +8,21 @@ namespace FurnitureGardenDesign.Data.Seeding
 {
     public static class DbSeeder
     {
+
+
+        // Main seeding method to call individual seeders
         public static async Task SeedAsync(ApplicationDbContext context)
         {
             await SeedCategoriesAsync(context);
             await SeedCatalogAsync(context);
+         
         }
 
+
+
+
+
+        // Seed Categories from JSON file
         public static async Task SeedCategoriesAsync(ApplicationDbContext context)
         {
             if (await context.Categories.AnyAsync())
@@ -30,17 +41,24 @@ namespace FurnitureGardenDesign.Data.Seeding
             {
                 throw new Exception($"categories.json NOT FOUND at: {jsonPath}");
             }
-
+            // Read and deserialize JSON
             var json = await File.ReadAllTextAsync(jsonPath);
+
+
+
 
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
 
+
+            // Deserialize JSON to List<Category>
             var categories = JsonSerializer.Deserialize<List<Category>>(json, options)
                 ?? throw new Exception("categories.json is empty or invalid");
 
+
+            // Validate each category and set IsDeleted to true
             foreach (var category in categories)
             {
                 if (string.IsNullOrWhiteSpace(category.Name))
@@ -60,10 +78,13 @@ namespace FurnitureGardenDesign.Data.Seeding
 
                 category.IsDeleted = true;
             }
-
+            // Add categories to the database
             await context.Categories.AddRangeAsync(categories);
             await context.SaveChangesAsync();
         }
+
+
+        // Seed CatalogDesigns from JSON file
 
         public static async Task SeedCatalogAsync(ApplicationDbContext context)
         {

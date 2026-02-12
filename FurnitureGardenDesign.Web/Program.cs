@@ -63,8 +63,11 @@ using (var scope = app.Services.CreateScope())
 
 //  Static files with .glb support for 3D models
 var provider = new FileExtensionContentTypeProvider();
+
+// Add .glb MIME type for 3D models
 provider.Mappings[".glb"] = "model/gltf-binary";
 
+// Serve static files with the custom content type provider
 app.UseStaticFiles(new StaticFileOptions
 {
     ContentTypeProvider = provider

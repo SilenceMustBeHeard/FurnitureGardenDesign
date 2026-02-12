@@ -27,7 +27,7 @@ namespace FurnitureGardenDesign.Web.Controllers
 
             var designs = await _catalogService.GetPublicCatalogAsync(userId, page, pageSize, isGuest);
 
-            // За pagination
+            // for pagination
             ViewData["CurrentPage"] = page;
             ViewData["PageSize"] = pageSize;
             ViewData["TotalItems"] = await _catalogService.GetTotalActiveDesignsAsync(); 
@@ -63,7 +63,7 @@ namespace FurnitureGardenDesign.Web.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Invalid Action.";
-                return Redirect(returnUrl ?? Url.Action("Index"));
+                return Redirect("Index");
             }
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -75,7 +75,7 @@ namespace FurnitureGardenDesign.Web.Controllers
                 : "You removed this design from favorites.";
 
             // if returnUrl is null, redirect to Index
-            return Redirect(returnUrl ?? Url.Action("Index"));
+            return Redirect("Index");
         }
 
 

@@ -8,15 +8,22 @@ namespace FurnitureGardenDesign.Data.Models
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
+
+        // Name of the category, e.g., "Living Room", "Bedroom", etc.
         [Required]
         [MaxLength(100)]
         [MinLength(3)]
         public string Name { get; set; } = null!;
 
+        // Optional description of the category
         public string? Description { get; set; }
+
+
         //flag
         public bool IsDeleted { get; set; } = true;
 
+
+        // Navigation properties
         public virtual ICollection<Order> Orders { get; set; }
         = new HashSet<Order>();
 

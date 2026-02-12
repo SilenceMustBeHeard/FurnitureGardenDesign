@@ -29,16 +29,16 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
 
 
 
-
-            public int Count()
+        // returns the total count of entities in the database
+        public int Count()
                 => _dbSet.Count();
 
             public async Task<int> CountAsync()
                 => await _dbSet.CountAsync();
 
 
-
-            public void Add(TEntity item)
+        // adds a new entity to the database and saves changes immediately
+        public void Add(TEntity item)
             {
                 _dbSet.Add(item);
                 _context.SaveChanges();
@@ -52,7 +52,9 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
 
             }
 
-            public void AddRange(IEnumerable<TEntity> items)
+
+        // adds multiple entities to the database and saves changes immediately
+        public void AddRange(IEnumerable<TEntity> items)
             {
                 _dbSet.AddRange(items);
                 _context.SaveChanges();
@@ -64,42 +66,52 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
                 await _context.SaveChangesAsync();
             }
 
-            public bool Delete(TEntity entity)
+        // performs a soft delete by setting the IsDeleted flag to true and saving changes
+
+        public bool Delete(TEntity entity)
          => SoftDelete(entity) > 0;
 
             public async Task<bool> DeleteAsync(TEntity entity)
                 => await SoftDeleteAsync(entity) > 0;
 
 
-            //public Task<TEntity> FindByConditionAsync(Expression<Func<TEntity, bool>> predicate)
-            //{
-            //    throw new NotImplementedException();
-            //}
+        //public Task<TEntity> FindByConditionAsync(Expression<Func<TEntity, bool>> predicate)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-            public TEntity? FirstOrDefault(Func<TEntity, bool> predicate)
+
+        // retrieves the first entity that matches the specified predicate or returns null if no match is found
+        public TEntity? FirstOrDefault(Func<TEntity, bool> predicate)
             => _dbSet.FirstOrDefault(predicate);
 
             public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
                 => await _dbSet.FirstOrDefaultAsync(predicate);
 
+        // retrieves all entities from the database as a list
+        public IEnumerable<TEntity> GetAll() => _dbSet.ToList();
 
-            public IEnumerable<TEntity> GetAll() => _dbSet.ToList();
+        // retrieves all categories from the database asynchronously as a list
 
         public async Task<IEnumerable<TEntity>> GetCategoriesAsync()
          => await _dbSet.ToListAsync();
 
+
+        // retrieves all entities (including soft-deleted ones) from the database as an IQueryable for further querying
         public IQueryable<TEntity> GetAllIncludingDeleted()
         {
             return _dbSet.IgnoreQueryFilters().AsQueryable();
         }
 
-
+        //  retrieves all entities, including those that have been soft-deleted, without applying any query filters.
         public IQueryable<TEntity> GetAllAttachedAsync()
                 => _dbSet.AsQueryable();
 
         public IQueryable<TEntity> GetAllAttached()
             => _dbSet.AsQueryable();
 
+
+        // retrieves an entity by its unique identifier (primary key) or returns null if no match is found
         public TEntity? GetById(TKey id)
                 => _dbSet.Find(id);
 
@@ -107,8 +119,9 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
             public async Task<TEntity?> GetByIdAsync(TKey id)
            => await _dbSet.FindAsync(id);
 
-
-            public async Task<bool> HardDeleteAsync(TEntity entity)
+        // performs a hard delete by removing the entity from the database and saving changes immediately
+        // (rarely used, as it permanently deletes the record instead of marking it as deleted)
+        public async Task<bool> HardDeleteAsync(TEntity entity)
             {
                 _dbSet.Remove(entity);
                 return await _context.SaveChangesAsync() > 0;
@@ -120,20 +133,29 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
                 return _context.SaveChanges() > 0;
             }
 
-            public void SaveChanges()
+
+        // saves any pending changes to the database, such as added, modified, or deleted entities
+        public void SaveChanges()
            => _context.SaveChanges();
 
 
             public async Task SaveChangesAsync()
            => await _context.SaveChangesAsync();
 
-            public TEntity? SingleOrDefault(Func<TEntity, bool> predicate)
+
+        // retrieves a single entity that matches the specified predicate
+        // or returns null if no match is found; throws an exception if multiple matches are found
+
+        public TEntity? SingleOrDefault(Func<TEntity, bool> predicate)
                 => _dbSet.SingleOrDefault(predicate);
 
             public async Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
                 => await _dbSet.SingleOrDefaultAsync(predicate);
 
-            public bool Update(TEntity item)
+
+        // updates an existing entity in the database by attaching it to the context,
+        // marking it as modified, and saving changes immediately
+        public bool Update(TEntity item)
             {
                 try
                 {
@@ -163,8 +185,8 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
                 }
             }
 
-
-            private int SoftDelete(TEntity entity)
+        // performs a soft delete by setting the IsDeleted flag to true and saving changes
+        private int SoftDelete(TEntity entity)
             {
                 var flagProperty = GetFlagProperty();
                 if (flagProperty != null && flagProperty.PropertyType == typeof(bool))
@@ -177,6 +199,9 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
                 throw new InvalidOperationException(ExceptionMessages.SoftDeleteNotSupported);
             }
 
+
+
+        // changes the IsDeleted flag of an entity to mark it as deleted or restore it, and saves changes
         public async Task<bool> ToggleStatusAsync(TEntity entity)
         {
             var entry = _context.Entry(entity);
@@ -206,7 +231,8 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
                 throw new InvalidOperationException(ExceptionMessages.SoftDeleteNotSupported);
             }
 
-            private PropertyInfo? GetFlagProperty()
+        // uses reflection to find a property named "IsDeleted" in the entity type, which is used for soft deletion
+        private PropertyInfo? GetFlagProperty()
 
                => typeof(TEntity).GetProperty("IsDeleted");
 
