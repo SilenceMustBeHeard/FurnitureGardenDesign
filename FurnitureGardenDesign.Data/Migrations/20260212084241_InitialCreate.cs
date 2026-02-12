@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FurnitureGardenDesign.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -194,9 +194,11 @@ namespace FurnitureGardenDesign.Data.Migrations
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Image2DUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Model3DUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    Model3DStatus = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -343,6 +345,33 @@ namespace FurnitureGardenDesign.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "InboxMessages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DesignVariantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ReceiverId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InboxMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_InboxMessages_AspNetUsers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InboxMessages_DesignVariants_DesignVariantId",
+                        column: x => x.DesignVariantId,
+                        principalTable: "DesignVariants",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -414,6 +443,16 @@ namespace FurnitureGardenDesign.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_InboxMessages_DesignVariantId",
+                table: "InboxMessages",
+                column: "DesignVariantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InboxMessages_ReceiverId",
+                table: "InboxMessages",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_CategoryId",
                 table: "Orders",
                 column: "CategoryId");
@@ -456,10 +495,10 @@ namespace FurnitureGardenDesign.Data.Migrations
                 name: "CatalogDesignMaterials");
 
             migrationBuilder.DropTable(
-                name: "DesignVariants");
+                name: "Favorites");
 
             migrationBuilder.DropTable(
-                name: "Favorites");
+                name: "InboxMessages");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
@@ -471,10 +510,13 @@ namespace FurnitureGardenDesign.Data.Migrations
                 name: "Materials");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "DesignVariants");
 
             migrationBuilder.DropTable(
                 name: "CatalogDesigns");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

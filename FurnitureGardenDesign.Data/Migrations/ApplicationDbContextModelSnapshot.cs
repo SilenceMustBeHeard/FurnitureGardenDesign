@@ -265,7 +265,7 @@ namespace FurnitureGardenDesign.Data.Migrations
 
                     b.HasIndex("ReceiverId");
 
-                    b.ToTable("InboxMessage");
+                    b.ToTable("InboxMessages");
                 });
 
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Material", b =>
