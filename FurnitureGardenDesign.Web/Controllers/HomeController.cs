@@ -17,6 +17,7 @@ namespace FurnitureGardenDesign.Web.Controllers
             _logger = logger;
         }
 
+        // The home page, about page, and privacy page are accessible to all users, including anonymous ones.
         [AllowAnonymous]
         public IActionResult Index() => View();
 
@@ -25,6 +26,9 @@ namespace FurnitureGardenDesign.Web.Controllers
 
         [AllowAnonymous]
         public IActionResult Privacy() => View();
+
+
+        // The error page is also accessible to all users, and it displays the request ID for debugging purposes.
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -1,5 +1,6 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,14 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
             : base(context)
         {
         }
+
+
+        public async Task<CatalogDesign?> GetByIdWithReviewsAsync(Guid id)
+        
+            => await GetAllAttached()
+                .Include(c => c.Reviews)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        
+
     }
 }

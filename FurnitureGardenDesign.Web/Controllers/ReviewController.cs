@@ -7,113 +7,78 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-
-
-
-
-
 namespace FurnitureGardenDesign.Web.Controllers
 {
     [Authorize]
     public class ReviewController : BaseController
     {
         private readonly IReviewService _reviewService;
-        private readonly ICatalogService _catalogService;
 
         public ReviewController(
             UserManager<AppUser> userManager,
-            IReviewService reviewService,
-            ICatalogService catalogService)
+            IReviewService reviewService)
             : base(userManager)
         {
             _reviewService = reviewService;
-            _catalogService = catalogService;
         }
 
-        [HttpGet]
 
+        // gets the form for writing a review for a specific catalog design
+        // checks if the user is authorized and if they have already reviewed the design
+        // and returns the appropriate view or redirects with an error message
+        [HttpGet]
         public async Task<IActionResult> Write(Guid id)
         {
             var userId = GetUserId();
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
+            var model = await _reviewService.GetWriteReviewModelAsync(userId, id);
 
-            if (await _reviewService.HasUserReviewedAsync(userId, id))
+            if (model == null)
             {
                 TempData["Error"] = "You have already reviewed this design.";
                 return RedirectToAction("Index", "Catalog");
             }
 
-            var design = await _catalogService.GetByIdAsync(id);
-            if (design == null)
-                return NotFound();
-
-            var model = new CatalogDesignViewModel
-            {
-                Id = design.Id,
-                Title = design.Title,
-                Description = design.Description,
-                Image2DUrl = design.Image2DUrl,
-                Price = design.Price,
-                AverageRating = design.Reviews.Any() ? design.Reviews.Average(r => r.Rating) : 0,
-                ReviewCount = design.Reviews.Count
-            };
-
             return View(model);
         }
 
+
+
+        // posts the review form data to create a new review for a specific catalog design
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Post(Guid catalogDesignId, int rating, string? comment)
+        public async Task<IActionResult> Post(AddReviewViewModel model)
         {
             var userId = GetUserId();
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
-            if (await _reviewService.HasUserReviewedAsync(userId, catalogDesignId))
+            var result = await _reviewService.CreateReviewAsync(userId, model);
+
+            if (!result.Success)
             {
-                TempData["Error"] = "You have already reviewed this design.";
+                TempData["Error"] = result.Error;
                 return RedirectToAction("Index", "Catalog");
             }
-
-            var reviewModel = new AddReviewViewModel
-            {
-                CatalogDesignId = catalogDesignId,
-                Rating = rating,
-                Comment = comment
-            };
-
-            await _reviewService.AddReviewAsync(userId, reviewModel);
 
             TempData["Success"] = "Review added successfully!";
             return RedirectToAction("Index", "Catalog");
         }
 
 
-
+        // gets the reviews for a specific catalog design and returns the view with the reviews list
 
         [HttpGet]
         public async Task<IActionResult> Reviews(Guid id)
         {
             var reviews = await _reviewService.GetReviewsByDesignIdAsync(id);
 
-            var model = new ReviewListViewModel
+            return View(new ReviewListViewModel
             {
                 Reviews = reviews.ToList()
-            };
-
-            return View(model);
+            });
         }
-
-
-
-
-
-
-
-
-
-
     }
 }

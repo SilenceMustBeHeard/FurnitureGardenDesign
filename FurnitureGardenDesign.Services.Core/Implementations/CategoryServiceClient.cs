@@ -18,7 +18,8 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         }
 
 
-
+        // retrieves all active categories for the client
+        // and maps them to a list of CategoryViewModelList objects for dropdown display
         public async Task<IEnumerable<CategoryViewModelList>> GetAllActiveCategoriesForClientAsync()
         {
             var categories = await _categoryRepository.GetAllActiveAsync();

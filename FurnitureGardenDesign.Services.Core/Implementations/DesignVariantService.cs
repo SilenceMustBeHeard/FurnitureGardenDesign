@@ -27,7 +27,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
 
 
-
+        
         public Task AddDesignVariantAsync(Guid orderId, string imageUrl, string? notes)
         {
             throw new NotImplementedException();

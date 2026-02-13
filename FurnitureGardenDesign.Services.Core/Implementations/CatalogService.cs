@@ -55,6 +55,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         // Add to favorites
         public async Task AddToFavoritesAsync(string userId, Guid designId)
         {
+            // Check if the about-to favorite and user  exists
             bool exists = await _favoriteRepo
                 .GetAllAttached()
                 .AnyAsync(f => f.UserId == userId && f.CatalogDesignId == designId);
@@ -71,7 +72,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             }
         }
 
-        // Soft delete from favorites
+        // Soft delete(removes) from favorites
         public async Task RemoveFromFavoritesAsync(string userId, Guid designId)
         {
             var favorite = await _favoriteRepo

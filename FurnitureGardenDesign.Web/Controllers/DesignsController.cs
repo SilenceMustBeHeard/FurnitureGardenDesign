@@ -16,13 +16,13 @@ namespace FurnitureGardenDesign.Web.Controllers
         {
             return View();
         }
-
-
-
-
         public IActionResult Create(string id)
         {
             return View();
         }
     }
 }
+
+
+
+

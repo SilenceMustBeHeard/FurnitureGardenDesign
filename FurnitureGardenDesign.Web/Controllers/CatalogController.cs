@@ -28,8 +28,11 @@ namespace FurnitureGardenDesign.Web.Controllers
             var designs = await _catalogService.GetPublicCatalogAsync(userId, page, pageSize, isGuest);
 
             // for pagination
+            // curent page
             ViewData["CurrentPage"] = page;
+            // items per page
             ViewData["PageSize"] = pageSize;
+            // total items in the catalog
             ViewData["TotalItems"] = await _catalogService.GetTotalActiveDesignsAsync(); 
 
             return View(designs);
@@ -41,9 +44,11 @@ namespace FurnitureGardenDesign.Web.Controllers
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Details(Guid id)
-        {
+        {   // if user is not authenticated
+            // userId will be null, and service will handle it accordingly
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            
             var model = await _catalogService.GetDetailsAsync(id, userId);
 
             if (model == null)
@@ -70,6 +75,7 @@ namespace FurnitureGardenDesign.Web.Controllers
 
             bool isNowFavorited = await _favoriteService.ToggleFavoriteAsync(userId, id);
 
+            // Show success message based on the new favorite status
             TempData["Success"] = isNowFavorited
                 ? "You added this design to favorites!"
                 : "You removed this design from favorites.";
@@ -95,6 +101,8 @@ namespace FurnitureGardenDesign.Web.Controllers
                 rating,
                 comment
             );
+
+
             TempData["Success"] = "You added a review!";
             return RedirectToAction(nameof(Index));
         }
