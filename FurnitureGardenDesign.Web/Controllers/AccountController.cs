@@ -1,5 +1,6 @@
 ﻿
 using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,19 +9,20 @@ namespace FurnitureGardenDesign.Web.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
+        private readonly IAccountService accountService;
 
-        public AccountController(UserManager<AppUser> userManager,
-                                 SignInManager<AppUser> signInManager)
+        public AccountController(IAccountService accountService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            this.accountService = accountService;
         }
 
-        //  REGISTER 
+
+        
         [HttpGet]
         public IActionResult Register() => View();
+
+
+        // Handles the registration form submission
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -29,28 +31,14 @@ namespace FurnitureGardenDesign.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = new AppUser { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await accountService.RegisterAsync(model);
 
-            if (result.Succeeded)
-            {
-                // assign user role automatically
-                if (!await _userManager.IsInRoleAsync(user, "User"))
-                {
-                    await _userManager.AddToRoleAsync(user, "User");
-                }
-
-                if (await _userManager.IsInRoleAsync(user, "Admin"))
-                    return RedirectToAction("Login", "Account", new { area = "Admin" });
-
-                // sign the user in
-                await _signInManager.SignInAsync(user, isPersistent: false);
-
-                return RedirectToAction("Index", "Home");
-            }
+            if (result.Success)
+               
+            return RedirectToAction("Index", "Home");
 
             foreach (var error in result.Errors)
-                ModelState.AddModelError("", error.Description);
+                ModelState.AddModelError("", error);
 
             return View(model);
         }
@@ -58,6 +46,8 @@ namespace FurnitureGardenDesign.Web.Controllers
         [HttpGet]
         public IActionResult Login() => View();
 
+
+        // logs in the user and redirects to home page if successful, otherwise shows error message
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -65,17 +55,11 @@ namespace FurnitureGardenDesign.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-                return View(model);
+            var success = await accountService.LoginAsync(model);
 
-
-
-            var result = await _signInManager.PasswordSignInAsync(
-                user, model.Password, model.RememberMe, lockoutOnFailure: false);
-
-            if (result.Succeeded)
-                return RedirectToAction("Index", "Home", new { area = "" });
+            if (success)
+                
+            return RedirectToAction("Index", "Home");
 
             ModelState.AddModelError("", "Invalid login attempt.");
             return View(model);
@@ -85,8 +69,9 @@ namespace FurnitureGardenDesign.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home", new { area = "" }); // public home page
+            await accountService.LogoutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
+
 }

@@ -14,6 +14,12 @@ namespace FurnitureGardenDesign.Web.ViewModels.Account
         [EmailAddress]
         public string Email { get; set; } = null!;
 
+
+
+        public string? FirstName { get; set; }    // Personalization Purposes
+        public string? LastName { get; set; }     // by choice
+        public string? Address { get; set; }     // by choice
+
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; } = null!;

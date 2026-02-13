@@ -4,10 +4,10 @@
 }
 <div class="full-glass-wrapper">
 
-    <!-- Frosted background overlay -->
+  @* Frosted background *@
     <div class="full-glass-bg"></div>
 
-    <!-- Centered glass login card -->
+      @*   centered login card *@
     <div class="full-glass-content d-flex justify-content-center align-items-center">
         <div class="glass-card p-4 p-md-5 shadow-lg">
 
@@ -23,6 +23,23 @@
                 <input asp-for="Email" class="form-control glass-input" />
                 <span asp-validation-for="Email" class="text-danger small"></span>
             </div>
+                 <div class="mb-3">
+                <label asp-for="FirstName" class="form-label"></label>
+                <input asp-for="FirstName" class="form-control glass-input" />
+                <span asp-validation-for="FirstName" class="text-danger small"></span>
+            </div>
+                <div class="mb-3">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control glass-input" />
+                    <span asp-validation-for="LastName" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Address" class="form-label"></label>
+                    <input asp-for="Address" class="form-control glass-input" />
+                    <span asp-validation-for="Address" class="text-danger small"></span>
+                </div>
+
+
 
             <div class="mb-3">
                 <label asp-for="Password" class="form-label"></label>
