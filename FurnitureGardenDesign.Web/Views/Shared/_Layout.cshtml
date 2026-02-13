@@ -16,7 +16,8 @@
 <body>
 
     <header>
-        <nav class="navbar navbar-expand-sm glass-nav navbar-dark border-bottom mb-3">
+        @* navbar style px,py represent how much padding to apply*@
+        <nav class="navbar navbar-expand-lg glass navbar-dark rounded-9 px-1 py-1">
 
             <div class="container-fluid">
 
@@ -26,7 +27,10 @@
                        asp-controller="Home"
                        asp-action="Index">
 
-                        <svg class="fgd-logo" width="320" height="48" viewBox="0 0 320 48">
+                    
+
+
+                        <svg class="fgd-logo" width="300" height="40" viewBox="0 0 320 48">
                             <text x="0" y="34" class="logo-text">
                                 Furniture &amp; Garden Design
                             </text>
@@ -94,18 +98,18 @@
     @* Scene *@
     <div class="scene-wrapper">
 
-        <!-- Base image -->
+          @*image*@
         <div class="scene-bg"></div>
 
-        <!-- Light mode layers -->
+     @*light mode layers*@ 
         <div class="light-path"></div>
         <div class="light-vignette"></div>
 
-        <!-- Dark mode layers -->
+        @* Dark mode layers *@
         <div class="dark-path"></div>
         <div class="dark-vignette"></div>
 
-        <!-- Actual page content -->
+        @* Actual page content *@
         <div class="container scene-content">
             <main role="main" class="pb-3">
                 @RenderBody()

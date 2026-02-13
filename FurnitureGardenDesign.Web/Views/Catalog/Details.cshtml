@@ -1,93 +1,91 @@
 ﻿@model FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogDesignViewModel
 
 <div class="container py-5">
-    <div class="card glass-card p-4 text-light shadow-lg border-0 rounded-4">
+    <div class="card glass-card p-5 text-light shadow-lg border-0 rounded-4">
 
-        @*  Back Button  *@
-        <a asp-action="Index" class="btn btn-sm btn-outline-glass">
+        <a asp-action="Index" class="btn btn-outline-glass mb-4">
             ← Back
         </a>
 
-        <div class="row g-4">
+        <div class="row align-items-start g-5">
 
-          @*   LEFT: IMAGE *@
-            <div class="col-lg-9 text-center">
+         @* left - image*@ 
+            <div class="col-lg-8 text-center">
                 <img src="@Model.Image2DUrl"
-                     class="img-fluid rounded-4 shadow details-img"
+                     class="img-fluid rounded-4 shadow-lg details-img"
                      alt="@Model.Title" />
             </div>
 
-            @* RIGHT: DETAILS *@
+          @* right - details*@ 
             <div class="col-lg-4">
 
-                <h2 class="fw-bold mb-3">@Model.Title</h2>
+                <h2 class="fw-bold mb-3 display-6">@Model.Title</h2>
 
-                <p class="glass-text-muted">@Model.Description</p>
+                <p class="glass-text-muted mb-4">
+                    @Model.Description
+                </p>
 
-                <hr class="border-light opacity-25" />
-
-                <div class="mb-2">
-                    <span class="text-secondary">Category:</span>
-                    <strong>@Model.CategoryName</strong>
+                <div class="mb-3">
+                    <small class="text-secondary">Category</small><br />
+                    <span class="fw-semibold">@Model.CategoryName</span>
                 </div>
 
-                <div class="mb-2">
-                    <span class="text-secondary">Price:</span>
-                    <span class="text-success fs-5 fw-bold">
+                <div class="mb-3">
+                    <small class="text-secondary">Price</small><br />
+                    <span class="text-success fs-4 fw-bold">
                         @Model.Price.ToString("C")
                     </span>
                 </div>
 
-                <div class="mb-3">
-                    <span class="text-secondary">Rating:</span>
-                    <span class="text-warning fw-semibold">
-                        @Model.AverageRating ★
+                <div class="mb-4">
+                    <small class="text-secondary">Rating</small><br />
+                    <span class="text-warning fs-5 fw-semibold">
+                        @Model.AverageRating.ToString("0.0") ★
                     </span>
                     <span class="small text-muted">
                         (@Model.ReviewCount reviews)
                     </span>
                 </div>
 
-                @* ACTION BUTTONS *@
-                <div class="d-flex flex-wrap gap-2 mt-4">
+                <hr class="border-light opacity-25" />
+
+             @*action buttons*@
+                <div class="d-grid gap-2 mt-4">
 
                     @if (User.Identity.IsAuthenticated)
                     {
                         <form asp-controller="Catalog"
                               asp-action="ToggleFavorite"
-                              method="post"
-                              class="d-inline">
-
+                              method="post">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@Model.Id" />
                             <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
 
                             <button type="submit"
-                                  class="btn btn-outline-glass" @(Model.IsFavorited ? "btn-danger" : "btn-outline-danger")">
-                                @(Model.IsFavorited ? "❤️ Remove" : "🤍 Favorite")
+                                    class="btn @(Model.IsFavorited ? "btn-danger" : "btn-outline-danger") w-100">
+                                @(Model.IsFavorited ? "❤️ Remove from Favorites" : "🤍 Add to Favorites")
                             </button>
                         </form>
 
                         <a asp-controller="Review"
                            asp-action="Write"
                            asp-route-id="@Model.Id"
-                           class="btn btn-outline-glass">
+                           class="btn btn-primary-glass w-100">
                             Write Review
                         </a>
 
                         <a asp-controller="Review"
                            asp-action="Reviews"
                            asp-route-id="@Model.Id"
-                           class="btn btn-outline-glass">
-                            Reviews
+                           class="btn btn-outline-glass w-100">
+                            View Reviews
                         </a>
                     }
 
-                    @* 3D Button *@
                     @if (Model.Model3DStatus == FurnitureGardenDesign.Data.Common.Enums.Model3DStatus.Ready
                                         && !string.IsNullOrEmpty(Model.Model3DUrl))
                     {
-                        <button class="btn btn-outline-glass"
+                        <button class="btn btn-outline-glass w-100"
                                 data-bs-toggle="modal"
                                 data-bs-target="#model3DModal">
                             View in 3D
@@ -95,57 +93,88 @@
                     }
                     else
                     {
-                        <button class="btn btn-outline-secondary" disabled>
+                        <button class="btn btn-primary-glass w-100" disabled>
                             3D Not Available
                         </button>
                     }
 
                 </div>
-
             </div>
         </div>
     </div>
 </div>
 
-@* ---------------- 3D Modal ---------------- *@
-@if (Model.Model3DStatus == FurnitureGardenDesign.Data.Common.Enums.Model3DStatus.Ready)
+
+
+
+@*3D Modal*@ 
+@if (Model.Model3DStatus == FurnitureGardenDesign.Data.Common.Enums.Model3DStatus.Ready
+    && !string.IsNullOrEmpty(Model.Model3DUrl))
 {
-    <div class="modal fade" id="model3DModal" tabindex="-1" aria-labelledby="model3DModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content bg-white text-dark">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="model3DModalLabel">@Model.Title - 3D View</h5>
-                    <small class="position-absolute top-0 start-50 translate-middle-x mt-2 text-bg-dark">
-                        Press Esc to leave
-                    </small>
-                    @*     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+    <div class="modal fade"
+         id="model3DModal"
+         tabindex="-1"
+         aria-labelledby="model3DModalLabel"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+
+            <div class="modal-content glass-card border-0 rounded-4 text-light shadow-lg">
+
+              @* Header*@
+                <div class="modal-header border-0">
+
+                    <h5 class="modal-title fw-semibold" id="model3DModalLabel">
+                        @Model.Title – 3D View
+                    </h5>
+
+                    @*To do - fix button not working*@
+
+                   @*  <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button> *@
                 </div>
 
+               @* body*@
                 <div class="modal-body p-0 position-relative">
 
-
                     <model-viewer src="@Model.Model3DUrl"
-                                  @* for future add of manual rotation*@
-                                  @* camera-controls *@
+                                  camera-controls
                                   auto-rotate
                                   interaction-prompt="manual"
-                                  style="width:100%; height:700px; background-color:white;">
+                                  shadow-intensity="1"
+                                  exposure="1"
+                                  style="width:100%; height:75vh; background: transparent;">
                     </model-viewer>
 
+                @* ESC Hint *@
+                    <small class="position-absolute top-0 start-50 translate-middle-x mt-3 text-light opacity-75">
+                        Press ESC to close
+                    </small>
+
                 </div>
+
+              @* footer*@ 
+                <div class="modal-footer border-0">
+
+                   
+
+                </div>
+
             </div>
         </div>
     </div>
 
     <script>
-        // press ESC to close
-        document.addEventListener('keydown', function(event) {
+        // ESC fallback safety
+        document.addEventListener('keydown', function (event) {
             if (event.key === "Escape") {
-                var modalEl = document.getElementById('model3DModal');
-                var modal = bootstrap.Modal.getInstance(modalEl);
+                const modalEl = document.getElementById('model3DModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
                 if (modal) modal.hide();
             }
         });
     </script>
 }
-
