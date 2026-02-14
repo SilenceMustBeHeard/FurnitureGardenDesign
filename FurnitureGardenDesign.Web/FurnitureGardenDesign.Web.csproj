@@ -31,7 +31,6 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Views\NewFolder\" />
     <Folder Include="wwwroot\images\errors\" />
-    <Folder Include="wwwroot\images\theme\" />
   </ItemGroup>
 
 </Project>

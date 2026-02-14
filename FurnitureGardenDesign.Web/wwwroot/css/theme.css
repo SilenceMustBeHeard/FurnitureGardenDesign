@@ -5,7 +5,7 @@
 html[data-bs-theme="light"] .scene-bg {
     position: fixed;
     inset: 0;
-    background-image: url("/images/theme/dayMode.jpg");
+    background-image: url("/images/theme/lightTheme.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -17,9 +17,7 @@ html[data-bs-theme="light"] .scene-bg {
 html[data-bs-theme="light"] .light-vignette {
     position: fixed;
     inset: 0;
-    background: radial-gradient( ellipse at center,
-    transparent 45%,
-    rgba(120, 120, 120, 0.18) 100% );
+    background: radial-gradient( ellipse at center, transparent 45%, #8B400030 100% );
     z-index: 2;
     pointer-events: none;
 }
@@ -34,7 +32,7 @@ html[data-bs-theme="light"] .light-vignette {
 html[data-bs-theme="dark"] .scene-bg {
     position: fixed;
     inset: 0;
-    background-image: url("/images/theme/nightMode.jpg");
+    background-image: url("/images/theme/nightTheme.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -46,9 +44,7 @@ html[data-bs-theme="dark"] .scene-bg {
 html[data-bs-theme="dark"] .dark-vignette {
     position: fixed;
     inset: 0;
-    background: radial-gradient( ellipse at center, 
-    transparent 70%, 
-    rgb(5, 25, 143, 0.24) 100% );
+    background: radial-gradient( ellipse at center, transparent 70%, #2c221c 100% );
     z-index: 2;
     pointer-events: none;
 }
