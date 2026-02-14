@@ -47,11 +47,11 @@
                                     <input type="hidden" name="id" value="@item.Id" />
                                     <input type="hidden" name="returnUrl" value="@Url.Action("Details", "Catalog", new { id = item.Id })" />
 
-                                    <button type="submit"
-                                            class="btn btn-sm @(item.IsFavorited ? "btn-danger" : "btn-outline-danger")"
-                                            title="@(item.IsFavorited ? "Remove from favorites" : "Add to favorites")">
-                                        @(item.IsFavorited ? "❤️" : "🤍")
-                                    </button>
+
+                                        <button type="submit"
+                                                class="btn @(item.IsFavorited ? "btn-danger" : "btn-outline-danger") w-100">
+                                            @(item.IsFavorited ? "❤️ Remove from Favorites" : "🤍 Add to Favorites")
+                                        </button>
                                 </form>
 
                                 <a asp-controller="Review" asp-action="Write" asp-route-id="@item.Id" class="btn btn-outline-glass btn-sm">
