@@ -110,60 +110,55 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
         // For public catalog listing with pagination
         public async Task<IEnumerable<CatalogDesignViewModel>> GetPublicCatalogAsync(
-    string? userId,
-    int page,
-    int pageSize,
-    bool isGuest)
+         string? userId,
+         int page,
+         int pageSize,
+         bool isGuest)
         {
             var query = _catalogRepo
                 .GetAllAttached()
                 .Where(d => d.IsActive);
 
-                
-            var designs = await query
+            if (isGuest)
+            {
+                page = 1;
+                pageSize = 3;
+            }
+
+            return await query
                 .OrderByDescending(d => d.CreatedOn)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-           .Select(d => new CatalogDesignViewModel
-           {
-               Id = d.Id,
-               Title = d.Title,
-               Description = d.Description,
-               Image2DUrl = d.Image2DUrl,
+                .Select(d => new CatalogDesignViewModel
+                {
+                    Id = d.Id,
+                    Title = d.Title,
+                    Description = d.Description,
+                    Image2DUrl = d.Image2DUrl,
 
-               // Only return Model3DUrl if it exists, otherwise null
-               // used to control frontend rendering and loading of 3D model
-               Model3DUrl = !string.IsNullOrWhiteSpace(d.Model3DUrl)
-        ? d.Model3DUrl
-        : null,
-               // Determine 3D model status based on presence of URL
-               Model3DStatus = !string.IsNullOrWhiteSpace(d.Model3DUrl)
-        ? Model3DStatus.Ready
-        : Model3DStatus.None,
+                    Model3DUrl = !string.IsNullOrWhiteSpace(d.Model3DUrl)
+                        ? d.Model3DUrl
+                        : null,
 
-               Price = d.Price,
-               CategoryName = d.Category.Name,
+                    Model3DStatus = !string.IsNullOrWhiteSpace(d.Model3DUrl)
+                        ? Model3DStatus.Ready
+                        : Model3DStatus.None,
 
-               IsFavorited = userId != null &&
-        d.Favorites.Any(f => f.UserId == userId && !f.IsDeleted),
+                    Price = d.Price,
+                    CategoryName = d.Category.Name,
 
-               AverageRating = d.Reviews.Any()
-        ? d.Reviews.Average(r => r.Rating)
-        : 0,
+                    IsFavorited = userId != null &&
+                        d.Favorites.Any(f => f.UserId == userId && !f.IsDeleted),
 
-               ReviewCount = d.Reviews.Count
-           })
+                    AverageRating = d.Reviews.Any()
+                        ? d.Reviews.Average(r => r.Rating)
+                        : 0,
 
+                    ReviewCount = d.Reviews.Count
+                })
                 .ToListAsync();
-
-            // guest restriction - only show top 3 designs on first page
-            if (isGuest && page == 1)
-            {
-                designs = designs.Take(3).ToList();
-            }
-
-            return designs;
         }
+
 
 
         // get total count for pagination

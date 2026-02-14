@@ -62,7 +62,7 @@
                             <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
 
                             <button type="submit"
-                                    class="btn @(Model.IsFavorited ? "btn-danger" : "btn-outline-danger") w-100">
+                                    class="btn btn-glass-fav @(Model.IsFavorited ? "active" : "")">
                                 @(Model.IsFavorited ? "❤️ Remove from Favorites" : "🤍 Add to Favorites")
                             </button>
                         </form>

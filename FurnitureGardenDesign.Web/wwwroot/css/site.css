@@ -558,3 +558,65 @@ header {
     background-color: transparent;
     border: 1px solid #c09a6c80;
 }
+
+
+
+
+/* Hover effect for rows */
+.hover-glass-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transition: background 0.3s ease;
+}
+
+/* Glass badges */
+.bg-success-glass {
+    background: rgba(40, 200, 120, 0.2);
+    color: #28c878;
+    font-weight: 600;
+}
+
+.bg-danger-glass {
+    background: rgba(255, 50, 50, 0.2);
+    color: #ff3232;
+    font-weight: 600;
+}
+
+/* Optional: table border radius & spacing */
+.glass-table th,
+.glass-table td {
+    vertical-align: middle;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+    .glass-table th:first-child,
+    .glass-table td:first-child {
+        border-left: none;
+    }
+
+    .glass-table th:last-child,
+    .glass-table td:last-child {
+        border-right: none;
+    }
+
+
+
+
+
+
+
+
+
+/* Glass-style role button */
+.btn-glass-role {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+    .btn-glass-role:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.05);
+    }
