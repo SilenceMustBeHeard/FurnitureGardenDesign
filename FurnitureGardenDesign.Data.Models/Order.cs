@@ -20,12 +20,14 @@ namespace FurnitureGardenDesign.Data.Models
         [Required]
         [MaxLength(100)]
         [MinLength(3)]
+        [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Furniture type can only contain letters, numbers, spaces, and hyphens.")]
         // chair, table, pergola, etc.
         public string FurnitureType { get; set; } = null!; 
 
         [Required]
         [MaxLength(100)]
         [MinLength(3)]
+        [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Dimensions can only contain letters, numbers, spaces, and hyphens.")]
         // free text (e.g. 200x80x75 cm), 
         public string Dimensions { get; set; } = null!; 
 
@@ -33,11 +35,13 @@ namespace FurnitureGardenDesign.Data.Models
 
         [Required]
         [MinLength(3)]
+        [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Description can only contain letters, numbers, spaces, and hyphens.")]
         // short text describing how it should look like
         public string Description { get; set; } = null!; 
 
       
         [Url]
+        
         // optional image URL for reference
         public string? ReferenceImageUrl { get; set; }
 

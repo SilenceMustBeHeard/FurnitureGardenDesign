@@ -10,7 +10,8 @@ namespace FurnitureGardenDesign.Web.ViewModels.Account
     public class LoginViewModel
     {
         [Required]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
+     
         public string Email { get; set; } = null!;
 
         [Required]

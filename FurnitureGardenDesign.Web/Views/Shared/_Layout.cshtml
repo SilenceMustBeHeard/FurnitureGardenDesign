@@ -4,11 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Furniture &amp; Garden Design</title>
-
+    @* links for Bootstrap *@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
+          @* links for site theme settings*@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
 </head>
@@ -28,19 +28,22 @@
                        asp-action="Index">
 
                     
-
+                       @*site name logo*@
 
                         <svg class="fgd-logo" width="300" height="40" viewBox="0 0 320 48">
                             <text x="0" y="34" class="logo-text">
                                 Furniture &amp; Garden Design
                             </text>
                         </svg>
-                    </a>
 
+                    </a>
+                    @*button About*@
                     <a class="btn btn-outline-glass btn-sm" asp-controller="Home" asp-action="About">About</a>
+                    @*button Privacy*@
                     <a class="btn btn-outline-glass btn-sm" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </div>
 
+            
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -118,19 +121,20 @@
 
     </div>
 
-
+    @* Footer *@
     <footer class="glass-footer text-center text-muted border-top">
 
         <div class="container">&copy; 2025 - Furniture &amp; Garden Design</div>
     </footer>
 
+    @* Scripts  for functionality *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script type="module" src="https://unpkg.com/@@google/model-viewer/dist/model-viewer.min.js"></script>
 
 
-
+    @*scripts for temporary alerts*@
 
     @await RenderSectionAsync("Scripts", required: false)
     <script>

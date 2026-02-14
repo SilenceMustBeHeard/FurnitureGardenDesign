@@ -13,12 +13,14 @@ namespace FurnitureGardenDesign.Data.Models
         [Required]
         [MaxLength(100)]
         [MinLength(3)]
+        [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Name can only contain letters, numbers, spaces, and hyphens.")]
         public string Name { get; set; } = null!;
 
         //flag
 
         public bool IsOutdoorSuitable { get; set; }
         // Optional description of the material
+        [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Description can only contain letters, numbers, spaces, and hyphens.")]
         public string? Description { get; set; }
 
         // Navigation property for the catalog designs that use this material

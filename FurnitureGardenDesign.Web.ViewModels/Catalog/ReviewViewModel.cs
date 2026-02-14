@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace FurnitureGardenDesign.Web.ViewModels.Catalog
@@ -8,6 +9,7 @@ namespace FurnitureGardenDesign.Web.ViewModels.Catalog
     {
         public string UserName { get; set; } = null!;
         public int Rating { get; set; }
+      
         public string? Comment { get; set; }
         public DateTime CreatedAt { get; set; }
     }

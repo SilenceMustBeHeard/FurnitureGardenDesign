@@ -13,6 +13,7 @@ namespace FurnitureGardenDesign.Data.Models
         [Required]
         [MaxLength(100)]
         [MinLength(3)]
+        [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Title can only contain letters, numbers, spaces, and hyphens.")]
         // Title of the design
         public string Title { get; set; } = null!;
 
@@ -24,7 +25,7 @@ namespace FurnitureGardenDesign.Data.Models
 
         // Description of the design
         [Required]
-        [MinLength(5)]
+        [MinLength(5, ErrorMessage = "Description must be at least 5 characters long.")]
         public string Description { get; set; } = null!;
 
         // URLs for 2D image 
