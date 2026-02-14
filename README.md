@@ -218,7 +218,7 @@
 
 ### Then open in browser
 
-### https://localhost:5001
+
 
 ### 
 
@@ -252,42 +252,26 @@
 
 #### \## 📸 Screenshots
 
-#### 
+## 📸 Screenshots
 
-#### \### 🏠 Home
-
-#### 
-
-#### \### 🔐 Login
-
-#### 
-
-#### <p align="center">
-
-####   <img src="screenshots/Home.png" width="45%">
-
-####   <img src="screenshots/Login.png" width="45%">
-
-#### </p>
+### 🏠 Home
 
 
+<img width="1920" height="956" alt="Home" src="https://github.com/user-attachments/assets/3194bb6a-17b9-4a0c-bde4-649c65759080" />
 
-#### \### 📝 Make An Order
+### 🔐 Login
 
-#### 
+<img width="1920" height="957" alt="Login" src="https://github.com/user-attachments/assets/b82e27ee-b6c1-4b40-be95-9a1c2fd02880" />
 
-#### 
 
-#### \### 🛠 Admin Panel
+### 📝 Make An Order
+<img width="1920" height="960" alt="MakeAnOrder" src="https://github.com/user-attachments/assets/0d48c145-0b95-4520-9e30-3f524a9735cf" />
 
-#### <p align="center">
+### 🛠 Admin Panel
 
-#### &nbsp; <img src="screenshots/MakeAnOrder.png" width="45%">
 
-#### &nbsp; <img src="screenshots/AdminPanel.png" width="45%">
 
-#### </p>
-
+<img width="1920" height="961" alt="AdminPanel" src="https://github.com/user-attachments/assets/751323b8-1200-44ef-bed9-43c77d7078bf" />
 
 
 ### 
