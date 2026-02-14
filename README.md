@@ -218,7 +218,7 @@
 
 ### Then open in browser
 
-### https://localhost:5001
+
 
 ### 
 
@@ -252,41 +252,20 @@
 
 #### \## 📸 Screenshots
 
-#### 
+## 📸 Screenshots
 
-#### \### 🏠 Home
+### 🏠 Home
+![Home](screenshots/Home.png)
 
-#### 
+### 🔐 Login
+![Login](screenshots/Login.png)
 
-#### \### 🔐 Login
+### 📝 Make An Order
+![Make An Order](screenshots/MakeAnOrder.png)
 
-#### 
+### 🛠 Admin Panel
+![Admin Panel](screenshots/AdminPanel.png)
 
-#### <p align="center">
-
-####   <img src="screenshots/Home.png" width="45%">
-
-####   <img src="screenshots/Login.png" width="45%">
-
-#### </p>
-
-
-
-#### \### 📝 Make An Order
-
-#### 
-
-#### 
-
-#### \### 🛠 Admin Panel
-
-#### <p align="center">
-
-#### &nbsp; <img src="screenshots/MakeAnOrder.png" width="45%">
-
-#### &nbsp; <img src="screenshots/AdminPanel.png" width="45%">
-
-#### </p>
 
 
 
