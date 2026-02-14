@@ -1,184 +1,296 @@
-# Furniture\&GardenDesign (F\&GD)
+### Furniture\&GardenDesign (F\&GD)
 
-# 
+### Custom ASP.NET Online Store for AI-Powered Furniture \& Garden Designs
 
-# Custom ASP.NET Online Store Application
+### 
 
-# 
+### Furniture\&GardenDesign (F\&GD) is a web platform that allows customers to order personalized furniture or garden layouts, review AI-generated design proposals, approve them, and optionally request interactive 3D renders.
 
-# Furniture\&GardenDesign (F\&GD) is a web application for ordering custom furniture and garden designs. Built with ASP.NET MVC and Individual Accounts, the platform allows customers to create personalized orders, which can then be reviewed and processed by admins or managers with AI-powered design visualization. Approved designs can also be added to a catalog for future reference.
+### 
 
-# 
+### The system includes role-based access for Admins, Managers, and Customers to ensure structured workflow and secure management.
 
-# Features
+### 
 
-# For Customers
+### 🌟 Features
 
-# 
+### 👤 Customer
 
-# Registration \& Login: Customers must have an account to create and track orders.
+### 
 
-# 
+### Create custom orders
 
-# Create Order: Each order contains:
+### 
 
-# 
+### Track order status
 
-# Order name
+### 
 
-# 
+### Approve or request AI design refinements
 
-# Description
+### 
 
-# 
+### Browse approved catalog designs
 
-# Dimensions (optional)
+### 
 
-# 
+### 🛠 Admin
 
-# Reference image
+### 
 
-# 
+### Manage orders
 
-# Category
+### 
 
-# 
+### Manage categories
 
-# Design Preview: After the order is accepted by an admin or manager, an AI-generated design is created based on the description and reference image.
+### 
 
-# 
+### Manage users
 
-# Approval Process: Customers can approve the design or request enhancements. This process repeats until the customer is satisfied.
+### 
 
-# 
+### Manage catalog entries
 
-# Catalog Access: Customers can browse a catalog of previously approved designs for inspiration.
+### 
 
-# 
+### Manage reviews
 
-# For Admins
 
-# 
 
-# Order Management: View, accept, and process all orders.
+### 📋 Manager
 
-# 
+### 
 
-# Category Management: Add, edit, or delete order categories.
+### Manage and process orders only
 
-# 
+### 
 
-# User Management: Delete customer accounts if needed.
+### 🤖 AI Integration
 
-# 
+### 
 
-# Catalog Management: Approve designs to be added to the public catalog.
+### Generates design images based on:
 
-# 
+### 
 
-# For Managers
+### Text description
 
-# 
+### 
 
-# Order Management Only: Managers can view and process orders but cannot modify categories or manage users.
+### Reference images
 
-# 
+### 
 
-# Order Workflow
+### Supports iterative refinement until customer approval
 
-# 
+### 
 
-# Customer creates and submits an order with all required details.
+### 🧊 Optional 3D Render
 
-# 
+### 
 
-# Admin or Manager reviews the order.
+### Interactive 3D visualization available upon request
 
-# 
+### 
 
-# AI generates an image based on the order description and reference.
+### 📚 Catalog
 
-# 
+### 
 
-# The generated image is sent to the customer.
+### Displays approved designs
 
-# 
+### 
 
-# Customer can either:
+### Available to all customers for inspiration
 
-# 
+### 
 
-# Approve → order moves to execution, and optionally added to catalog
+### ⚙️ Technologies
 
-# 
+### 
 
-# Request changes → AI refines the image until customer satisfaction
+### Backend: ASP.NET MVC (Individual Accounts)
 
-# 
+### 
 
-# Catalog of Approved Designs
+### Database: Entity Framework Core
 
-# 
+### 
 
-# Displays previously approved orders and designs.
+### Frontend: Razor Views + Bootstrap
 
-# 
+### 
 
-# Available for all customers to browse.
+### AI: Image generation from prompts \& references
 
-# 
+### 
 
-# Helps customers find inspiration or reuse popular designs.
+### 3D Rendering: Interactive previews (optional feature)
 
-# 
+### 
 
-# Technologies
+### 📝 Order Workflow
 
-# 
+### 
 
-# Backend: ASP.NET MVC with Individual Accounts
+### Customer submits order (description, dimensions, reference images, category).
 
-# 
+### 
 
-# Database: Entity Framework Core
+### Admin or Manager reviews the order.
 
-# 
+### 
 
-# Frontend: Razor Views, Bootstrap (or Tailwind if applied)
+### AI generates design proposals.
 
-# 
+### 
 
-# AI Integration: Generates images based on text prompts and reference images
+### Customer:
 
-# 
+### 
 
-# Roles \& Permissions
+### Approves → Order proceeds to execution (optional catalog inclusion)
 
-# Role	Permissions
+### 
 
-# Admin	Manage orders, categories, users, and catalog
+### Requests changes → AI refines design
 
-# Manager	Manage orders only
+### 
 
-# Customer	Create and track orders, approve or request design revisions, 
+### Optional 3D render upon request.
 
-# browse catalog
+### 
 
-# Future Enhancements
+### 
 
-# 
+### 
 
-# Payment system integration
+### | Role         | Permissions                                                 |
 
-# 
+### | ------------ | ----------------------------------------------------------- |
 
-# Automatic multiple design variations
+### | \*\*Admin\*\*    | Manage orders, categories, users, catalog, reviews        |
 
-# 
+### | \*\*Manager\*\*  | Manage orders only                                          |
 
-# Order history tracking with AI revisions
+### | \*\*Customer\*\* | Create/track orders, approve/refine designs, browse catalog |
 
-# 
+### 
 
-# Advanced search and filter for catalog designs
+### 
+
+### 🚀 Local Setup
+
+### 1️⃣ Clean Migrations (if needed)
+
+### 
+
+### If there are existing migrations:
+
+### 
+
+### Delete the Migrations folder.
+
+### 
+
+### 2️⃣ Create New Database
+
+### 
+
+### Open Package Manager Console and run:
+
+### 
+
+### 
+
+### Add-Migration InitialCreate
+
+### Update-Database
+
+### 
+
+### 
+
+### 3️⃣ Run Application
+
+### 
+
+### Then open in browser
+
+### https://localhost:5001
+
+### 
+
+### 
+
+### Register an account and start creating orders.
+
+### 
+
+### 📈 Future Enhancements
+
+### 
+
+### Multiple AI design variations per order
+
+### 
+
+### Default interactive 3D previews
+
+### 
+
+### Real-time collaboration between customer and manager
+
+### 
+
+### AI-based material \& dimension suggestions
+
+
+
+
+
+#### \## 📸 Screenshots
+
+#### 
+
+#### \### 🏠 Home
+
+#### 
+
+#### \### 🔐 Login
+
+#### 
+
+#### <p align="center">
+
+####   <img src="screenshots/Home.png" width="45%">
+
+####   <img src="screenshots/Login.png" width="45%">
+
+#### </p>
+
+
+
+#### \### 📝 Make An Order
+
+#### 
+
+#### 
+
+#### \### 🛠 Admin Panel
+
+#### <p align="center">
+
+#### &nbsp; <img src="screenshots/MakeAnOrder.png" width="45%">
+
+#### &nbsp; <img src="screenshots/AdminPanel.png" width="45%">
+
+#### </p>
+
+
+
+### 
+
+### 
 
