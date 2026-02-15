@@ -195,8 +195,8 @@ namespace FurnitureGardenDesign.Data.Migrations
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Image2DUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Model3DUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image2DUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Model3DUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Model3DStatus = table.Column<int>(type: "int", nullable: false),
@@ -223,7 +223,7 @@ namespace FurnitureGardenDesign.Data.Migrations
                     FurnitureType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Dimensions = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ReferenceImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferenceImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -331,9 +331,12 @@ namespace FurnitureGardenDesign.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Image2DUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Model3DUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsApproved = table.Column<bool>(type: "bit", nullable: false)
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {

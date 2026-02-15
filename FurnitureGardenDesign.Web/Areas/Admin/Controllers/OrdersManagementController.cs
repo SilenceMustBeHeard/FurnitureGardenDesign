@@ -88,7 +88,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 
 
         // gets all categories for the dropdown in the create order form
-        [HttpPost]
+
         private async Task LoadCategoriesAsync()
         {
             var categories = await _categoryService.GetAllActiveCategoriesAsync();
@@ -103,6 +103,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
         }   
 
       // view the details of current order  
+        [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
             var order = await _orderService.GetByIdAsync(id);
