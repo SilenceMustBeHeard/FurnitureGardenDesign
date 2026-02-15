@@ -8,7 +8,9 @@ namespace FurnitureGardenDesign.Web.ViewModels.User
     {
         public Guid Id { get; set; }
 
-        public string DesignImageUrl { get; set; } = null!;
+        public string DesignImage2DUrl { get; set; } = null!;
+
+        public string? Model3DUrl { get; set; } = null!;
 
         public string? Notes { get; set; }
 

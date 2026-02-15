@@ -62,6 +62,11 @@ namespace FurnitureGardenDesign.Data
                 .Property(o => o.CreatedOn)
                 .HasDefaultValueSql("GETUTCDATE()");  // if not set any value, giving it currnet UTC time
 
+            builder
+              .Entity<DesignVariant>()
+              .Property(o => o.CreatedOn)
+              .HasDefaultValueSql("GETUTCDATE()");  // if not set any value, giving it currnet UTC time
+
 
 
             builder

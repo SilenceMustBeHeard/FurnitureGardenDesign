@@ -8,7 +8,8 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
     public interface IDesignVariantRepository
          : IRepository<DesignVariant, Guid>, IRepositoryAsync<DesignVariant, Guid>
     {
-    
+        Task<IEnumerable<DesignVariant>> GetByOrderIdAsync(Guid orderId);
+
     }
 }
 

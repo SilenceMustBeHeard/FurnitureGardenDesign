@@ -9,5 +9,6 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
        : IRepository<Order, Guid>, IRepositoryAsync<Order, Guid>
     {
         Task<int> CountPendingAsync();
+        Task<Order?> GetOrderWithVariantsAsync(Guid orderId);
     }
 }

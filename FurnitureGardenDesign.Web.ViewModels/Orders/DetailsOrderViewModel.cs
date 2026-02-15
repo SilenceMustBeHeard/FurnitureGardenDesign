@@ -21,10 +21,10 @@ namespace FurnitureGardenDesign.Web.ViewModels.Orders
         public string Dimensions { get; set; } = null!; 
 
       
-        public string Description { get; set; } = null!; 
+        public string Description { get; set; } = null!;
 
 
-
+        
         public string? ReferenceImageUrl { get; set; }
 
         

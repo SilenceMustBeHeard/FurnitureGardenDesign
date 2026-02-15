@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FurnitureGardenDesign.Data.Models
 {
-    public class DesignVariant
+    public class DesignVariant : BaseDeletableEntity
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -11,12 +11,20 @@ namespace FurnitureGardenDesign.Data.Models
         public Guid OrderId { get; set; }
 
         // Image URL for the design variant
+ 
+        [Required(ErrorMessage = "2D image URL is required.")]
+        [MaxLength(500, ErrorMessage = "Image URL cannot exceed 500 characters.")]
         [Url]
-        public string ImageUrl { get; set; } = null!;
+        public string Image2DUrl { get; set; } = null!;
+
+        [Required(ErrorMessage = "3D model URL is required.")]
+        [MaxLength(500, ErrorMessage = "Model URL cannot exceed 500 characters.")]
+        [Url]
+        public string? Model3DUrl { get; set; } = null!;
 
 
         // Optional notes about the design variant
-        
+
         [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Notes can only contain letters, numbers, spaces, and hyphens.")]
         public string? Notes { get; set; }
 

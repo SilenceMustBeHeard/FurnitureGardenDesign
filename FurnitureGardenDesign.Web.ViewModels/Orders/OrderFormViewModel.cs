@@ -28,7 +28,8 @@ namespace FurnitureGardenDesign.Web.ViewModels
 
         [Url]
         [Display(Name = "Reference Image URL")]
-        
+        [MaxLength(500, ErrorMessage = "Image URL cannot exceed 500 characters.")]
+
         public string? ReferenceImageUrl { get; set; } // optional reference image
 
         [Required]

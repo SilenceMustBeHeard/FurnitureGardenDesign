@@ -29,11 +29,16 @@ namespace FurnitureGardenDesign.Data.Models
         public string Description { get; set; } = null!;
 
         // URLs for 2D image 
+
         [Url]
+        [Required(ErrorMessage = "2D image URL is required.")]
+        [MaxLength(500, ErrorMessage = "Image URL cannot exceed 500 characters.")]
         public string Image2DUrl { get; set; } = null!;
 
         // URL for 3D model (optional)
         [Url]
+
+        [MaxLength(500, ErrorMessage = "Model URL cannot exceed 500 characters.")]
         public string? Model3DUrl { get; set; }
 
         // Price of the design

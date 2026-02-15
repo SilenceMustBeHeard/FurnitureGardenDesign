@@ -13,7 +13,11 @@ namespace Furniture_GardenDesign.Data.Configuration
         {
             builder.HasKey(d => d.Id);
 
-           
+            builder.Property(d => d.IsDeleted)
+                  .HasDefaultValue(false);
+
+
+            builder.HasQueryFilter(d => !d.IsDeleted);
 
             builder.HasOne(d => d.Order)
                    .WithMany(o => o.DesignVariants)

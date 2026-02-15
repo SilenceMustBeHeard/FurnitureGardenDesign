@@ -40,8 +40,10 @@ namespace FurnitureGardenDesign.Data.Models
         public string Description { get; set; } = null!; 
 
       
+       
         [Url]
-        
+        [MaxLength(500, ErrorMessage = "Model URL cannot exceed 500 characters.")]
+
         // optional image URL for reference
         public string? ReferenceImageUrl { get; set; }
 

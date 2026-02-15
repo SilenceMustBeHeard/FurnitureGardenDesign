@@ -25,8 +25,16 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
                 return await _dbSet
                     .CountAsync(o => o.Status == OrderStatus.Pending);
             }
-       
+
+        public async Task<Order?> GetOrderWithVariantsAsync(Guid orderId)
+        {
+            return await _dbSet
+                .Include(o => o.DesignVariants)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+        }
+
+
     }
-    
+
 
 }

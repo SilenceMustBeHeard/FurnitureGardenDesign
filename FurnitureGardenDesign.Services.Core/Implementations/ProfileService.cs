@@ -11,11 +11,10 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 {
     public class ProfileService : IProfileService
     {
-
         // seed repositories
         private readonly IAppUserRepository userRepository;
+
         private readonly IInboxMessageRepository messageRepository;
-      
 
         public ProfileService(
             IAppUserRepository userRepository,
@@ -25,7 +24,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             this.userRepository = userRepository;
             this.messageRepository = messageRepository;
         }
-
 
         // gets the profile data for the user, including their inbox messages
         // this is used in the profile page to display user information and messages
@@ -42,23 +40,27 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                     LastName = u.LastName,
                     Address = u.Address,
 
+                    // get the user's inbox messages,
+                    // filter out deleted design variants, and order them by creation date
                     Inbox = u.InboxMessages
-                        .OrderByDescending(x => x.CreatedOn)
-                        .Select(x => new InboxMessageViewModel
-                        {
-                            Id = x.Id,
-                            DesignImageUrl = x.DesignVariant!.ImageUrl,
-                            Notes = x.DesignVariant!.Notes,
-                            IsRead = x.IsRead,
-                            CreatedOn = x.CreatedOn
-                        })
-                        .ToList()
+                   .Where(x => x.DesignVariant != null && !x.DesignVariant.IsDeleted)
+                   .OrderByDescending(x => x.CreatedOn)
+                   .Select(x => new InboxMessageViewModel
+                {
+                       Id = x.Id,
+                       DesignImage2DUrl = x.DesignVariant!.Image2DUrl,
+                       Model3DUrl = x.DesignVariant.Model3DUrl,
+                       Notes = x.DesignVariant.Notes,
+                       IsRead = x.IsRead,
+                       CreatedOn = x.CreatedOn
+
+                   }).ToList()
+
                 })
                 .FirstOrDefaultAsync();
 
             return model;
         }
-
 
         // marks a message as read when the user views it in their inbox,
         // this is used to update the message status in the database and reflect it in the UI
@@ -73,7 +75,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             message.IsRead = true;
 
             await messageRepository.UpdateAsync(message);
-
         }
 
         // gets the count of unread messages for the user, this is used to display a notification badge in the UI
@@ -84,6 +85,4 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
         }
     }
-
-
 }

@@ -20,10 +20,14 @@ namespace FurnitureGardenDesign.Web.ViewModels.Catalog
         [MinLength(5, ErrorMessage = "Description must be at least 5 characters long.")]
         public string Description { get; set; } = null!;
 
+
         [Url(ErrorMessage = "Image2DUrl must be a valid URL.")]
+        [Required(ErrorMessage = "2D image URL is required.")]
+        [MaxLength(500, ErrorMessage = "Image URL cannot exceed 500 characters.")]
         public string Image2DUrl { get; set; } = null!;
 
         [Url(ErrorMessage = "Model3DUrl must be a valid URL.")]
+        [MaxLength(500, ErrorMessage = "Model URL cannot exceed 500 characters.")]
         public string? Model3DUrl { get; set; }
 
         public Model3DStatus Model3DStatus { get; set; }
