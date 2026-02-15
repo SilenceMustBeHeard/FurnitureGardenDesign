@@ -33,7 +33,7 @@
                         <div class="text-center mb-3">
                             <img src="@Url.Action("ProxyImage", "OrdersManagement", new { url = Model.ReferenceImageUrl })"
                                  class="img-fluid rounded shadow-lg details-img"
-                                 style="max-height:500px;object-fit:contain;"
+                                 style="max-height:700px;object-fit:contain;"
                                  alt="Reference Image"
                                  onerror="handleImageError(this)" />
 
@@ -52,15 +52,15 @@
                             <div class="webpage-card glass-card p-4 text-center">
 
                               
-                                <i class="bi bi-link-45deg" style="font-size: 3rem; color: #c09a6c;"></i>
-                                <h5 class="mt-3">Webpage Link Provided</h5>
-                                <p class="text-muted small">The client shared a product page instead of an image.</p>
+                                <i class="bi bi-link-45deg" style="font-size: 6rem; color: #c09a6c;"></i>
+                                <h5 class="mt-3"> Link Provided</h5>
+                                <p class="text-muted fw-bold">The client shared a page instead of an image.</p>
                                 
                                 <div class="d-flex gap-2 justify-content-center mt-3">
                                     <a href="@Model.ReferenceImageUrl"
                                        target="_blank"
                                        class="btn btn-primary-glass">
-                                        <i class="bi bi-box-arrow-up-right"></i> View Product Page
+                                        <i class="bi"></i> View Page
                                     </a>
 
                                     @* fetch preview image *@

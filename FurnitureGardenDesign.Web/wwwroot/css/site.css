@@ -532,7 +532,7 @@ header {
 
 
 .glass-table {
-    background: transparent;
+    background: #000000af;
 }
 
 .glass-row {
@@ -540,7 +540,7 @@ header {
 }
 
 .glass-collapse-row td {
-    background: transparent !important;
+    background: #000000af !important;
 }
 
 
