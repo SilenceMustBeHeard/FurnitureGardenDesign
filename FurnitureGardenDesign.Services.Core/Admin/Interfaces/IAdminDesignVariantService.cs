@@ -6,7 +6,7 @@ using System.Text;
 
 namespace FurnitureGardenDesign.Services.Core.Admin.Interfaces
 {
-    public interface IDesignVariantService
+    public interface IAdminDesignVariantService
     {
         Task<IEnumerable<DesignVariant>> GetDesignVariantsByOrderIdAsync(Guid orderId);
          Task<DesignVariant> GetDesignVariantByIdAsync(Guid id);

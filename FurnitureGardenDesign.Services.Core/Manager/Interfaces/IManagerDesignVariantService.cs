@@ -3,7 +3,7 @@ using FurnitureGardenDesign.Web.ViewModels.DesignVariants;
 
 namespace FurnitureGardenDesign.Services.Core.Manager.Interfaces
 {
-    public interface IDesignVariantService
+    public interface IManagerDesignVariantService
     {
         Task<IEnumerable<DesignVariant>> GetDesignVariantsByOrderIdAsync(Guid orderId);
          Task<DesignVariant> GetDesignVariantByIdAsync(Guid id);

@@ -10,9 +10,9 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers
     [Authorize(Roles = "Manager")]
     public class DesignVariantsController : Controller
     {
-        private readonly IDesignVariantService _designVariantService;
+        private readonly IManagerDesignVariantService _designVariantService;
 
-        public DesignVariantsController(IDesignVariantService designVariantService)
+        public DesignVariantsController(IManagerDesignVariantService designVariantService)
         {
             _designVariantService = designVariantService;
         }

@@ -24,6 +24,7 @@
             @if (SignInManager.IsSignedIn(User))
             {
                 <a class="btn btn-primary-glass position-relative"
+                asp-area="Manager"
                    asp-controller="Catalog"
                    asp-action="CatalogIndex">
                     Explore
@@ -31,7 +32,8 @@
 
 
                 <a class="btn btn-outline-glass btn-lg"
-                   asp-controller="Orders"
+                   asp-area="Manager"
+                   asp-controller="OrdersManagement"
                    asp-action="Create">
                     New Order
                 </a>
@@ -39,6 +41,7 @@
             else
             {
                 <a class="btn btn-primary-glass position-relative"
+                  
                    asp-controller="Catalog"
                    asp-action="CatalogIndex">
                     Explore

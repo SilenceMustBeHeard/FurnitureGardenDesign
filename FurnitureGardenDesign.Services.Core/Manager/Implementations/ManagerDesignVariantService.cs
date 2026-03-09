@@ -2,20 +2,21 @@
 using FurnitureGardenDesign.Data.Common.Enums;
 using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
-using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
+
+using FurnitureGardenDesign.Services.Core.Manager.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.DesignVariants;
 using Microsoft.EntityFrameworkCore;
 
-namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
+namespace FurnitureGardenDesign.Services.Core.Manager.Implementations
 {
-    public class DesignVariantService : IDesignVariantService
+    public class ManagerDesignVariantService : IManagerDesignVariantService
     {
 
         private readonly IDesignVariantRepository _designVariantRepository;
         private readonly IInboxMessageRepository _inboxMessageRepository;
         private readonly IOrderRepository _orderRepository;
 
-        public DesignVariantService(IDesignVariantRepository designVariantRepository,
+        public ManagerDesignVariantService(IDesignVariantRepository designVariantRepository,
             IOrderRepository orderRepository, IInboxMessageRepository inboxMessageRepository)
         {
             _designVariantRepository = designVariantRepository;

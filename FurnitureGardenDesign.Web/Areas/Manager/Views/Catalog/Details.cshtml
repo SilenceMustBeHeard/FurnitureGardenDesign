@@ -1,0 +1,107 @@
+﻿@model FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogDesignViewModel
+
+<div class="container py-5">
+    <div class="card glass-card p-5 text-light shadow-lg border-0 rounded-4">
+
+        <a asp-action="Index" class="btn btn-outline-glass mb-4">
+            ← Back
+        </a>
+
+        <div class="row align-items-start g-5">
+
+            @* left - image*@
+            <div class="col-lg-8 text-center">
+                <img src="@Model.Image2DUrl"
+                     class="img-fluid rounded-4 shadow-lg details-img"
+                     alt="@Model.Title" />
+            </div>
+
+            @* right - details*@
+            <div class="col-lg-4">
+
+                <h2 class="fw-bold mb-3 display-6">@Model.Title</h2>
+
+                <p class="glass-text-muted mb-4">
+                    @Model.Description
+                </p>
+
+                <div class="mb-3">
+                    <small class="text-secondary">Category</small><br />
+                    <span class="fw-semibold">@Model.CategoryName</span>
+                </div>
+
+                <div class="mb-3">
+                    <small class="text-secondary">Price</small><br />
+                    <span class="text-success fs-4 fw-bold">
+                        @Model.Price.ToString("C")
+                    </span>
+                </div>
+
+                <div class="mb-4">
+                    <small class="text-secondary">Rating</small><br />
+                    <span class="text-warning fs-5 fw-semibold">
+                        @Model.AverageRating.ToString("0.0") ★
+                    </span>
+                    <span class="small text-muted">
+                        (@Model.ReviewCount reviews)
+                    </span>
+                </div>
+
+                <hr class="border-light opacity-25" />
+
+                @*action buttons*@
+                <div class="d-grid gap-2 mt-4">
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-controller="Catalog"
+                              asp-action="ToggleFavorite"
+                              method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+
+                            <button type="submit"
+                                    class="btn btn-glass-fav @(Model.IsFavorited ? "active" : "")">
+                                @(Model.IsFavorited ? "❤️ Remove from Favorites" : "🤍 Add to Favorites")
+                            </button>
+                        </form>
+
+                        <a asp-controller="Review"
+                           asp-action="Write"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-primary-glass w-100">
+                            Write Review
+                        </a>
+
+                        <a asp-controller="Review"
+                           asp-action="Reviews"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-outline-glass w-100">
+                            View Reviews
+                        </a>
+                    }
+
+                    @* FIX ! : added only external link for 3dmodel *@
+                    @if (!string.IsNullOrEmpty(Model.Model3DUrl))
+                    {
+                        <a href="@Model.Model3DUrl"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="btn btn-outline-glass w-100">
+                            <i class="bi bi-box-arrow-up-right me-2"></i>View 3D Model
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-glass w-100" disabled>
+                            <i class="bi bi-cube me-2"></i>3D Not Available
+                        </button>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

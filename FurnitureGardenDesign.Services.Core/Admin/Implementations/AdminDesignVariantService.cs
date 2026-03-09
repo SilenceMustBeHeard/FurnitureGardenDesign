@@ -6,16 +6,16 @@ using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.DesignVariants;
 using Microsoft.EntityFrameworkCore;
 
-namespace FurnitureGardenDesign.Services.Core.Manager.Implementations
+namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
 {
-    public class DesignVariantService : IDesignVariantService
+    public class AdminDesignVariantService : IAdminDesignVariantService
     {
 
         private readonly IDesignVariantRepository _designVariantRepository;
         private readonly IInboxMessageRepository _inboxMessageRepository;
         private readonly IOrderRepository _orderRepository;
 
-        public DesignVariantService(IDesignVariantRepository designVariantRepository,
+        public AdminDesignVariantService(IDesignVariantRepository designVariantRepository,
             IOrderRepository orderRepository, IInboxMessageRepository inboxMessageRepository)
         {
             _designVariantRepository = designVariantRepository;
