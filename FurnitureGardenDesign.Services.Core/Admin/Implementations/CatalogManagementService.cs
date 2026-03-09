@@ -27,7 +27,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
                 Image2DUrl = model.Image2DUrl,
                 Model3DUrl = model.Model3DUrl,
                 Price = decimal.Parse(model.Price),
-              
+                CategoryId = model.CategoryId,
                 IsDeleted = model.IsDeleted,
                 Model3DStatus = model.Model3DStatus
             };
