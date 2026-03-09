@@ -1,0 +1,364 @@
+﻿@model IEnumerable<FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogDesignViewModel>
+
+@{
+    ViewData["Title"] = "Catalog Management";
+    var currentPage = (int)ViewData["CurrentPage"];
+    var pageSize = (int)ViewData["PageSize"];
+    var totalItems = (int)ViewData["TotalItems"];
+    var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+}
+<div class="card glass-table p-4">
+
+<div class="container-fluid py-4">
+
+  @* Header Section *@
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="glass-card p-4 text-light" style="background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 100%);">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <h1 class="display-6 fw-bold mb-2">
+                            <i class="bi bi-grid-3x3-gap-fill me-2 text-warning"></i>Catalog Management
+                        </h1>
+                        <p class="text-muted mb-0">Manage your product catalog, edit items, and monitor performance</p>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="text-center px-3">
+                            <h3 class="fw-bold text-warning mb-0">@totalItems</h3>
+                            <small class="text-muted">Total Items</small>
+                        </div>
+                        <div class="text-center px-3 border-start border-secondary">
+                            <h3 class="fw-bold text-success mb-0">@Model.Count(c => !c.IsDeleted)</h3>
+                            <small class="text-muted">Active</small>
+                        </div>
+                        <div class="text-center px-3 border-start border-secondary">
+                            <h3 class="fw-bold text-secondary mb-0">@Model.Count(c => c.IsDeleted)</h3>
+                            <small class="text-muted">Inactive</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   @*  Quick Actions Bar  *@
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="glass-card p-3">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div class="d-flex gap-2">
+                        <a asp-area="Admin" asp-controller="CatalogManagement" asp-action="Create"
+                           class="btn btn-primary-glass">
+                            <i class="bi bi-plus-circle me-2"></i>Add New Item
+                        </a>
+                        <a asp-area="Admin" asp-controller="CatalogManagement" asp-action="EditList"
+                           class="btn btn-outline-glass">
+                            <i class="bi bi-list-ul me-2"></i>Bulk Management
+                        </a>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <div class="input-group glass-input-group" style="width: 300px;">
+                            <span class="input-group-text glass-input-prepend">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" class="form-control glass-input" placeholder="Search catalog..." id="searchInput">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     @*    status filter buttons  *@
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="glass-card p-2">
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-glass flex-fill active" onclick="filterStatus('all')" id="filterAll">
+                        <i class="bi bi-grid-fill me-1"></i>All Items
+                    </button>
+                    <button type="button" class="btn btn-outline-glass flex-fill" onclick="filterStatus('active')" id="filterActive">
+                        <i class="bi bi-check-circle-fill me-1 text-success"></i>Active Only
+                    </button>
+                    <button type="button" class="btn btn-outline-glass flex-fill" onclick="filterStatus('inactive')" id="filterInactive">
+                        <i class="bi bi-eye-slash-fill me-1 text-secondary"></i>Inactive Only
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     @*  Catalog Grid with cards *@
+    <div class="row g-4" id="catalogGrid">
+        @foreach (var item in Model)
+        {
+            <div class="col-xl-4 col-lg-6 col-md-6 catalog-item @(item.IsDeleted ? "inactive-item" : "active-item")">
+                <div class="card glass-card admin-catalog-card h-100">
+
+
+                @*  Image container *@
+                    <div class="position-relative">
+                        <img src="@item.Image2DUrl" class="admin-catalog-img w-100" alt="@item.Title"
+                             onerror="this.src='/images/placeholder.jpg'"
+                             style="height: 220px; object-fit: cover;">
+
+                          @* top left badges *@
+                        <div class="position-absolute top-0 start-0 p-2 d-flex gap-2">
+                         @* status badge *@
+                            @if (item.IsDeleted)
+                            {
+                                <span class="badge bg-secondary shadow-sm">
+                                    <i class="bi bi-eye-slash me-1"></i>INACTIVE
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success shadow-sm">
+                                    <i class="bi bi-check-circle me-1"></i>ACTIVE
+                                </span>
+                            }
+
+                          
+                        </div>
+
+                   
+                            @* 3D badge  *@
+                        @if (!string.IsNullOrEmpty(item.Model3DUrl))
+                        {
+                            <div class="position-absolute bottom-0 end-0 p-2">
+                                <span class="badge bg-info">
+                                    <i class="bi bi-cube me-1"></i>3D
+                                </span>
+                            </div>
+                        }
+                    </div>
+
+                   @* card body  *@
+                    <div class="card-body d-flex flex-column">
+                            @*  ID badge *@
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <span class="badge bg-dark bg-opacity-75">
+                                    #ID:@item.Id.ToString()
+                                </span>
+                            </div>
+                        @* Title *@
+                        <h5 class="glass-title fw-bold mb-2">@item.Title</h5>
+                          
+                       @*  Description *@
+                        <p class="glass-text-muted small mb-3" style="min-height: 48px; max-height: 48px; overflow: hidden;">
+                            @item.Description
+
+
+                              
+                        </p>
+                            @* popular badge *@
+                            @if (item.AverageRating >= 4.5)
+                            {
+                                <span class="badge bg-warning text-dark shadow-sm">
+                                    <i class="bi bi-star-fill me-1"></i>POPULAR
+                                </span>
+                            }
+
+                     @* Price and Rating *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <small class="text-muted d-block">Price</small>
+                                <span class="text-success fw-bold fs-5">@item.Price.ToString("C")</span>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted d-block">Rating</small>
+                                <span class="text-warning">
+                                    <i class="bi bi-star-fill me-1"></i>@item.AverageRating.ToString("0.0")
+                                    <small class="text-muted">(@item.ReviewCount)</small>
+                                </span>
+                            </div>
+                              
+                        </div>
+                       
+                      @* Action Buttons *@
+                        <div class="d-grid gap-2 mt-auto">
+
+                           @* Main Actions *@
+                            <div class="btn-group">
+                                <a asp-area="Admin"
+                                   asp-controller="CatalogManagement"
+                                   asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-outline-glass">
+                                    <i class="bi bi-eye me-1"></i>View
+                                </a>
+                                <a asp-area="Admin"
+                                   asp-controller="CatalogManagement"
+                                   asp-action="Edit"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-outline-glass">
+                                    <i class="bi bi-pencil me-1"></i>Edit
+                                </a>
+                              
+                            </div>
+                            
+                               @*  Favorite button *@
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <form asp-area="Admin"
+                                      asp-controller="CatalogManagement"
+                                      asp-action="ToggleFavorite"
+                                      method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                    <button type="submit"
+                                            class="btn w-100 @(item.IsFavorited ? "btn-danger" : "btn-outline-danger")">
+                                        <i class="bi @(item.IsFavorited ? "bi-heart-fill" : "bi-heart") me-1"></i>
+                                        @(item.IsFavorited ? "Remove Favorite" : "Add to Favorites")
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @* Pagination *@
+    @if (totalPages > 1)
+    {
+        <div class="row mt-5">
+            <div class="col-12">
+                <nav aria-label="Catalog pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <a class="page-link glass-pagination"
+                               asp-area="Admin"
+                               asp-controller="CatalogManagement"
+                               asp-action="AdminIndex"
+                               asp-route-page="@(currentPage - 1)"
+                               asp-route-pageSize="@pageSize"
+                               aria-label="Previous">
+                                <span aria-hidden="true"><i class="bi bi-chevron-left"></i></span>
+                            </a>
+                        </li>
+
+                        @{
+                            int startPage = Math.Max(1, currentPage - 2);
+                            int endPage = Math.Min(totalPages, currentPage + 2);
+
+                            if (startPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link glass-pagination"
+                                       asp-area="Admin"
+                                       asp-controller="CatalogManagement"
+                                       asp-action="AdminIndex"
+                                       asp-route-page="1"
+                                       asp-route-pageSize="@pageSize">1</a>
+                                </li>
+                                @if (startPage > 2)
+                                {
+                                    <li class="page-item disabled"><span class="page-link glass-pagination">...</span></li>
+                                }
+                            }
+                        }
+
+                        @for (int i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link glass-pagination"
+                                   asp-area="Admin"
+                                   asp-controller="CatalogManagement"
+                                   asp-action="AdminIndex"
+                                   asp-route-page="@i"
+                                   asp-route-pageSize="@pageSize">@i</a>
+                            </li>
+                        }
+
+                        @if (endPage < totalPages)
+                        {
+                            @if (endPage < totalPages - 1)
+                            {
+                                <li class="page-item disabled"><span class="page-link glass-pagination">...</span></li>
+                            }
+                            <li class="page-item">
+                                <a class="page-link glass-pagination"
+                                   asp-area="Admin"
+                                   asp-controller="CatalogManagement"
+                                   asp-action="AdminIndex"
+                                   asp-route-page="@totalPages"
+                                   asp-route-pageSize="@pageSize">@totalPages</a>
+                            </li>
+                        }
+
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a class="page-link glass-pagination"
+                               asp-area="Admin"
+                               asp-controller="CatalogManagement"
+                               asp-action="AdminIndex"
+                               asp-route-page="@(currentPage + 1)"
+                               asp-route-pageSize="@pageSize"
+                               aria-label="Next">
+                                <span aria-hidden="true"><i class="bi bi-chevron-right"></i></span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    }
+</div>
+</div>
+
+@section Scripts {
+    <script>
+        // Live search with debounce
+        let searchTimeout;
+        const searchInput = document.getElementById('searchInput');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    const searchTerm = this.value.toLowerCase();
+                    const items = document.querySelectorAll('.catalog-item');
+
+                    items.forEach(item => {
+                        const title = item.querySelector('.glass-title').textContent.toLowerCase();
+                        const description = item.querySelector('.glass-text-muted').textContent.toLowerCase();
+
+                        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                            item.style.display = '';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                }, 300);
+            });
+        }
+
+        // Filter by status
+        function filterStatus(status) {
+            const items = document.querySelectorAll('.catalog-item');
+
+            // Update active buttons
+            document.getElementById('filterAll').classList.remove('active');
+            document.getElementById('filterActive').classList.remove('active');
+            document.getElementById('filterInactive').classList.remove('active');
+            document.getElementById('filter' + status.charAt(0).toUpperCase() + status.slice(1)).classList.add('active');
+
+            items.forEach(item => {
+                if (status === 'all') {
+                    item.style.display = '';
+                } else if (status === 'active') {
+                    item.style.display = item.classList.contains('active-item') ? '' : 'none';
+                } else if (status === 'inactive') {
+                    item.style.display = item.classList.contains('inactive-item') ? '' : 'none';
+                }
+            });
+        }
+
+        // Auto-hide alerts
+        setTimeout(() => {
+            document.querySelectorAll(".alert").forEach(alert => alert.style.display = "none");
+        }, 3500);
+    </script>
+}

@@ -7,7 +7,15 @@
 
     @if (Model.IsAdmin)
     {
-       @* Admin *@
+        @* Admin *@
+
+
+        @* Uncomment this block to show a clear admin mode indicator in the navbar. It can be styled as needed. *@
+        @* 
+            <div style="background: green; color: white; padding: 2px 5px; border-radius: 3px; font-size: 10px;">
+                ADMIN MODE - Area: @Model.CurrentArea
+            </div>
+         *@
 
         <a class="btn btn-outline-glass btn-sm"
            asp-area="Admin"
@@ -16,27 +24,62 @@
             Admin Panel
         </a>
 
-      
-      <a class="btn btn-outline-glass"
+
+
+        <a class="btn btn-outline-glass"
            asp-area="Admin"
            asp-controller="OrdersManagement"
            asp-action="Manage">
-            Orders (@Model.PendingOrdersCount)
-        </a> 
- 
+            <span>Orders</span>
+            @if (Model.PendingOrdersCount > 0)
+            {
+                <span class="badge bg-warning text-dark rounded-pill">
+                    @Model.PendingOrdersCount
+                </span>
+            }
+        </a>
+
+
+        <a class="btn btn-outline-glass d-flex align-items-center gap-2"
+           asp-area="Admin"
+           asp-controller="AdminProfile"
+           asp-action="AdminInbox">
+
+            <i class="bi bi-envelope"></i>
+            <span>Messages</span>
+            @if (Model.UnreadMessagesCount > 0)
+            {
+                <span class="badge bg-warning text-dark rounded-pill">
+                    @Model.UnreadMessagesCount
+                </span>
+            }
+        </a>
+
+
+
+
+
+
+
+
+
+
+
+
         <a class="btn btn-primary-glass"
-           asp-area=""
-           asp-controller="Catalog"
-           asp-action="Index">
+           asp-area="Admin"
+           asp-controller="CatalogManagement"
+           asp-action="AdminIndex">
+
             Catalogue
-        </a> 
+        </a>
     }
     else if (Model.IsManager)
     {
-      @*   Manager *@
+        @* Manager *@
         <a class="btn btn-primary-glass"
            asp-controller="Catalog"
-           asp-action="Index">
+           asp-action="CatalogIndex">
             Catalogue
         </a>
 
@@ -45,14 +88,33 @@
            asp-action="Manage">
             Orders (@Model.PendingOrdersCount)
         </a>
+
+
+
+
+
+
+
+
+        <a class="btn btn-outline-glass d-flex align-items-center gap-2"
+           asp-controller="Profile"
+           asp-action="AdminInbox">
+            <i class="bi bi-envelope"></i>
+            <span>Messages</span>
+            @if (Model.UnreadMessagesCount > 0)
+            {
+                <span class="badge bg-warning text-dark rounded-pill">
+                    @Model.UnreadMessagesCount
+                </span>
+            }
+        </a>
     }
     else if (Model.IsUser)
     {
-        
-     @* Registered User *@  
-        <a class="btn btn-primary-glass"
+        @* Registered User *@
+        <a class="btn btn-primary-glass position-relative"
            asp-controller="Catalog"
-           asp-action="Index">
+           asp-action="CatalogIndex">
             Catalogue
         </a>
 
@@ -61,14 +123,29 @@
            asp-action="Create">
             New Order
         </a>
+
+        @*Button for unread messages*@
+
+        <a class="btn btn-outline-glass d-flex align-items-center gap-2"
+           asp-controller="Profile"
+           asp-action="Index">
+            <i class="bi bi-envelope"></i>
+
+            @if (Model.UnreadMessagesCount > 0)
+            {
+                <span class="badge bg-warning text-dark rounded-pill">
+                    @Model.UnreadMessagesCount
+                </span>
+            }
+        </a>
     }
     else
     {
-          @* Guest *@
-     @*   <a class="btn btn-primary-glass"
+        @* Guest *@
+        @* <a class="btn btn-primary-glass"
            asp-controller="Catalog"
            asp-action="Explore">
             Catalogue
-        </a>   *@
+        </a> *@
     }
 </div>

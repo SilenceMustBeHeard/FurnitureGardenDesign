@@ -18,9 +18,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         {
             _orderRepo = orderRepo;
         }
-
-
-
         // creates new order 
 
         public async Task CreateOrderAsync(string userId, OrderFormViewModel model)
@@ -40,6 +37,11 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             await _orderRepo.AddAsync(order);
         }
 
+
+
+
+  
+  
 
         // gets the count of all pending orders for admin or manager view
         public async Task<int> GetPendingOrdersCountAsync()

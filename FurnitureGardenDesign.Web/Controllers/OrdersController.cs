@@ -44,11 +44,18 @@ namespace FurnitureGardenDesign.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
+                TempData["Error"] = "Please correct the errors in the form.";
                 await LoadCategoriesAsync();
                 return View(model);
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            if(User.Identity?.IsAuthenticated != true)
+            {
+                TempData["Error"] = "You must be logged in to submit an order.";
+                return RedirectToAction("Login", "Account");
+            }
             await _orderService.CreateOrderAsync(userId, model);
 
             TempData["Success"] = "Your order has been submitted!";

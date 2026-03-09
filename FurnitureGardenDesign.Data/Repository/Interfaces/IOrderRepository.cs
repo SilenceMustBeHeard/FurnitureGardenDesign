@@ -1,4 +1,5 @@
-﻿using FurnitureGardenDesign.Data.Models;
+﻿using Furniture_GardenDesign.Data.Enums;
+using FurnitureGardenDesign.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,5 +11,8 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces
     {
         Task<int> CountPendingAsync();
         Task<Order?> GetOrderWithVariantsAsync(Guid orderId);
+
+
+        Task UpdateStatusAsync(Guid orderId, OrderStatus newStatus);
     }
 }

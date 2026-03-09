@@ -1,0 +1,235 @@
+﻿@model FurnitureGardenDesign.Web.ViewModels.Orders.DetailsOrderViewModel
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="container py-5">
+    <div class="card glass-card p-5 text-light shadow-lg border-0 rounded-4">
+
+        <a asp-area="Manager"
+           asp-controller="OrdersManagement"
+           asp-action="Manage"
+           class="btn btn-outline-glass mb-4">
+            ← Back to Orders
+        </a>
+
+        <div class="row align-items-start g-5">
+
+            @* LEFT – Image / Preview with Proxy *@
+            <div class="col-lg-8 text-center">
+                @if (!string.IsNullOrWhiteSpace(Model.ReferenceImageUrl))
+                {
+                    bool isDirectImage = Model.ReferenceImageUrl.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
+                    || Model.ReferenceImageUrl.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
+                    || Model.ReferenceImageUrl.EndsWith(".webp", StringComparison.OrdinalIgnoreCase)
+                    || Model.ReferenceImageUrl.EndsWith(".gif", StringComparison.OrdinalIgnoreCase)
+                    || Model.ReferenceImageUrl.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
+
+                    if (isDirectImage)
+                    {
+                        @* check if the image is directly accessible *@
+                        @*then uses proxy image *@
+                        <div class="text-center mb-3">
+                            <img src="@Url.Action("ProxyImage", "OrdersManagement", new { url = Model.ReferenceImageUrl })"
+                                 class="img-fluid rounded shadow-lg details-img"
+                                 style="max-height:700px;object-fit:contain;"
+                                 alt="Reference Image"
+                                 onerror="handleImageError(this)" />
+
+                            <div class="mt-2 small text-muted">
+                                <a href="@Model.ReferenceImageUrl" target="_blank">Original Link</a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @* Handle webpage links smartly *@
+                        <div class="webpage-preview mb-3">
+                           
+
+                            @* Generic webpage preview *@
+                            <div class="webpage-card glass-card p-4 text-center">
+
+                              
+                                <i class="bi bi-link-45deg" style="font-size: 6rem; color: #c09a6c;"></i>
+                                <h5 class="mt-3"> Link Provided</h5>
+                                <p class="text-muted fw-bold">The client shared a page instead of an image.</p>
+                                
+                                <div class="d-flex gap-2 justify-content-center mt-3">
+                                    <a href="@Model.ReferenceImageUrl"
+                                       target="_blank"
+                                       class="btn btn-primary-glass">
+                                        <i class="bi"></i> View Page
+                                    </a>
+
+                                    @* fetch preview image *@
+                                    <button type="button"
+                                            class="btn btn-outline-glass"
+                                            onclick="fetchPagePreview('@Model.ReferenceImageUrl')">
+                                        <i class="bi bi-arrow-repeat"></i> Try Fetch Image
+                                    </button>
+                                </div>
+
+                                @* Preview container for fetched image *@
+                                <div id="previewContainer" class="mt-4" style="display: none;">
+                                    <img id="fetchedImage" class="img-fluid rounded" style="max-height:700px;" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-muted fst-italic">
+                        No reference image provided.
+                    </div>
+                }
+            </div>
+
+            @* right – Details with Controls *@
+            <div class="col-lg-4">
+
+                <h2 class="fw-bold mb-4 display-6">
+                    Order #@Model.Id
+                </h2>
+
+                <div class="mb-3">
+                    <small class="text-secondary">User</small><br />
+                    <span class="fw-semibold">@Model.UserId</span>
+                </div>
+
+                <div class="mb-3">
+                    <small class="text-secondary">Category</small><br />
+                    <span class="fw-semibold">@Model.CategoryId</span>
+                </div>
+
+                <div class="mb-3">
+                    <small class="text-secondary">Furniture Type</small><br />
+                    <span class="fw-semibold">@Model.FurnitureType</span>
+                </div>
+
+                <div class="mb-3">
+                    <small class="text-secondary">Dimensions</small><br />
+                    <span class="fw-semibold">@Model.Dimensions</span>
+                </div>
+
+                <div class="mb-3">
+                    <small class="text-secondary">Description</small><br />
+                    <p class="glass-text-muted">
+                        @Model.Description
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <small class="text-secondary">Status</small><br />
+                    <span class="badge bg-info text-dark fs-6">
+                        @Model.Status
+                    </span>
+                </div>
+
+                <hr class="border-light opacity-25" />
+
+                @* buttons *@
+                @* Reject*@
+                <div class="d-grid gap-2 mt-4">
+                    <form asp-area="Manager"
+                          asp-controller="OrdersManagement"
+                          asp-action="Reject"
+                          asp-route-id="@Model.Id"
+                          method="post">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-outline-glass w-100">
+                            <i class="bi bi-x-circle me-2"></i>Reject Order
+                        </button>
+                    </form>
+
+
+                    <a asp-area="Manager"
+                       asp-controller="DesignVariants"
+                       asp-action="Create"
+                       asp-route-orderId="@Model.Id"
+                       class="btn btn-primary-glass w-100">
+                        <i class="bi bi-brush me-2"></i>Send Design Proposal
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@section Scripts {
+    <script>
+        function handleImageError(img) {
+            console.log('Image failed to load:', img.src);
+            img.style.display = 'none';
+
+            // Show fallback
+            const parent = img.parentElement;
+            const fallbackDiv = document.createElement('div');
+            fallbackDiv.className = 'webpage-card glass-card p-4';
+            fallbackDiv.innerHTML = `
+                <i class="bi bi-exclamation-triangle" style="font-size: 3rem; color: #ffc107;"></i>
+                <p class="mt-3">Image could not be loaded</p>
+                <a href="@Model.ReferenceImageUrl" target="_blank" class="btn btn-outline-glass">
+                    View Original Link
+                </a>
+            `;
+            parent.appendChild(fallbackDiv);
+        }
+
+        function showFallback(img) {
+            img.style.display = 'none';
+            const parent = img.parentElement;
+            const textDiv = document.createElement('div');
+            textDiv.className = 'alert alert-info mt-3';
+            textDiv.innerHTML = `
+                <i class="bi bi-info-circle"></i>
+                Product image temporarily unavailable.
+                <a href="@Model.ReferenceImageUrl" target="_blank">Click here to view product page</a>
+            `;
+            parent.appendChild(textDiv);
+        }
+
+        async function fetchPagePreview(url) {
+            const container = document.getElementById('previewContainer');
+            const img = document.getElementById('fetchedImage');
+
+            container.style.display = 'block';
+            img.src = ''; // Clear previous
+
+            // Show loading
+            img.insertAdjacentHTML('beforebegin', '<div class="spinner-border text-warning" id="loadingSpinner"></div>');
+
+            try {
+                const proxyUrl = `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false`;
+
+                const response = await fetch(proxyUrl);
+                const data = await response.json();
+
+                document.getElementById('loadingSpinner')?.remove();
+
+                if (data.data?.image?.url) {
+                    img.src = data.data.image.url;
+                } else if (data.data?.screenshot?.url) {
+                    img.src = data.data.screenshot.url;
+                } else {
+                    throw new Error('No image found');
+                }
+            } catch (error) {
+                document.getElementById('loadingSpinner')?.remove();
+                container.innerHTML = `
+                    <div class="alert alert-warning">
+                        Could not fetch page preview.
+                        <a href="${url}" target="_blank">Visit page directly</a>
+                    </div>
+                `;
+            }
+        }
+    </script>
+}

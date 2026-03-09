@@ -213,7 +213,6 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Model3DUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -267,14 +266,23 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DesignVariantId")
+                    b.Property<Guid>("DesignVariantId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ReceiverId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Type")
@@ -285,6 +293,8 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.HasIndex("DesignVariantId");
 
                     b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
 
                     b.ToTable("InboxMessages");
                 });
@@ -595,17 +605,26 @@ namespace FurnitureGardenDesign.Data.Migrations
                 {
                     b.HasOne("FurnitureGardenDesign.Data.Models.DesignVariant", "DesignVariant")
                         .WithMany()
-                        .HasForeignKey("DesignVariantId");
+                        .HasForeignKey("DesignVariantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "Receiver")
                         .WithMany("InboxMessages")
                         .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("DesignVariant");
 
                     b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Order", b =>
@@ -704,6 +723,8 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.Navigation("InboxMessages");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("SentMessages");
                 });
 
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.CatalogDesign", b =>

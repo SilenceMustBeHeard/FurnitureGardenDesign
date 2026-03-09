@@ -20,30 +20,41 @@ namespace FurnitureGardenDesign.Web.Controllers
         // Index
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index(int page = 1, int pageSize = 9)
+        public virtual async Task<IActionResult> CatalogIndex(int page = 1, int pageSize = 9)
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             bool isGuest = !User.Identity!.IsAuthenticated;
 
-            var designs = await _catalogService.GetPublicCatalogAsync(userId, page, pageSize, isGuest);
+            IEnumerable<FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogDesignViewModel> designs;
+            int totalItems;
 
-            // for pagination
-            // curent page
-            ViewData["CurrentPage"] = page;
-            // items per page
-            ViewData["PageSize"] = pageSize;
-            // total items in the catalog
-            ViewData["TotalItems"] = await _catalogService.GetTotalActiveDesignsAsync(); 
+            if (isGuest)
+            {
+                // For guests: get only first 3 designs
+                designs = await _catalogService.GetPublicCatalogAsync(userId, 1, 3, isGuest);
+                totalItems = 3; // Guests only see 3 items total
+            }
+            else
+            {
+                // For authenticated users: full catalog with pagination
+                designs = await _catalogService.GetPublicCatalogAsync(userId, page, pageSize, isGuest);
+                totalItems = await _catalogService.GetTotalActiveDesignsAsync();
+            }
+
+            // For pagination
+            ViewData["CurrentPage"] = isGuest ? 1 : page;
+            ViewData["PageSize"] = isGuest ? 3 : pageSize;
+            ViewData["TotalItems"] = totalItems;
+            ViewData["IsGuest"] = isGuest; // Add this to view data
 
             return View(designs);
         }
 
 
-
         // Details
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Details(Guid id)
+        public virtual async Task<IActionResult> Details(Guid id)
         {   // if user is not authenticated
             // userId will be null, and service will handle it accordingly
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -52,7 +63,10 @@ namespace FurnitureGardenDesign.Web.Controllers
             var model = await _catalogService.GetDetailsAsync(id, userId);
 
             if (model == null)
-                return NotFound();
+              {
+                TempData["Error"] = "Design not found.";
+                return NotFound(); 
+              }
 
             return View(model);
         }
@@ -68,10 +82,17 @@ namespace FurnitureGardenDesign.Web.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Invalid Action.";
-                return Redirect("Index");
+                return RedirectToAction(nameof(CatalogIndex));
             }
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            if(userId == null)
+            {
+               TempData["Error"] = "You must be logged in to manage favorites.";
+                return RedirectToAction(nameof(CatalogIndex));
+
+            }
 
             bool isNowFavorited = await _favoriteService.ToggleFavoriteAsync(userId, id);
 
@@ -81,7 +102,7 @@ namespace FurnitureGardenDesign.Web.Controllers
                 : "You removed this design from favorites.";
 
             // if returnUrl is null, redirect to Index
-            return Redirect("Index");
+            return RedirectToAction(nameof(CatalogIndex));
         }
 
 
@@ -93,7 +114,10 @@ namespace FurnitureGardenDesign.Web.Controllers
         public async Task<IActionResult> AddReview(Guid id, int rating, string? comment)
         {
             if (rating < 1 || rating > 5)
+               {
+                TempData["Error"] = "Rating must be between 1 and 5.";
                 return RedirectToAction(nameof(Details), new { id });
+            }
 
             await _catalogService.AddReviewAsync(
                 User.Identity!.Name!,
@@ -104,7 +128,7 @@ namespace FurnitureGardenDesign.Web.Controllers
 
 
             TempData["Success"] = "You added a review!";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(CatalogIndex));
         }
     }
 }

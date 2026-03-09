@@ -24,7 +24,7 @@ namespace Furniture_GardenDesign.Data.Configuration
             // User <= Favorites
             builder
       .HasMany(u => u.Favorites)
-      .WithOne(f => f.User)   // <-- IMPORTANT
+      .WithOne(f => f.User)   //  IMPORTANT : ONE User CAN HAVE MANY Favorites, BUT ONE Favorite CAN HAVE ONLY ONE User
       .HasForeignKey(f => f.UserId)
       .OnDelete(DeleteBehavior.Restrict);
 

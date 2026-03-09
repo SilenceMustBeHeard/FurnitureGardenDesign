@@ -1,0 +1,227 @@
+﻿@model FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogDesignViewModel
+
+@{
+    ViewData["Title"] = $"{Model.Title} - Details";
+}
+<div class="card glass-card p-4 ">
+<div class="container-fluid py-4">
+
+   
+    <!-- Navigation Breadcrumb -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Home" asp-action="Index" class="text-muted">Admin</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index" class="text-muted">Catalog</a></li>
+                    <li class="breadcrumb-item active text-warning" aria-current="page">@Model.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Main Content - Left Column -->
+        <div class="col-lg-8">
+            <div class="glass-card p-4 text-light">
+                <!-- Action Bar -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <a asp-action="Index" class="btn btn-outline-glass">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Catalog
+                    </a>
+                    <div class="d-flex gap-2">
+                        <a asp-area="Admin" asp-controller="CatalogManagement" asp-action="Edit" asp-route-id="@Model.Id"
+                           class="btn btn-primary-glass">
+                            <i class="bi bi-pencil-square me-2"></i>Edit Item
+                        </a>
+                        <a asp-area="Admin" asp-controller="CatalogManagement" asp-action="EditList"
+                           class="btn btn-outline-glass">
+                            <i class="bi bi-list-ul me-2"></i>Management
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Image Section -->
+                <div class="text-center mb-4">
+                    <div class="position-relative d-inline-block">
+                        <img src="@Model.Image2DUrl" class="img-fluid rounded-4 shadow-lg admin-details-img"
+                             alt="@Model.Title" style="max-height: 500px; width: auto;"
+                             onerror="this.src='/images/placeholder.jpg'">
+                        @if (!string.IsNullOrEmpty(Model.Model3DUrl))
+                        {
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-success p-2">
+                                    <i class="bi bi-cube me-1"></i>3D Model Available
+                                </span>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3 col-6">
+                        <div class="bg-dark bg-opacity-25 p-3 rounded-3 text-center">
+                            <small class="text-muted d-block">Price</small>
+                            <span class="text-success fs-5 fw-bold">@Model.Price.ToString("C")</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="bg-dark bg-opacity-25 p-3 rounded-3 text-center">
+                            <small class="text-muted d-block">Rating</small>
+                            <span class="text-warning fs-5 fw-bold">@Model.AverageRating.ToString("0.0") ★</span>
+                            <small class="text-muted">(@Model.ReviewCount)</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="bg-dark bg-opacity-25 p-3 rounded-3 text-center">
+                            <small class="text-muted d-block">Category</small>
+                            <span class="text-light">@Model.CategoryName</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="bg-dark bg-opacity-25 p-3 rounded-3 text-center">
+                            <small class="text-muted d-block">Status</small>
+                            <span class="badge @(Model.IsFavorited ? "bg-success" : "bg-secondary")">
+                                @(Model.IsFavorited ? "Featured" : "Standard")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-card-text me-2 text-warning"></i>Description
+                    </h5>
+                    <div class="bg-dark bg-opacity-25 p-3 rounded-3">
+                        <p class="glass-text-muted mb-0">@Model.Description</p>
+                    </div>
+                </div>
+
+                <!-- 3D Model Section -->
+                @if (!string.IsNullOrEmpty(Model.Model3DUrl))
+                {
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-cube me-2 text-warning"></i>3D Model
+                        </h5>
+                        <div class="bg-dark bg-opacity-25 p-3 rounded-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="bi bi-box text-success fs-1"></i>
+
+
+
+                                <div class="flex-grow-1">
+                                    <p class="mb-1">External 3D model available</p>
+                                    <small class="text-muted">@Model.Model3DUrl</small>
+                                </div>
+
+
+
+                                <a href="@Model.Model3DUrl" target="_blank" rel="noopener noreferrer"
+                                   class="btn btn-primary-glass">
+                                    <i class="bi bi-box-arrow-up-right me-2"></i>Open Model
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Right Column - Admin Actions -->
+        <div class="col-lg-4">
+            <!-- Management Card -->
+            <div class="glass-card p-4 text-light mb-4">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-gear me-2 text-warning"></i>Management
+                </h5>
+                <div class="d-grid gap-2">
+
+
+                    <a asp-area="Admin" asp-controller="CatalogManagement" asp-action="Edit" asp-route-id="@Model.Id"
+                       class="btn btn-primary-glass">
+                        <i class="bi bi-pencil-square me-2"></i>Edit Catalog Item
+                    </a>
+
+
+
+                    <a asp-area="Admin" asp-controller="CatalogManagement" asp-action="Create"
+                       class="btn btn-outline-glass">
+                        <i class="bi bi-plus-circle me-2"></i>Add New Item
+                    </a>
+
+
+
+                    <button class="btn btn-outline-glass" onclick="copyToClipboard('@Model.Id')">
+                        <i class="bi bi-clipboard me-2"></i>Copy ID: @Model.Id.ToString().Substring(0, 8)...
+                    </button>
+                </div>
+            </div>
+
+            <!-- Reviews Card -->
+            <div class="glass-card p-4 text-light">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-star me-2 text-warning"></i>Reviews
+                    </h5>
+                    <span class="badge bg-warning text-dark">@Model.ReviewCount total</span>
+                </div>
+
+                @if (Model.ReviewCount > 0)
+                {
+                    <div class="text-center mb-3">
+                        <h2 class="display-4 fw-bold text-warning">@Model.AverageRating.ToString("0.0")</h2>
+                        <div class="text-warning">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= Math.Round(Model.AverageRating))
+                                {
+                                    <i class="bi bi-star-fill"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-star"></i>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <a asp-area="Admin"
+                            asp-controller="ReviewManagement" asp-action="Reviews" asp-route-id="@Model.Id"
+                           class="btn btn-outline-glass">
+                            <i class="bi bi-chat me-2"></i>View All Reviews
+                        </a>
+                            <a asp-area="Admin"
+                            asp-controller="ReviewManagement" asp-action="Write" asp-route-id="@Model.Id"
+                           class="btn btn-outline-glass">
+                            <i class="bi bi-pencil me-2"></i>Write a Review
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center py-3">No reviews yet</p>
+                        <a asp-area="Admin"
+                        asp-controller="ReviewManagement" asp-action="Write" asp-route-id="@Model.Id"
+                       class="btn btn-outline-glass w-100">
+                        <i class="bi bi-pencil me-2"></i>Be the first to review
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+@section Scripts {
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('ID copied to clipboard!');
+            });
+        }
+    </script>
+}

@@ -1,0 +1,80 @@
+﻿
+
+@model FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogViewModelCreate
+
+@{
+    ViewData["Title"] = "Add New Catalog";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-6 col-md-8 col-12">
+
+            <div class="glass p-4 p-md-5 rounded-7 shadow-lg">
+
+                <h2 class="text-center mb-4 hero-title">
+                    <i class="bi  me-2"></i> Add New Catalog
+                </h2>
+
+                <form asp-area="Admin" asp-controller="CatalogManagement" asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label fw-semibold"></label>
+                        <input asp-for="Title" class="form-control glass-input" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Description" rows="3" class="form-control glass-input"></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Image2DUrl" class="form-label fw-semibold"></label>
+                        <input asp-for="Image2DUrl" class="form-control glass-input" />
+                        <span asp-validation-for="Image2DUrl" class="text-danger small"></span>
+                    </div>
+
+
+
+                    <div class="mb-3">
+                        <label asp-for="Model3DUrl" class="form-label fw-semibold"></label>
+                        <input asp-for="Model3DUrl" class="form-control glass-input" />
+                        <span asp-validation-for="Model3DUrl" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Price" class="form-label fw-semibold"></label>
+                        <input asp-for="Price" class="form-control glass-input" />
+                        <span asp-validation-for="Price" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="CategoryId" class="form-label">Category</label>
+                        <select asp-for="CategoryId" class="form-select" asp-items="Model.Categories">
+                            <option value="">-- Select a category --</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+
+
+
+
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="AdminIndex" class="btn btn-outline-glass">← Back</a>
+                        <button type="submit" class="btn btn-primary-glass">
+                            Add New Design
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

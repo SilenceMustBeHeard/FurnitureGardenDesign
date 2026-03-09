@@ -1,41 +1,38 @@
-﻿using FurnitureGardenDesign.Data.Models;
+﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace FurnitureGardenDesign.Web.ViewModels.DesignVariants
 {
     public class DesignVariantViewModel
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
 
         public Guid OrderId { get; set; }
-
-        // Image URL for the design variant
 
         [Required(ErrorMessage = "2D image URL is required.")]
         [MaxLength(500, ErrorMessage = "Image URL cannot exceed 500 characters.")]
         [Url]
         public string Image2DUrl { get; set; } = null!;
 
-        [Required(ErrorMessage = "3D model URL is required.")]
         [MaxLength(500, ErrorMessage = "Model URL cannot exceed 500 characters.")]
         [Url]
-        public string? Model3DUrl { get; set; } = null!;
+        public string? Model3DUrl { get; set; }
 
 
+     
 
-        [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Notes can only contain letters, numbers, spaces, and hyphens.")]
+        [RegularExpression(@"^[a-zA-Z0-9\s\-]+$",
+            ErrorMessage = "Notes can only contain letters, numbers, spaces, and hyphens.")]
         public string? Notes { get; set; }
-
-
 
         public bool IsApproved { get; set; }
 
+        //  Order Preview Info (UI only)
+        public string? OrderDescription { get; set; }
 
-        public Order Order { get; set; } = null!;
+        public string? OrderDimensions { get; set; }
 
-
+        public string? ReferenceImageUrl { get; set; }
     }
 }

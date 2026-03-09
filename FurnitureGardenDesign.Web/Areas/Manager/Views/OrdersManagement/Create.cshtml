@@ -1,0 +1,60 @@
+﻿@using FurnitureGardenDesign.Web.ViewModels
+@model OrderFormViewModel
+@{
+    ViewData["Title"] = "Make an Order";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9 col-12">
+
+            <div class="glass p-4 p-md-5 rounded-4 shadow-lg">
+               
+                <h2 class="text-center mb-4 hero-title">Make an Order</h2>
+                <form asp-action="Create" method="post">
+                    <div class="mb-3">
+                        <label asp-for="FurnitureType" class="form-label"></label>
+                        <input asp-for="FurnitureType" class="form-control glass-input" placeholder="e.g., Chair" />
+                        <span asp-validation-for="FurnitureType" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Dimensions" class="form-label"></label>
+                        <input asp-for="Dimensions" class="form-control glass-input" placeholder="e.g., 200x80x75 cm" />
+                        <span asp-validation-for="Dimensions" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control glass-input" placeholder="Describe how it should look"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ReferenceImageUrl" class="form-label"></label>
+                        <input asp-for="ReferenceImageUrl" class="form-control glass-input" placeholder="Optional URL for reference image" />
+                        <span asp-validation-for="ReferenceImageUrl" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="CategoryId" class="form-label">Category</label>
+                        <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories">
+                            <option value="">-- Select a category --</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary-glass btn-lg">Make an Order!</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

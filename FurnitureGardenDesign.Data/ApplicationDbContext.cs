@@ -41,7 +41,7 @@ namespace FurnitureGardenDesign.Data
 
             builder
                 .Entity<CatalogDesign>()
-                .HasQueryFilter(c => c.IsActive); // filter for catalogDesign
+                .HasQueryFilter(c => !c.IsDeleted); // filter for catalogDesign
 
 
             builder

@@ -1,0 +1,95 @@
+﻿@model FurnitureGardenDesign.Web.ViewModels.Catalog.CatalogDesignViewModel
+
+<div class="container py-5">
+
+    <div class="card glass-card p-5 text-light shadow-lg border-0 rounded-4">
+
+        <h2 class="text-center mb-5 fw-bold display-6">
+            Write a Review
+        </h2>
+
+        <div class="row g-5 align-items-start">
+
+            @*left - design preview*@ 
+            <div class="col-lg-6 text-center">
+                <img src="@Model.Image2DUrl"
+                     class="img-fluid rounded-4 shadow-lg"
+                     alt="@Model.Title" />
+
+                <h4 class="mt-4 fw-semibold">@Model.Title</h4>
+
+                <p class="glass-text-muted small">
+                    @Model.Description
+                </p>
+
+                <div class="mt-3">
+                    <span class="text-success fw-bold fs-5">
+                        @Model.Price.ToString("C")
+                    </span>
+                </div>
+
+                <div class="mt-2">
+                    <span class="text-warning fw-semibold">
+                        @Model.AverageRating.ToString("0.0") ★
+                    </span>
+                    <span class="small text-muted">
+                        (@Model.ReviewCount reviews)
+                    </span>
+                </div>
+            </div>
+
+            @*right - review form*@ 
+            <div class="col-lg-6">
+
+                <form asp-area="Admin" asp-controller="ReviewManagement"
+                      asp-action="Post"
+                      method="post"
+                      class="glass-form">
+
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="catalogDesignId" value="@Model.Id" />
+
+                    <div class="mb-4">
+                        <label class="form-label glass-text-muted">
+                            Rating
+                        </label>
+
+                        <select class="form-select glass-input"
+                                name="rating"
+                                required>
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                <option value="@i">@i ★</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label glass-text-muted">
+                            Comment
+                        </label>
+
+                        <textarea class="form-control glass-input"
+                                  name="comment"
+                                  rows="5"
+                                  placeholder="Share your experience...">
+                        </textarea>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary-glass w-100 fw-semibold">Submit Review</button>
+
+                        <a asp-area="Admin" asp-controller="CatalogManagement"
+                           asp-action="Details"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-outline-glass">
+                            Back to Design
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

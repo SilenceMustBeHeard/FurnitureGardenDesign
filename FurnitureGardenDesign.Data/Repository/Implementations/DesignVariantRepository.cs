@@ -7,21 +7,27 @@ using System.Text;
 
 namespace FurnitureGardenDesign.Data.Repository.Implementations
 {
-    public class DesignVariantRepository:
+    public class DesignVariantRepository :
         BaseRepository<DesignVariant, Guid>, IDesignVariantRepository
     {
-        public DesignVariantRepository(ApplicationDbContext context) 
+        public DesignVariantRepository(ApplicationDbContext context)
             : base(context)
         {
 
 
         }
 
-        public async Task<IEnumerable<DesignVariant>> GetByOrderIdAsync(Guid orderId)
-        
+        public async Task<IEnumerable<DesignVariant>> GetByOrderId(Guid orderId)
+
             => await _context.DesignVariants
                 .Where(dv => dv.OrderId == orderId)
                 .ToListAsync();
-        
+
+
+
+     
+
+
+
     }
 }

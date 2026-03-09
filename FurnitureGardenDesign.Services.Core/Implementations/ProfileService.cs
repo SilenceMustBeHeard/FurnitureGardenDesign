@@ -1,35 +1,35 @@
-﻿using FurnitureGardenDesign.Data;
+﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.User;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FurnitureGardenDesign.Services.Core.Implementations
 {
     public class ProfileService : IProfileService
     {
         // seed repositories
-        private readonly IAppUserRepository userRepository;
+        private readonly IAppUserRepository _userRepository;
+        private readonly UserManager<AppUser> _userManager;
 
-        private readonly IInboxMessageRepository messageRepository;
 
         public ProfileService(
             IAppUserRepository userRepository,
-            IInboxMessageRepository messageRepository
-             )
+            UserManager<AppUser> userManager)
         {
-            this.userRepository = userRepository;
-            this.messageRepository = messageRepository;
+            _userRepository = userRepository;
+            _userManager = userManager;
         }
 
+
+
+
         // gets the profile data for the user, including their inbox messages
-        // this is used in the profile page to display user information and messages
+        // THIS WORKS FOR BOTH REGULAR USERS AND ADMINS/MANAGERS!
         public async Task<ProfileViewModel?> GetProfileAsync(string userId)
         {
-            var model = await userRepository
+            var model = await _userRepository
                 .GetAllAttached()
                 .Where(u => u.Id == userId)
                 .Select(u => new ProfileViewModel
@@ -40,49 +40,43 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                     LastName = u.LastName,
                     Address = u.Address,
 
-                    // get the user's inbox messages,
-                    // filter out deleted design variants, and order them by creation date
                     Inbox = u.InboxMessages
-                   .Where(x => x.DesignVariant != null && !x.DesignVariant.IsDeleted)
-                   .OrderByDescending(x => x.CreatedOn)
-                   .Select(x => new InboxMessageViewModel
-                {
-                       Id = x.Id,
-                       DesignImage2DUrl = x.DesignVariant!.Image2DUrl,
-                       Model3DUrl = x.DesignVariant.Model3DUrl,
-                       Notes = x.DesignVariant.Notes,
-                       IsRead = x.IsRead,
-                       CreatedOn = x.CreatedOn
-
-                   }).ToList()
-
+                        .Where(x => x.DesignVariant != null && !x.DesignVariant.IsDeleted)
+                        .OrderByDescending(x => x.CreatedOn)
+                        .Select(x => new InboxMessageViewModel
+                        {
+                            Id = x.Id,
+                            DesignVariantId = x.DesignVariant!.Id,
+                            DesignImage2DUrl = x.DesignVariant!.Image2DUrl,
+                            Model3DUrl = x.DesignVariant.Model3DUrl,
+                            Notes = x.DesignVariant.Notes,
+                            IsRead = x.IsRead,
+                            CreatedOn = x.CreatedOn,
+                            Type = x.Type 
+                        }).ToList()
                 })
                 .FirstOrDefaultAsync();
 
             return model;
         }
 
-        // marks a message as read when the user views it in their inbox,
-        // this is used to update the message status in the database and reflect it in the UI
-        public async Task MarkMessageAsReadAsync(Guid messageId, string userId)
+      
+
+        private async Task<HashSet<string>> GetAllAdminAndManagerIds()
         {
-            var message = await messageRepository
-                .FirstOrDefaultAsync(x => x.Id == messageId && x.ReceiverId == userId);
+            var adminIds = new HashSet<string>();
+            var allUsers = await _userRepository.GetAllAttached().ToListAsync();
 
-            if (message == null)
-                return;
+            foreach (var user in allUsers)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles.Contains("Admin") || roles.Contains("Manager"))
+                {
+                    adminIds.Add(user.Id);
+                }
+            }
 
-            message.IsRead = true;
-
-            await messageRepository.UpdateAsync(message);
-        }
-
-        // gets the count of unread messages for the user, this is used to display a notification badge in the UI
-        public async Task<int> GetUnreadCountAsync(string userId)
-        {
-            return await messageRepository
-                .GetAllAttached()
-                .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
+            return adminIds;
         }
     }
 }

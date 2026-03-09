@@ -45,6 +45,11 @@ namespace FurnitureGardenDesign.Web.ViewModels.Catalog
         public double AverageRating { get; set; }
         public int ReviewCount { get; set; }
 
-      
+
+        public bool IsDeleted { get; set; } 
+        public string StatusBadge => IsDeleted ? "Inactive" : "Active";
+        public string StatusClass => IsDeleted ? "bg-secondary" : "bg-success";
+
+
     }
 }

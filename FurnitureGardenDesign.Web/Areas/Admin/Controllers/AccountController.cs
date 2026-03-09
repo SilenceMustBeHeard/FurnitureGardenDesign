@@ -63,15 +63,37 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+                return View(model);
 
             var result = await _signInManager.PasswordSignInAsync(
                 model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
 
             if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
+            {
+                // Get the user to check their role
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    // Check if user is admin
+                    if (await _userManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        // Redirect admin to Admin area
+                        return RedirectToAction("Index", "Home", new { area = "Admin" });
+                    }
+
+                    // Regular user - check returnUrl or go to main home
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
+
+                    return RedirectToAction("Index", "Home", new { area = "" });
+                }
+            }
 
             ModelState.AddModelError("", "Invalid login attempt.");
             return View(model);

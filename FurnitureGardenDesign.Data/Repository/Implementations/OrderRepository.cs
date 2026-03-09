@@ -10,22 +10,25 @@ using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Data.Repository.Implementations
 {
-    
 
-        public class OrderRepository
-            : BaseRepository<Order, Guid>, IOrderRepository
+
+    public class OrderRepository
+        : BaseRepository<Order, Guid>, IOrderRepository
+    {
+        public OrderRepository(ApplicationDbContext context)
+            : base(context)
         {
-            public OrderRepository(ApplicationDbContext context)
-                : base(context)
-            {
-            }
+        }
 
-            public async Task<int> CountPendingAsync()
-            {
-                return await _dbSet
-                    .CountAsync(o => o.Status == OrderStatus.Pending);
-            }
+        public async Task<int> CountPendingAsync()
+        {
+            return await _dbSet
+                .CountAsync(o => o.Status == OrderStatus.Pending);
+        }
 
+
+
+        // gets an order with its design variants included
         public async Task<Order?> GetOrderWithVariantsAsync(Guid orderId)
         {
             return await _dbSet
@@ -33,6 +36,23 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations
                 .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
+
+
+
+
+
+        // updates the status of an order
+
+        public async Task UpdateStatusAsync(Guid orderId, OrderStatus newStatus)
+        {
+            var order = await _dbSet.FindAsync(orderId);
+            if (order != null)
+            {
+                order.Status = newStatus;
+                _dbSet.Update(order);
+                await _context.SaveChangesAsync();
+            }
+        }
 
     }
 

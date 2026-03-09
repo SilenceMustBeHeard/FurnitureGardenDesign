@@ -107,7 +107,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Details(Guid id)
         {
             var order = await _orderService.GetByIdAsync(id);
-
+            
         
 
             if (order == null)

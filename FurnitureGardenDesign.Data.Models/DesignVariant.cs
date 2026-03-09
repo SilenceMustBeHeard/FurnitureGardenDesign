@@ -17,10 +17,10 @@ namespace FurnitureGardenDesign.Data.Models
         [Url]
         public string Image2DUrl { get; set; } = null!;
 
-        [Required(ErrorMessage = "3D model URL is required.")]
+      
         [MaxLength(500, ErrorMessage = "Model URL cannot exceed 500 characters.")]
         [Url]
-        public string? Model3DUrl { get; set; } = null!;
+        public string? Model3DUrl { get; set; } 
 
 
         // Optional notes about the design variant

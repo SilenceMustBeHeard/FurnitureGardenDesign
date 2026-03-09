@@ -53,7 +53,10 @@ namespace FurnitureGardenDesign.Web.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
-                return View(model);
+            { 
+                TempData["Error"] = "Invalid login attempt.";
+                return View(model); 
+            }
 
             var success = await accountService.LoginAsync(model);
 

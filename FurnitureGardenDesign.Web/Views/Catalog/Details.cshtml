@@ -9,14 +9,14 @@
 
         <div class="row align-items-start g-5">
 
-         @* left - image*@ 
+            @* left - image*@
             <div class="col-lg-8 text-center">
                 <img src="@Model.Image2DUrl"
                      class="img-fluid rounded-4 shadow-lg details-img"
                      alt="@Model.Title" />
             </div>
 
-          @* right - details*@ 
+            @* right - details*@
             <div class="col-lg-4">
 
                 <h2 class="fw-bold mb-3 display-6">@Model.Title</h2>
@@ -49,7 +49,7 @@
 
                 <hr class="border-light opacity-25" />
 
-             @*action buttons*@
+                @*action buttons*@
                 <div class="d-grid gap-2 mt-4">
 
                     @if (User.Identity.IsAuthenticated)
@@ -82,19 +82,20 @@
                         </a>
                     }
 
-                    @if (Model.Model3DStatus == FurnitureGardenDesign.Data.Common.Enums.Model3DStatus.Ready
-                                        && !string.IsNullOrEmpty(Model.Model3DUrl))
+                    @* FIX ! : added only external link for 3dmodel *@
+                    @if (!string.IsNullOrEmpty(Model.Model3DUrl))
                     {
-                        <button class="btn btn-outline-glass w-100"
-                                data-bs-toggle="modal"
-                                data-bs-target="#model3DModal">
-                            View in 3D
-                        </button>
+                        <a href="@Model.Model3DUrl"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="btn btn-outline-glass w-100">
+                            <i class="bi bi-box-arrow-up-right me-2"></i>View 3D Model
+                        </a>
                     }
                     else
                     {
-                        <button class="btn btn-primary-glass w-100" disabled>
-                            3D Not Available
+                        <button class="btn btn-outline-glass w-100" disabled>
+                            <i class="bi bi-cube me-2"></i>3D Not Available
                         </button>
                     }
 
@@ -104,77 +105,3 @@
     </div>
 </div>
 
-
-
-
-@*3D Modal*@ 
-@if (Model.Model3DStatus == FurnitureGardenDesign.Data.Common.Enums.Model3DStatus.Ready
-    && !string.IsNullOrEmpty(Model.Model3DUrl))
-{
-    <div class="modal fade"
-         id="model3DModal"
-         tabindex="-1"
-         aria-labelledby="model3DModalLabel"
-         aria-hidden="true">
-
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-
-            <div class="modal-content glass-card border-0 rounded-4 text-light shadow-lg">
-
-              @* Header*@
-                <div class="modal-header border-0">
-
-                    <h5 class="modal-title fw-semibold" id="model3DModalLabel">
-                        @Model.Title – 3D View
-                    </h5>
-
-                    @*To do - fix button not working*@
-
-                   @*  <button type="button"
-                            class="btn-close btn-close-white"
-                            data-bs-dismiss="modal"
-                            aria-label="Close">
-                    </button> *@
-                </div>
-
-               @* body*@
-                <div class="modal-body p-0 position-relative">
-
-                    <model-viewer src="@Model.Model3DUrl"
-                                  camera-controls
-                                  auto-rotate
-                                  interaction-prompt="manual"
-                                  shadow-intensity="1"
-                                  exposure="1"
-                                  style="width:100%; height:75vh; background: transparent;">
-                    </model-viewer>
-
-                @* ESC Hint *@
-                    <small class="position-absolute top-0 start-50 translate-middle-x mt-3 text-light opacity-75">
-                        Press ESC to close
-                    </small>
-
-                </div>
-
-              @* footer*@ 
-                <div class="modal-footer border-0">
-
-                   
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ESC fallback safety
-        document.addEventListener('keydown', function (event) {
-            if (event.key === "Escape") {
-                const modalEl = document.getElementById('model3DModal');
-                const modal = bootstrap.Modal.getInstance(modalEl);
-                if (modal) modal.hide();
-            }
-        });
-    </script>
-}
