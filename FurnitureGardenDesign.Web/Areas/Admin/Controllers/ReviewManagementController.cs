@@ -1,4 +1,6 @@
-﻿using FurnitureGardenDesign.Data.Models;
+﻿    using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Services.Core.Admin.Implementations;
+using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Review;
 using Microsoft.AspNetCore.Authorization;
@@ -12,13 +14,17 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
     public class ReviewManagementController : BaseAdminController
     {
         private readonly IReviewService _reviewService;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IReviewManagementService _reviewManagementService;
 
         public ReviewManagementController(
             UserManager<AppUser> userManager,
-            IReviewService reviewService)
+            IReviewService reviewService,
+            IReviewManagementService reviewManagementService)
             : base(userManager)
         {
             _reviewService = reviewService;
+            _reviewManagementService = reviewManagementService;
         }
 
 
@@ -79,6 +85,70 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
                 Reviews = reviews.ToList()
             });
         }
+
+        // gets the list of all reviews for editing (including soft deleted ones) and returns the view with the reviews list
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EditList(bool includeDeleted = true)
+        {
+            IEnumerable<ReviewViewModelList> reviews;
+
+            if (includeDeleted)
+            {
+                reviews = await _reviewManagementService.GetAllIncludingDeletedAsync();
+                ViewData["ShowDeleted"] = true;
+            }
+            else
+            {
+                reviews = await _reviewManagementService.GetAllActiveAsync();
+                ViewData["ShowDeleted"] = false;
+            }
+
+            return View("EditList", reviews.OrderByDescending(r => r.CreatedAt));
+        }
+
+        // toggles the active status of a review (soft delete or restore)
+        // by its id and redirects back to the edit list view with a success or error message
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ToggleActive(Guid id)
+        {
+            try
+            {
+                await _reviewManagementService.ToggleReviewAsync(id);
+                var review = await _reviewManagementService.GetByIdAsync(id);
+                TempData["Success"] = review.IsDeleted
+                    ? "Review has been deactivated (soft deleted)!"
+                    : "Review has been activated!";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error toggling review status: " + ex.Message;
+            }
+
+            return RedirectToAction(nameof(EditList));
+        }
+
+
+        // get the details for a specific review by its id
+        
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var review = await _reviewManagementService.GetByIdAsync(id);
+
+            if (review == null)
+            {
+                TempData["Error"] = "Review not found.";
+                return RedirectToAction(nameof(EditList));
+            }
+
+            return View(review);
+        }
+
     }
 }
 

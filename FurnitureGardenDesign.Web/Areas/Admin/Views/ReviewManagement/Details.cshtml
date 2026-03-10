@@ -1,0 +1,92 @@
+﻿@model FurnitureGardenDesign.Web.ViewModels.Review.ReviewViewModelList
+
+@{
+    ViewData["Title"] = "Review Details";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card glass-card p-4 text-light shadow-sm">
+            <h2 class="glass-title mb-4 text-center">Review Details</h2>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="glass-card p-3">
+                        <h6 class="text-warning mb-3">
+                            <i class="bi bi-grid-3x3-gap-fill me-2"></i>Design Information
+                        </h6>
+                        <p><span class="glass-text-muted">Design:</span><br><strong>@Model.CatalogDesignTitle</strong></p>
+                        <p><span class="glass-text-muted">Design ID:</span><br><code class="text-warning">@Model.CatalogDesignId</code></p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="glass-card p-3">
+                        <h6 class="text-warning mb-3">
+                            <i class="bi bi-person-circle me-2"></i>User Information
+                        </h6>
+                        <p><span class="glass-text-muted">Username:</span><br><strong>@Model.UserName</strong></p>
+                        <p><span class="glass-text-muted">Email:</span><br><a href="mailto:@Model.UserEmail" class="text-warning">@Model.UserEmail</a></p>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="glass-card p-3">
+                        <h6 class="text-warning mb-3">
+                            <i class="bi bi-star-fill me-2"></i>Review Content
+                        </h6>
+
+                        <div class="mb-3">
+                            <span class="glass-text-muted">Rating:</span><br>
+                            <div class="mt-2">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= Model.Rating)
+                                    {
+                                        <i class="bi bi-star-fill text-warning fs-5 me-1"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-star text-warning fs-5 me-1"></i>
+                                    }
+                                }
+                                <span class="ms-2 badge bg-warning text-dark">@Model.Rating/5</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <span class="glass-text-muted">Comment:</span><br>
+                            <div class="mt-2 p-3 bg-dark bg-opacity-25 rounded">
+                                <p class="text-light mb-0" style="white-space: pre-wrap;">@Model.Comment</p>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <small class="glass-text-muted d-block">Submitted on:</small>
+                                <span class="text-light">@Model.CreatedAt.ToString("MMMM dd, yyyy")</span>
+                            </div>
+                            <div class="col-6">
+                                <small class="glass-text-muted d-block">Time:</small>
+                                <span class="text-light">@Model.CreatedAt.ToString("hh:mm tt")</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <span class="glass-text-muted">Status:</span><br>
+                            <span class="badge mt-1 @(Model.IsDeleted ? "bg-secondary" : "bg-success") fs-6">
+                                @(Model.IsDeleted ? "INACTIVE" : "ACTIVE")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a asp-action="EditList" class="btn btn-outline-glass">
+                    <i class="bi bi-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

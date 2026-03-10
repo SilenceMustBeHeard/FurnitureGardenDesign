@@ -1,0 +1,131 @@
+﻿@model IEnumerable<FurnitureGardenDesign.Web.ViewModels.Review.ReviewViewModelList>
+
+@{
+    ViewData["Title"] = "Manage Reviews";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-12">
+        <div class="card glass-card p-4 text-light shadow-sm">
+            <h2 class="glass-title mb-4 text-center">Manage Reviews</h2>
+
+            @if (!Model.Any())
+            {
+                <p class="text-center glass-text-muted fst-italic">No reviews loaded yet.</p>
+            }
+            else
+            {
+                <div class="glass-table">
+                    <table class="table table-borderless align-middle glass-table text-light">
+                        <thead>
+                            <tr class="glass-text-muted text-uppercase small">
+                                <th style="width:5%">#</th>
+                                <th style="width:20%">Design</th>
+                                <th style="width:15%">User</th>
+                                <th style="width:8%">Rating</th>
+                                <th style="width:25%">Comment</th>
+                                <th style="width:12%">Date</th>
+                                <th style="width:8%">Status</th>
+                                <th style="width:12%" class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int rowNumber = 1;
+                            }
+                            @foreach (var item in Model)
+                            {
+                                <tr class="glass-row @(item.IsDeleted ? "opacity-50" : "hover-glass-row")">
+                                    <td class="glass-text-muted">@rowNumber</td>
+                                    <td class="glass-text-muted fw-semibold">
+                                        <span title="Design ID: @item.CatalogDesignId">
+                                            @item.CatalogDesignTitle
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-semibold">@item.UserName</span>
+                                            <small class="glass-text-muted">@item.UserEmail</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-warning">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= item.Rating)
+                                                {
+                                                    <i class="bi bi-star-fill"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bi bi-star"></i>
+                                                }
+                                            }
+                                            <span class="ms-1 text-light">(@item.Rating)</span>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="comment-preview" style="max-width: 250px;">
+                                            <p class="text-truncate mb-0" title="@item.Comment">
+                                                @item.Comment
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <small>@item.CreatedAt.ToString("MMM dd, yyyy")</small>
+                                        <br />
+                                        <small class="glass-text-muted">@item.CreatedAt.ToString("HH:mm")</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge @(item.IsDeleted ? "bg-secondary" : "bg-success")">
+                                            @(item.IsDeleted ? "INACTIVE" : "ACTIVE")
+                                        </span>
+                                    </td>
+
+                                    <td class="text-end d-flex justify-content-end flex-wrap gap-2">
+                                        <a asp-area="Admin"
+                                           asp-controller="ReviewManagement"
+                                           asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-outline-glass btn-sm">
+                                            <i class="bi bi-eye-fill me-1"></i>Details
+                                        </a>
+
+                                        <form asp-area="Admin"
+                                              asp-controller="ReviewManagement"
+                                              asp-action="ToggleActive"
+                                              asp-route-id="@item.Id"
+                                              method="post"
+                                              class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-outline-glass btn-sm"
+                                                    onclick="return confirm('Are you sure you want to @(item.IsDeleted ? "activate" : "deactivate") this review?');">
+                                                <i class="bi bi-toggle-on me-1"></i>
+                                                @(item.IsDeleted ? "Activate" : "Deactivate")
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                rowNumber++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            <div class="text-center mt-4">
+                <div class="d-flex justify-content-center gap-3">
+                    <a asp-area="Admin"
+                       asp-controller="CatalogManagement"
+                       asp-action="EditList"
+                       class="btn btn-outline-glass">
+                        <i class="bi bi-arrow-left me-1"></i>Back to Catalog
+                    </a>
+                    <span class="badge bg-info text-dark align-self-center">
+                        Total Reviews: @Model.Count()
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

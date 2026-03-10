@@ -15,7 +15,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         private readonly IReviewRepository _reviewRepo;
         private readonly ICatalogRepository _catalogRepo;
 
-        public ReviewService(IReviewRepository reviewRepo, ICatalogRepository catalogRepo   )
+        public ReviewService(IReviewRepository reviewRepo, ICatalogRepository catalogRepo)
         {
             _reviewRepo = reviewRepo;
             this._catalogRepo = catalogRepo;
@@ -57,7 +57,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 CatalogDesignTitle = r.CatalogDesign.Title,
                 Rating = r.Rating,
                 Comment = r.Comment
-            }).ToList(); 
+            }).ToList();
         }
 
         // retrieves a catalog design and its review form 
@@ -85,7 +85,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             };
         }
 
-           
+
 
 
         // creates a new review for a catalog design by a user
