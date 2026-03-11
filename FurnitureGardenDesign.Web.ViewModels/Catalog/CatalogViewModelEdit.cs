@@ -38,7 +38,9 @@ namespace FurnitureGardenDesign.Web.ViewModels.Catalog
         public string? Model3DUrl { get; set; }
 
 
-       
+        [MaxLength(700, ErrorMessage = "Materials cannot exceed 700 characters.")]
+        public string? Materials { get; set; }
+
         public string Price { get; set; } = null!;
 
 

@@ -26,6 +26,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
                 Description = model.Description,
                 Image2DUrl = model.Image2DUrl,
                 Model3DUrl = model.Model3DUrl,
+                Materials = model.Materials,
                 Price = decimal.Parse(model.Price),
                 CategoryId = model.CategoryId,
                 IsDeleted = model.IsDeleted,
@@ -50,6 +51,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
             catalog.Description = model.Description;
             catalog.Image2DUrl = model.Image2DUrl;
             catalog.Model3DUrl = model.Model3DUrl;
+            catalog.Materials = model.Materials;
             catalog.Price = decimal.Parse(model.Price);
             catalog.CategoryId = model.CategoryId;
             catalog.IsDeleted = model.IsDeleted;
@@ -109,6 +111,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
                 Description = catalog.Description,
                 Image2DUrl = catalog.Image2DUrl,
                 Model3DUrl = catalog.Model3DUrl,
+                Materials = catalog.Materials,
                 Price = catalog.Price.ToString(),
                 CategoryId = catalog.CategoryId,
                 IsDeleted = catalog.IsDeleted,

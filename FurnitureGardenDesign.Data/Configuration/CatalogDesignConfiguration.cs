@@ -21,10 +21,7 @@ namespace FurnitureGardenDesign.Data.Configurations
                    .HasForeignKey(d => d.CategoryId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            // CatalogDesign <> Materials
-            builder.HasMany(d => d.Materials)
-                   .WithMany(m => m.CatalogDesigns)
-                   .UsingEntity(j => j.ToTable("CatalogDesignMaterials"));
+           
 
             // CatalogDesign <> Reviews
             builder.HasMany(d => d.Reviews)

@@ -32,7 +32,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
           .GetAllAttached()
           .Where(c => c.IsActive)
           .Include(c => c.Category)
-          .Include(c => c.Materials)
+        
           .Include(c => c.Reviews)
           .Include(c => c.Favorites)
 
@@ -46,7 +46,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 .GetAllAttached()
                 .Where(c => c.IsActive)
                 .Include(c => c.Category)
-                .Include(c => c.Materials)
+               
                 .Include(c => c.Reviews)
                 .Include(c => c.Favorites)
                 .FirstOrDefaultAsync(c => c.Id == id);

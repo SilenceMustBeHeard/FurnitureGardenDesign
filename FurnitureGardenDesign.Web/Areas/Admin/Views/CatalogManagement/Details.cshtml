@@ -98,7 +98,15 @@
                         <p class="glass-text-muted mb-0">@Model.Description</p>
                     </div>
                 </div>
-
+                    <!-- Materials -->
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-card-text me-2 text-warning"></i>Materials
+                        </h5>
+                        <div class="bg-dark bg-opacity-25 p-3 rounded-3">
+                            <p class="glass-text-muted mb-0">@Model.Materials</p>
+                        </div>
+                    </div>
                 <!-- 3D Model Section -->
                 @if (!string.IsNullOrEmpty(Model.Model3DUrl))
                 {

@@ -51,13 +51,15 @@ namespace FurnitureGardenDesign.Data.Models
         public bool IsActive { get; set; } = true;
 
         // flag to indicate if the design has a 3D model
-        public Model3DStatus Model3DStatus { get; set; } = Model3DStatus.None;  
+        public Model3DStatus Model3DStatus { get; set; } = Model3DStatus.None;
 
 
 
         // materials used
-        public virtual ICollection<Material> Materials { get; set; }
-         = new HashSet<Material>();
+
+        [MaxLength(700, ErrorMessage = "Materials cannot exceed 700 characters.")]
+        public  string? Materials { get; set; } 
+
 
         // reviews given
         public  virtual ICollection<Review> Reviews { get; set; }

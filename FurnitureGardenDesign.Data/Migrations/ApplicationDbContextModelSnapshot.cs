@@ -22,21 +22,6 @@ namespace FurnitureGardenDesign.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CatalogDesignMaterial", b =>
-                {
-                    b.Property<Guid>("CatalogDesignsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MaterialsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CatalogDesignsId", "MaterialsId");
-
-                    b.HasIndex("MaterialsId");
-
-                    b.ToTable("CatalogDesignMaterials", (string)null);
-                });
-
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -138,6 +123,10 @@ namespace FurnitureGardenDesign.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Materials")
+                        .HasMaxLength(700)
+                        .HasColumnType("nvarchar(700)");
 
                     b.Property<int>("Model3DStatus")
                         .HasColumnType("int");
@@ -297,28 +286,6 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("InboxMessages");
-                });
-
-            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Material", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsOutdoorSuitable")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Materials");
                 });
 
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Order", b =>
@@ -543,21 +510,6 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("CatalogDesignMaterial", b =>
-                {
-                    b.HasOne("FurnitureGardenDesign.Data.Models.CatalogDesign", null)
-                        .WithMany()
-                        .HasForeignKey("CatalogDesignsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FurnitureGardenDesign.Data.Models.Material", null)
-                        .WithMany()
-                        .HasForeignKey("MaterialsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.CatalogDesign", b =>

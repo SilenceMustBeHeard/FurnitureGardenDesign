@@ -38,6 +38,8 @@ namespace FurnitureGardenDesign.Web.ViewModels.Catalog
         [MaxLength(500, ErrorMessage = "Model URL cannot exceed 500 characters.")]
         public string? Model3DUrl { get; set; }
 
+        [MaxLength(700, ErrorMessage = "Materials cannot exceed 700 characters.")]
+        public string? Materials { get; set; }
 
         [Required]
         public string Price { get; set; } = null!;

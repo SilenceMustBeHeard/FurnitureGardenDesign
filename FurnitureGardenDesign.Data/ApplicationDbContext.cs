@@ -20,7 +20,7 @@ namespace FurnitureGardenDesign.Data
 
 
         public virtual DbSet<Category> Categories { get; set; } = null!;
-        public virtual DbSet<Material> Materials { get; set; } = null!;
+       
         public virtual DbSet<Review> Reviews { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -49,9 +49,7 @@ namespace FurnitureGardenDesign.Data
                 .HasQueryFilter(c => c.IsDeleted); // filter for category
 
 
-            builder
-                .Entity<Material>()
-                .HasQueryFilter(m => m.IsOutdoorSuitable); // filter for outdoor/indoor
+     
 
 
             // Reviews and Favorites not needed to filter out
