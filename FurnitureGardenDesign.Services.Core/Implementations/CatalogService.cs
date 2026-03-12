@@ -4,9 +4,6 @@ using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FurnitureGardenDesign.Services.Core.Implementations
 {
@@ -139,6 +136,9 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                     Model3DUrl = !string.IsNullOrWhiteSpace(d.Model3DUrl)
                         ? d.Model3DUrl
                         : null,
+                    Materials = !string.IsNullOrWhiteSpace(d.Materials)
+                        ? d.Materials
+                        : null,
 
                     Model3DStatus = !string.IsNullOrWhiteSpace(d.Model3DUrl)
                         ? Model3DStatus.Ready
@@ -190,6 +190,10 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                Model3DUrl = !string.IsNullOrWhiteSpace(d.Model3DUrl)
                ? d.Model3DUrl
                : null,
+               Materials = !string.IsNullOrWhiteSpace(d.Materials)
+                        ? d.Materials
+                        : null,
+
                // Determine 3D model status based on presence of URL
                Model3DStatus = !string.IsNullOrWhiteSpace(d.Model3DUrl)
               ? Model3DStatus.Ready
