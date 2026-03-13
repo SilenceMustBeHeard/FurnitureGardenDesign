@@ -375,6 +375,44 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.ToTable("Reviews");
                 });
 
+            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.SystemInboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("SystemInboxMessages");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -617,6 +655,24 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.SystemInboxMessage", b =>
+                {
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "Receiver")
+                        .WithMany("SystemInboxMessages")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "Sender")
+                        .WithMany("SentSystemInboxMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -677,6 +733,10 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("SentMessages");
+
+                    b.Navigation("SentSystemInboxMessages");
+
+                    b.Navigation("SystemInboxMessages");
                 });
 
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.CatalogDesign", b =>

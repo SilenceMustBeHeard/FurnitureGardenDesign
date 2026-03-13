@@ -9,58 +9,50 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 {
     public class ProfileService : IProfileService
     {
-        // seed repositories
+       
         private readonly IAppUserRepository _userRepository;
         private readonly UserManager<AppUser> _userManager;
-
-
+        private readonly IInboxMessageService _inboxMessageService; 
+        private readonly ISystemInboxMessageService _systemInboxMessageService; 
         public ProfileService(
             IAppUserRepository userRepository,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager,
+            IInboxMessageService inboxMessageService, 
+            ISystemInboxMessageService systemInboxMessageService) 
         {
             _userRepository = userRepository;
             _userManager = userManager;
+            _inboxMessageService = inboxMessageService;
+            _systemInboxMessageService = systemInboxMessageService; 
         }
 
 
 
 
-        // gets the profile data for the user, including their inbox messages
-        // THIS WORKS FOR BOTH REGULAR USERS AND ADMINS/MANAGERS!
         public async Task<ProfileViewModel?> GetProfileAsync(string userId)
         {
-            var model = await _userRepository
+            var user = await _userRepository
                 .GetAllAttached()
-                .Where(u => u.Id == userId)
-                .Select(u => new ProfileViewModel
-                {
-                    Id = u.Id,
-                    Email = u.Email!,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName,
-                    Address = u.Address,
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
-                    Inbox = u.InboxMessages
-                        .Where(x => x.DesignVariant != null && !x.DesignVariant.IsDeleted)
-                        .OrderByDescending(x => x.CreatedOn)
-                        .Select(x => new InboxMessageViewModel
-                        {
-                            Id = x.Id,
-                            DesignVariantId = x.DesignVariant!.Id,
-                            DesignImage2DUrl = x.DesignVariant!.Image2DUrl,
-                            Model3DUrl = x.DesignVariant.Model3DUrl,
-                            Notes = x.DesignVariant.Notes,
-                            IsRead = x.IsRead,
-                            CreatedOn = x.CreatedOn,
-                            Type = x.Type 
-                        }).ToList()
-                })
-                .FirstOrDefaultAsync();
+            if (user == null)
+                return null;
 
-            return model;
+           
+            var inboxMessages = await _inboxMessageService.GetUserMessagesAsync(userId);
+            var systemMessages = await _systemInboxMessageService.GetUserMessagesAsync(userId);
+
+            return new ProfileViewModel
+            {
+                Id = user.Id,
+                Email = user.Email ?? string.Empty,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address = user.Address,
+                Inbox = inboxMessages ?? new List<InboxMessageViewModel>(),
+                SystemInbox = systemMessages ?? new List<SystemInboxMessageViewModel>()
+            };
         }
-
-      
 
         private async Task<HashSet<string>> GetAllAdminAndManagerIds()
         {
@@ -78,5 +70,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
             return adminIds;
         }
+
     }
 }
+    

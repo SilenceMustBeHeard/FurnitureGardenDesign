@@ -1,4 +1,5 @@
 ﻿using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,14 +14,17 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
         private readonly IProfileService _profileService;
         private readonly UserManager<AppUser> _userManager;
         private readonly IInboxMessageService _inboxMessageService;
+        private readonly ISystemInboxMessageService _systemInboxMessageService;
 
 
 
         public AdminProfileController(
+            ISystemInboxMessageService systemInboxMessageService,
             IProfileService profileService,
             UserManager<AppUser> userManager,
             IInboxMessageService inboxMessageService)
         {
+            _systemInboxMessageService = systemInboxMessageService;
             _profileService = profileService;
             _userManager = userManager;
             _inboxMessageService = inboxMessageService;
@@ -99,6 +103,19 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 
             return View(viewModel);
         }
+        [HttpGet]
+        public async Task<IActionResult> SystemInbox()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                TempData["Error"] = "You must be logged in to perform this action.";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var messages = await _systemInboxMessageService.GetAdminMessagesAsync(user.Id);
+            return View(messages);
+        }
 
 
         [HttpPost]
@@ -124,7 +141,26 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(MessageDetails), new { id });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SystemMessageDetails(Guid id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                TempData["Error"] = "You must be logged in to perform this action.";
+                return RedirectToAction("Login", "Account");
+            }
 
+            var viewModel = await _systemInboxMessageService.GetMessageDetailsAsync(id, user.Id);
+
+            if (viewModel == null)
+            {
+                TempData["Error"] = "Message not found or you do not have permission to view it.";
+                return NotFound();
+            }
+
+            return View("SystemMessageDetails", viewModel);
+        }
 
 
 

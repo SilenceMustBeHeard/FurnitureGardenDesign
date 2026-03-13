@@ -11,15 +11,19 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
     {
 
         private readonly IInboxMessageRepository _messageRepository;
+        private readonly ISystemInboxMessageRepository _systemMessageRepository;
         private readonly IAppUserRepository _userRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public InboxMessageService(IInboxMessageRepository messageRepository, 
+        public InboxMessageService(
+            IInboxMessageRepository messageRepository, 
+            ISystemInboxMessageRepository systemMessageRepository,
             UserManager<AppUser> userManager,
                 IAppUserRepository userRepository,
             RoleManager<IdentityRole> roleManager)
         {
+            _systemMessageRepository = systemMessageRepository;
             _messageRepository = messageRepository;
             _userManager = userManager;
             _userRepository = userRepository;
@@ -32,7 +36,29 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
 
 
-
+        public async Task<List<InboxMessageViewModel>> GetUserMessagesAsync(string userId)
+        {
+            return await _messageRepository
+                .GetAllAttached()
+                .Include(m => m.DesignVariant)
+                .Where(m => m.ReceiverId == userId && m.DesignVariant != null && !m.DesignVariant.IsDeleted)
+                .OrderByDescending(m => m.CreatedOn)
+                .Select(m => new InboxMessageViewModel
+                {
+                    Id = m.Id,
+                    DesignVariantId = m.DesignVariant!.Id,
+                    DesignImage2DUrl = m.DesignVariant.Image2DUrl,
+                    Model3DUrl = m.DesignVariant.Model3DUrl,
+                    Notes = m.DesignVariant.Notes,
+                   OrderDescription = m.DesignVariant.Order != null ? m.DesignVariant.Order.Description : null,
+                     OrderDimensions = m.DesignVariant.Order != null ? m.DesignVariant.Order.Dimensions : null,
+                    IsRead = m.IsRead,
+                    CreatedOn = m.CreatedOn,
+                    Type = m.Type,
+                    IsApproved = m.DesignVariant.IsApproved
+                })
+                .ToListAsync();
+        }
 
 
 
@@ -56,10 +82,20 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         // gets the count of unread messages
         public async Task<int> GetUnreadCountAsync(string userId)
         {
-            return await _messageRepository
+           
+            var inboxUnreadCount = await _messageRepository
                 .GetAllAttached()
                 .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
+
+            
+            var systemUnreadCount = await _systemMessageRepository
+                .GetAllAttached()
+                .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
+
+          
+            return inboxUnreadCount + systemUnreadCount;
         }
+
 
         public async Task<InboxMessageViewModel?> GetMessageDetailsAsync(Guid messageId, string userId)
         {

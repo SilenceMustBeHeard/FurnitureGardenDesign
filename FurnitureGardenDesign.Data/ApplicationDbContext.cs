@@ -17,11 +17,12 @@ namespace FurnitureGardenDesign.Data
         public virtual DbSet<CatalogDesign> CatalogDesigns { get; set; } = null!;
         public virtual DbSet<Favorite> Favorites { get; set; } = null!;
         public virtual DbSet<InboxMessage> InboxMessages { get; set; } = null!;
-
-
+        public virtual DbSet<SystemInboxMessage> SystemInboxMessages { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
-       
         public virtual DbSet<Review> Reviews { get; set; } = null!;
+       
+
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

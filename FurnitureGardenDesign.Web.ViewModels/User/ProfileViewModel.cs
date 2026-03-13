@@ -17,6 +17,8 @@ namespace FurnitureGardenDesign.Web.ViewModels.User
 
         public IEnumerable<InboxMessageViewModel> Inbox { get; set; }
             = new List<InboxMessageViewModel>();
+        public IEnumerable<SystemInboxMessageViewModel> SystemInbox { get; set; } 
+            = new List<SystemInboxMessageViewModel>();
     }
 
 }
