@@ -136,6 +136,8 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
             message.SenderName = sender != null ? $"{sender.FirstName} {sender.LastName}" : "System";
             message.ReceiverName = receiver != null ? $"{receiver.FirstName} {receiver.LastName}" : "Unknown";
 
+            
+
             return View(message);
         }
     }

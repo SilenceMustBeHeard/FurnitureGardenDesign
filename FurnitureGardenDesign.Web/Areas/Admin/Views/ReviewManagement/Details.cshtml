@@ -27,6 +27,15 @@
                         </h6>
                         <p><span class="glass-text-muted">Username:</span><br><strong>@Model.UserName</strong></p>
                         <p><span class="glass-text-muted">Email:</span><br><a href="mailto:@Model.UserEmail" class="text-warning">@Model.UserEmail</a></p>
+
+                        @* Send Message Button - Fixed to pass userId *@
+                        <a class="btn btn-outline-glass btn-sm"
+                               asp-area="Admin"
+                               asp-controller="SystemMessage"
+                               asp-action="Create"
+                               asp-route-userId="@Model.UserId">
+                            <i class="bi bi-envelope me-1"></i> Send Message
+                        </a>
                     </div>
                 </div>
 
@@ -81,6 +90,20 @@
                     </div>
                 </div>
             </div>
+            
+            <form asp-area="Admin"
+                  asp-controller="ReviewManagement"
+                  asp-action="ToggleActive"
+                  asp-route-id="@Model.Id"
+                  method="post"
+                  class="d-inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-outline-glass btn-sm"
+                        onclick="return confirm('Are you sure you want to @(Model.IsDeleted ? "activate" : "deactivate") this review?');">
+                    <i class="bi bi-toggle-on me-1"></i>
+                    @(Model.IsDeleted ? "Activate" : "Deactivate")
+                </button>
+            </form>
 
             <div class="text-center mt-4">
                 <a asp-action="EditList" class="btn btn-outline-glass">

@@ -9,6 +9,8 @@ namespace FurnitureGardenDesign.Web.ViewModels.Review
         public Guid Id { get; set; }
         public Guid CatalogDesignId { get; set; }
         public string CatalogDesignTitle { get; set; } = null!;
+
+        public string UserId { get; set; } = null!;
         public string UserName { get; set; } = null!;
         public string UserEmail { get; set; } = null!;
         public int Rating { get; set; }
