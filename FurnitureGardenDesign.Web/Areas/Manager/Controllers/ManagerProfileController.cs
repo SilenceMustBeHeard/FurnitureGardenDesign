@@ -153,29 +153,29 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers
 
 
 
-        [HttpGet]
-        public async Task<IActionResult> ManagerInbox()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                TempData["Error"] = "You must be logged in to perform this action.";
-                return RedirectToAction("Login", "Account");
-            }
+        //[HttpGet]
+        //public async Task<IActionResult> ManagerInbox()
+        //{
+        //    var user = await _userManager.GetUserAsync(User);
+        //    if (user == null)
+        //    {
+        //        TempData["Error"] = "You must be logged in to perform this action.";
+        //        return RedirectToAction("Login", "Account");
+        //    }
 
 
-            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
-            var isManager = await _userManager.IsInRoleAsync(user, "Manager");
+        //    var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+        //    var isManager = await _userManager.IsInRoleAsync(user, "Manager");
 
-            if (!isAdmin && !isManager)
-            {
-                TempData["Error"] = "You don't have permission to access this page.";
-                return RedirectToAction("Index", "Home");
-            }
+        //    if (!isAdmin && !isManager)
+        //    {
+        //        TempData["Error"] = "You don't have permission to access this page.";
+        //        return RedirectToAction("Index", "Home");
+        //    }
 
-            var messages = await _inboxMessageService.GetAdminMessagesAsync(user.Id);
+        //    var messages = await _inboxMessageService.GetAdminMessagesAsync(user.Id);
 
-            return View(messages);
-        }
+        //    return View(messages);
+        //}
     }
 }

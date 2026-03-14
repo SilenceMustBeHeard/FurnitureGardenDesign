@@ -1,7 +1,8 @@
 ﻿@using FurnitureGardenDesign.Data.Common.Enums
 @model FurnitureGardenDesign.Web.ViewModels.User.SystemInboxMessageViewModel
 
-<a asp-controller="Profile"
+<a asp-area="Manager"
+       asp-controller="ManagerProfile"
        asp-action="SystemMessageDetails"
        asp-route-id="@Model.Id"
        class="text-decoration-none">
@@ -16,7 +17,7 @@
                     @Model.CreatedOn.ToLocalTime().ToString("dd MMM yyyy · HH:mm")
                 </small>
 
-                @* Message Type Badge - Using your actual enum values *@
+                @* Message Type Badge *@
                 @if (Model.Type == InboxMessageType.SystemMessage)
                 {
                     <span class="badge bg-info ms-2">System</span>
@@ -64,7 +65,8 @@
 
         @* Read Message button *@
         <div class="d-flex gap-2" onclick="event.stopPropagation()">
-            <a asp-controller="Profile"
+            <a asp-area="Manager"
+                   asp-controller="ManagerProfile"
                    asp-action="SystemMessageDetails"
                    asp-route-id="@Model.Id"
                    class="btn btn-primary-glass btn-sm w-100">

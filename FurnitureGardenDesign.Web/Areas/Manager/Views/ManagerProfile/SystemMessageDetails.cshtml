@@ -8,9 +8,10 @@
 <div class="container py-5">
     <div class="card glass-card p-5 text-light shadow-lg border-0 rounded-4">
 
-        <a asp-controller="Profile"
-           asp-action="Index"
-           class="btn btn-outline-glass mb-4">
+        <a asp-area="Manager"
+               asp-controller="ManagerProfile"
+               asp-action="Index"
+               class="btn btn-outline-glass mb-4">
             ← Back to Profile
         </a>
 
@@ -35,7 +36,7 @@
                                 <span class="badge bg-warning text-dark">New</span>
                             }
                             
-                            @* Message Type Badge - Using your actual enum values *@
+                            @* Message Type Badge *@
                             @if (Model.Type == InboxMessageType.SystemMessage)
                             {
                                 <span class="badge bg-info">System Message</span>
@@ -96,15 +97,17 @@
 
                 @* Action buttons *@
                 <div class="d-flex gap-2 justify-content-end mt-4">
-                    <button type="button" 
-                            class="btn btn-outline-glass" 
+
+               @*      <button type="button"
+                            class="btn btn-outline-glass"
                             onclick="window.print()">
                         <i class="bi bi-printer me-2"></i>Print
-                    </button>
+                    </button> *@
                     
-                    <a asp-controller="Profile" 
-                       asp-action="Index" 
-                       class="btn btn-primary-glass">
+                    <a asp-area="Manager"
+                           asp-controller="ManagerProfile"
+                           asp-action="Index"
+                           class="btn btn-primary-glass">
                         <i class="bi bi-check2-circle me-2"></i>Done
                     </a>
                 </div>
@@ -112,7 +115,6 @@
         </div>
     </div>
 </div>
-
 
 @section Scripts {
     <script>

@@ -2,7 +2,8 @@
 @using FurnitureGardenDesign.Web.ViewModels.User  
 @model InboxMessageViewModel
 
-<a asp-controller="Profile"
+<a asp-area="Manager"
+   asp-controller="ManagerProfile"  
    asp-action="MessageDetails"
    asp-route-id="@Model.Id"
    class="text-decoration-none">
@@ -79,7 +80,8 @@
                 </a>
             }
 
-            <a asp-controller="Profile"
+            <a asp-area="Manager"
+               asp-controller="ManagerProfile"
                asp-action="MessageDetails"
                asp-route-id="@Model.Id"
                class="btn btn-primary-glass btn-sm">

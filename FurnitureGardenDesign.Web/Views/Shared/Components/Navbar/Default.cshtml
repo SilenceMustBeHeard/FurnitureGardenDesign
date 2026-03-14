@@ -76,9 +76,9 @@
         </a>
 
         <a asp-area="Manager"
-           class="btn btn-outline-glass d-flex align-items-center gap-2"
-           asp-controller="ManagerProfile"
-           asp-action="ManagerInbox">
+               class="btn btn-outline-glass d-flex align-items-center gap-2"
+               asp-controller="ManagerProfile"
+               asp-action="Index">
             <i class="bi bi-envelope"></i>
             <span>Messages</span>
             @if (Model.UnreadMessagesCount > 0)
