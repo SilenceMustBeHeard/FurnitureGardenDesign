@@ -8,8 +8,9 @@ namespace FurnitureGardenDesign.Web.ViewModels.User
 {
     public class SystemInboxMessageCreateViewModel
     {
-        public string? ReceiverId { get; set; }
-        public string? ReceiverName { get; set; }
+        [Required(ErrorMessage = "Please select a recipient")]
+        public string ReceiverId { get; set; } = null!;
+        public string? ReceiverName { get; set; } 
 
         [Required]
         [MinLength(20, ErrorMessage = "Description must be at least 20 characters long.")]

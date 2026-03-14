@@ -1,11 +1,11 @@
 ﻿using FurnitureGardenDesign.Data.Common.Enums;
 using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
-using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-namespace FurnitureGardenDesign.Services.Core.Implementations
+namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
 {
     public class SystemInboxMessageService : ISystemInboxMessageService
     {
@@ -105,7 +105,9 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                     IsRead = m.IsRead,
                     CreatedOn = m.CreatedOn,
                     Type = m.Type,
+                    
                     SenderId = m.SenderId 
+                    
                 })
                 .ToListAsync();
         }

@@ -16,9 +16,16 @@
                         Sending to: <strong>@Model.ReceiverName</strong>
                     </div>
                 }
+                <form asp-area="Admin"
+                      asp-controller="SystemMessage"
+                      asp-action="Create"
+                      method="post">
+                    @Html.AntiForgeryToken()
 
-                <form asp-action="Create" method="post">
-                    <input type="hidden" asp-for="ReceiverId" />
+    
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    
+                  
 
                     <div class="mb-3">
                         <label asp-for="ReceiverId" class="form-label">Recipient</label>
@@ -40,7 +47,7 @@
                         }
                         <span asp-validation-for="ReceiverId" class="text-danger"></span>
                     </div>
-
+                    
                     <div class="mb-3">
                         <label asp-for="Type" class="form-label">Message Type</label>
                         <select asp-for="Type" class="form-control glass-input" asp-items="Html.GetEnumSelectList<InboxMessageType>()">
@@ -64,7 +71,10 @@
                             <i class="bi bi-send me-2"></i>Send Message
                         </button>
 
-                        <a asp-action="Index" class="btn btn-primary-glass">
+                        <a asp-area="Admin"
+                               asp-controller="SystemMessage"
+                               asp-action="Index"
+                               class="btn btn-primary-glass">
                             <i class="bi bi-x-circle me-2"></i>Cancel
                         </a>
                     </div>

@@ -1,7 +1,7 @@
 ﻿using FurnitureGardenDesign.Data.Common.Enums;
 using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
-using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -71,37 +71,46 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SystemInboxMessageCreateViewModel model)
         {
+           
+            model.AvailableUsers = await _userRepository
+                .GetAllAttached()
+                .Select(u => new UserSelectViewModel
+                {
+                    Id = u.Id,
+                    FullName = u.FirstName + " " + u.LastName,
+                    Email = u.Email ?? string.Empty
+                })
+                .ToListAsync();
+
+      
+            if (!string.IsNullOrEmpty(model.ReceiverId))
+            {
+                var selectedUser = model.AvailableUsers.FirstOrDefault(u => u.Id == model.ReceiverId);
+                if (selectedUser != null)
+                {
+                    model.ReceiverName = selectedUser.FullName;
+                }
+            }
+
             if (!ModelState.IsValid)
             {
-                
-                model.AvailableUsers = await _userRepository
-                    .GetAllAttached()
-                    //.Where(u => !u.IsDeleted)
-                    .Select(u => new UserSelectViewModel
-                    {
-                        Id = u.Id,
-                        FullName = u.FirstName + " " + u.LastName,
-                        Email = u.Email ?? string.Empty
-                    })
-                    .ToListAsync();
                 return View(model);
             }
 
             var adminId = _userManager.GetUserId(User);
 
-           
             var message = new SystemInboxMessage
             {
                 Id = Guid.NewGuid(),
                 Description = model.Description,
                 ReceiverId = model.ReceiverId!,
+           
                 SenderId = adminId,
                 Type = model.Type,
                 IsRead = false,
                 CreatedOn = DateTime.UtcNow
             };
 
-          
             await _systemMessageService.CreateMessageAsync(message);
 
             TempData["Success"] = "Message sent successfully!";
@@ -122,7 +131,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 
             
             var sender = await _userManager.FindByIdAsync(message.SenderId ?? "");
-            var receiver = await _userManager.FindByIdAsync(message.ReceiverId);
+            var receiver = await _userManager.FindByIdAsync(message.ReceiverId!);
 
             message.SenderName = sender != null ? $"{sender.FirstName} {sender.LastName}" : "System";
             message.ReceiverName = receiver != null ? $"{receiver.FirstName} {receiver.LastName}" : "Unknown";
