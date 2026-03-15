@@ -38,7 +38,7 @@ namespace FurnitureGardenDesign.Web.Controllers
             if (model == null)
             {
                 TempData["Error"] = "You have already reviewed this design.";
-                return RedirectToAction("Index", "Catalog");
+                return RedirectToAction("CatalogIndex", "Catalog");
             }
 
             return View(model);
@@ -60,11 +60,11 @@ namespace FurnitureGardenDesign.Web.Controllers
             if (!result.Success)
             {
                 TempData["Error"] = result.Error;
-                return RedirectToAction("Index", "Catalog");
+                return RedirectToAction("CatalogIndex", "Catalog");
             }
 
             TempData["Success"] = "Review added successfully!";
-            return RedirectToAction("Index", "Catalog");
+            return RedirectToAction("CatalogIndex", "Catalog");
         }
 
 
