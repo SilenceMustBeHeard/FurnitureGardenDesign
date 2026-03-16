@@ -10,7 +10,7 @@
     <Project Path="FurnitureGardenDesign.Services.Core/FurnitureGardenDesign.Services.Core.csproj" />
   </Folder>
   <Folder Name="/Tests/">
-    <Project Path="FurnitureGardenDesign.Services.Tests/FurnitureGardenDesign.Services.Tests.csproj" />
+    <Project Path="FurnitureGardenDesign.Services.Tests/FurnitureGardenDesign.Services.Tests.csproj" Id="6f870db1-387a-4535-86a2-74db3a1591fe" />
     <Project Path="FurnitureGardenDesign.Web.Tests/FurnitureGardenDesign.Web.Tests.csproj" />
     <Project Path="FurnitureGardenDesignIntegrationTests/FurnitureGardenDesignIntegrationTests.csproj" />
   </Folder>
