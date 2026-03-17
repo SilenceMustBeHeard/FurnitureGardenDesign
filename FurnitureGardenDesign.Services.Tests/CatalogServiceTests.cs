@@ -1,12 +1,9 @@
-﻿
-
-using FurnitureGardenDesign.Data.Common.Enums;
+﻿using FurnitureGardenDesign.Data.Common.Enums;
 using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Implementations;
-using MockQueryable;
+using MockQueryable.Moq;
 using Moq;
-using NUnit.Framework;
 
 namespace FurnitureGardenDesign.Services.Tests
 {
@@ -130,6 +127,7 @@ namespace FurnitureGardenDesign.Services.Tests
                 Favorites = new List<Favorite>(),
                 CreatedOn = DateTime.UtcNow.AddDays(-1)
             };
+
             _testDesign4 = new CatalogDesign
             {
                 Id = _designId4,
@@ -146,7 +144,7 @@ namespace FurnitureGardenDesign.Services.Tests
                 Reviews = new List<Review>(),
                 Favorites = new List<Favorite>(),
                 CreatedOn = DateTime.UtcNow.AddDays(-1)
-            };  
+            };
 
             _inactiveDesign = new CatalogDesign
             {
@@ -168,25 +166,25 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetAllActiveAsync_ReturnsOnlyActiveDesignsWithRelatedData()
         {
-         
+           
             var allDesigns = new List<CatalogDesign> { _testDesign1, _testDesign2, _testDesign3, _inactiveDesign };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
          
             var result = await _catalogService.GetAllActiveAsync();
 
-          
-            Assert.IsNotNull(result);
-            Assert.AreEqual(3, result.Count());
-            Assert.IsFalse(result.Any(d => d.Id == _inactiveDesignId));
+         
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Count(), Is.EqualTo(3));
+            Assert.That(result.Any(d => d.Id == _inactiveDesignId), Is.False);
 
             var design1 = result.First(d => d.Id == _designId1);
-            Assert.AreEqual(_testDesign1.Title, design1.Title);
-            Assert.IsNotNull(design1.Category);
-            Assert.AreEqual("Living Room", design1.Category.Name);
-            Assert.AreEqual(2, design1.Reviews.Count);
-            Assert.AreEqual(1, design1.Favorites.Count);
+            Assert.That(design1.Title, Is.EqualTo(_testDesign1.Title));
+            Assert.That(design1.Category, Is.Not.Null);
+            Assert.That(design1.Category.Name, Is.EqualTo("Living Room"));
+            Assert.That(design1.Reviews.Count, Is.EqualTo(2));
+            Assert.That(design1.Favorites.Count, Is.EqualTo(1));
 
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
@@ -198,88 +196,77 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetByIdAsync_ReturnsDesign_WhenIdExistsAndIsActive()
         {
-          
-            var allDesigns = new List<CatalogDesign> { _testDesign1, _testDesign2 };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
-
             
+            var allDesigns = new List<CatalogDesign> { _testDesign1, _testDesign2 };
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
+
+          
             var result = await _catalogService.GetByIdAsync(_designId1);
 
            
-            Assert.IsNotNull(result);
-            Assert.AreEqual(_designId1, result.Id);
-            Assert.AreEqual("Modern Sofa", result.Title);
-            Assert.IsNotNull(result.Category);
-            Assert.AreEqual(2, result.Reviews.Count);
-            Assert.AreEqual(1, result.Favorites.Count);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Id, Is.EqualTo(_designId1));
+            Assert.That(result.Title, Is.EqualTo("Modern Sofa"));
+            Assert.That(result.Category, Is.Not.Null);
+            Assert.That(result.Reviews.Count, Is.EqualTo(2));
+            Assert.That(result.Favorites.Count, Is.EqualTo(1));
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
-
-
-
-
-
-
-
-
 
         [Test]
         public async Task GetByIdAsync_ReturnsNull_WhenIdDoesNotExist()
         {
            
             var allDesigns = new List<CatalogDesign> { _testDesign1, _testDesign2 };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
             var nonExistentId = Guid.NewGuid();
 
+           
             var result = await _catalogService.GetByIdAsync(nonExistentId);
 
-         
-            Assert.IsNull(result);
+           
+            Assert.That(result, Is.Null);
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
         [Test]
         public async Task GetByIdAsync_ReturnsNull_WhenDesignIsInactive()
         {
-            
+          
             var allDesigns = new List<CatalogDesign> { _testDesign1, _inactiveDesign };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-     
+           
             var result = await _catalogService.GetByIdAsync(_inactiveDesignId);
 
-
-            Assert.IsNull(result);
+            
+            Assert.That(result, Is.Null);
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
+        #endregion
 
-
-
-
-
-
-
-
+        #region AddToFavoritesAsync Tests
 
         [Test]
         public async Task AddToFavoritesAsync_AddsFavorite_WhenNotAlreadyFavorited()
         {
-         
+           
             var favorites = new List<Favorite>();
-            var mockQueryable = favorites.BuildMock();
-            _favoriteRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = favorites.BuildMockDbSet();
+            _favoriteRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
             _favoriteRepoMock.Setup(r => r.AddAsync(It.IsAny<Favorite>()))
                 .Returns(Task.CompletedTask)
                 .Callback<Favorite>(f => favorites.Add(f));
             _favoriteRepoMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
 
+            
             await _catalogService.AddToFavoritesAsync(_testUserId, _designId1);
 
-           
+            
             _favoriteRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
             _favoriteRepoMock.Verify(r => r.AddAsync(It.Is<Favorite>(f =>
                 f.UserId == _testUserId &&
@@ -287,39 +274,34 @@ namespace FurnitureGardenDesign.Services.Tests
             _favoriteRepoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
 
-
-
-
-
-
-
         [Test]
         public async Task AddToFavoritesAsync_DoesNotAddFavorite_WhenAlreadyExists()
         {
-           
             var existingFavorite = new Favorite
             {
                 UserId = _testUserId,
                 CatalogDesignId = _designId1
             };
             var favorites = new List<Favorite> { existingFavorite };
-            var mockQueryable = favorites.BuildMock();
-            _favoriteRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = favorites.BuildMockDbSet();
+            _favoriteRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-          
+           
             await _catalogService.AddToFavoritesAsync(_testUserId, _designId1);
 
-         
             _favoriteRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
             _favoriteRepoMock.Verify(r => r.AddAsync(It.IsAny<Favorite>()), Times.Never);
             _favoriteRepoMock.Verify(r => r.SaveChangesAsync(), Times.Never);
         }
 
-      
+        #endregion
+
+        #region RemoveFromFavoritesAsync Tests
+
         [Test]
         public async Task RemoveFromFavoritesAsync_RemovesFavorite_WhenExists()
         {
-          
+            
             var favoriteToRemove = new Favorite
             {
                 Id = Guid.NewGuid(),
@@ -327,16 +309,16 @@ namespace FurnitureGardenDesign.Services.Tests
                 CatalogDesignId = _designId1
             };
             var favorites = new List<Favorite> { favoriteToRemove };
-            var mockQueryable = favorites.BuildMock();
-            _favoriteRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = favorites.BuildMockDbSet();
+            _favoriteRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
             _favoriteRepoMock.Setup(r => r.DeleteAsync(It.IsAny<Favorite>()))
                 .ReturnsAsync(true);
             _favoriteRepoMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
 
-          
+           
             await _catalogService.RemoveFromFavoritesAsync(_testUserId, _designId1);
 
-        
+            
             _favoriteRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
             _favoriteRepoMock.Verify(r => r.DeleteAsync(It.Is<Favorite>(f =>
                 f.UserId == _testUserId &&
@@ -347,12 +329,12 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task RemoveFromFavoritesAsync_DoesNothing_WhenFavoriteDoesNotExist()
         {
-           
+            
             var favorites = new List<Favorite>();
-            var mockQueryable = favorites.BuildMock();
-            _favoriteRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = favorites.BuildMockDbSet();
+            _favoriteRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-          
+            
             await _catalogService.RemoveFromFavoritesAsync(_testUserId, _designId1);
 
          
@@ -361,12 +343,14 @@ namespace FurnitureGardenDesign.Services.Tests
             _favoriteRepoMock.Verify(r => r.SaveChangesAsync(), Times.Never);
         }
 
-       
+        #endregion
+
+        #region AddReviewAsync Tests
 
         [Test]
         public async Task AddReviewAsync_CreatesAndSavesReview()
         {
-          
+           
             int rating = 4;
             string comment = "Great design!";
 
@@ -374,10 +358,10 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Returns(Task.CompletedTask);
             _reviewRepoMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
 
-          
+            
             await _catalogService.AddReviewAsync(_testUserId, _designId1, rating, comment);
 
-           
+            
             _reviewRepoMock.Verify(r => r.AddAsync(It.Is<Review>(rev =>
                 rev.UserId == _testUserId &&
                 rev.CatalogDesignId == _designId1 &&
@@ -386,27 +370,20 @@ namespace FurnitureGardenDesign.Services.Tests
             _reviewRepoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
 
-
-
-
-
-
-
-
         [Test]
         public async Task AddReviewAsync_CreatesReview_WithNullComment()
         {
-       
+            
             int rating = 5;
 
             _reviewRepoMock.Setup(r => r.AddAsync(It.IsAny<Review>()))
                 .Returns(Task.CompletedTask);
             _reviewRepoMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
 
-
+        
             await _catalogService.AddReviewAsync(_testUserId, _designId1, rating, null);
 
-   
+           
             _reviewRepoMock.Verify(r => r.AddAsync(It.Is<Review>(rev =>
                 rev.UserId == _testUserId &&
                 rev.CatalogDesignId == _designId1 &&
@@ -415,201 +392,219 @@ namespace FurnitureGardenDesign.Services.Tests
             _reviewRepoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
 
+        #endregion
 
+        #region GetPublicCatalogAsync Tests
 
-
-
-      
+       
 
         [Test]
         public async Task GetPublicCatalogAsync_ReturnsCorrectPagination_ForPage2()
         {
-   
+            
             var allDesigns = new List<CatalogDesign> { _testDesign1, _testDesign2, _testDesign3 };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-      
+           
             var result = await _catalogService.GetPublicCatalogAsync(_testUserId, 2, 2, false);
 
-         
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count()); // 3 total, page 2 should have 1 item
-            Assert.AreEqual(_designId1, result.First().Id); // Oldest design
+           
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(result.First().Id, Is.EqualTo(_designId1));
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
+        [Test]
+        public async Task GetPublicCatalogAsync_ReturnsFirst3Items_ForGuestUser()
+        {
+            
+            var allDesigns = new List<CatalogDesign> { _testDesign1, _testDesign2, _testDesign3, _testDesign4 };
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
+            
+            var result = await _catalogService.GetPublicCatalogAsync(null, 2, 10, true);
 
-
-
+           
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Count(), Is.EqualTo(3));
+            Assert.That(result.All(d => !d.IsFavorited), Is.True);
+            _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
+        }
 
         [Test]
         public async Task GetPublicCatalogAsync_ReturnsEmptyList_WhenNoActiveDesigns()
         {
-           
+            
             var allDesigns = new List<CatalogDesign>();
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-          
+            
             var result = await _catalogService.GetPublicCatalogAsync(_testUserId, 1, 10, false);
 
-          
-            Assert.IsNotNull(result);
-            Assert.IsEmpty(result);
+            
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Empty);
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
-     
+        #endregion
+
+        #region GetTotalActiveDesignsAsync Tests
 
         [Test]
         public async Task GetTotalActiveDesignsAsync_ReturnsCorrectCount()
         {
-            
+           
             var allDesigns = new List<CatalogDesign> { _testDesign1, _testDesign2, _testDesign3, _inactiveDesign };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
            
             var result = await _catalogService.GetTotalActiveDesignsAsync();
 
-            
-            Assert.AreEqual(3, result);
+           
+            Assert.That(result, Is.EqualTo(3));
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
         [Test]
         public async Task GetTotalActiveDesignsAsync_ReturnsZero_WhenNoActiveDesigns()
         {
-          
-            var allDesigns = new List<CatalogDesign> { _inactiveDesign };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
-
            
-            var result = await _catalogService.GetTotalActiveDesignsAsync();
+            var allDesigns = new List<CatalogDesign> { _inactiveDesign };
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
             
-            Assert.AreEqual(0, result);
+            var result = await _catalogService.GetTotalActiveDesignsAsync();
+
+           
+            Assert.That(result, Is.EqualTo(0));
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
-     
+        #endregion
+
+        #region GetDetailsAsync Tests
 
         [Test]
         public async Task GetDetailsAsync_ReturnsViewModel_WhenDesignExistsAndIsActive()
         {
-          
+            
             var allDesigns = new List<CatalogDesign> { _testDesign1, _testDesign2 };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-           
+      
             var result = await _catalogService.GetDetailsAsync(_designId1, _testUserId);
 
-          
-            Assert.IsNotNull(result);
-            Assert.AreEqual(_designId1, result.Id);
-            Assert.AreEqual("Modern Sofa", result.Title);
-            Assert.AreEqual("A comfortable modern sofa", result.Description);
-            Assert.AreEqual("sofa.jpg", result.Image2DUrl);
-            Assert.AreEqual("sofa.glb", result.Model3DUrl);
-            Assert.AreEqual("Leather, Wood", result.Materials);
-            Assert.AreEqual(Model3DStatus.Ready, result.Model3DStatus);
-            Assert.AreEqual(499.99m, result.Price);
-            Assert.AreEqual("Living Room", result.CategoryName);
-            Assert.IsTrue(result.IsFavorited); 
-            Assert.AreEqual(4.5, result.AverageRating); 
-            Assert.AreEqual(2, result.ReviewCount);
+         
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Id, Is.EqualTo(_designId1));
+            Assert.That(result.Title, Is.EqualTo("Modern Sofa"));
+            Assert.That(result.Description, Is.EqualTo("A comfortable modern sofa"));
+            Assert.That(result.Image2DUrl, Is.EqualTo("sofa.jpg"));
+            Assert.That(result.Model3DUrl, Is.EqualTo("sofa.glb"));
+            Assert.That(result.Materials, Is.EqualTo("Leather, Wood"));
+            Assert.That(result.Model3DStatus, Is.EqualTo(Model3DStatus.Ready));
+            Assert.That(result.Price, Is.EqualTo(499.99m));
+            Assert.That(result.CategoryName, Is.EqualTo("Living Room"));
+            Assert.That(result.IsFavorited, Is.True);
+            Assert.That(result.AverageRating, Is.EqualTo(4.5));
+            Assert.That(result.ReviewCount, Is.EqualTo(2));
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
         [Test]
         public async Task GetDetailsAsync_ReturnsNull_WhenDesignDoesNotExist()
         {
+          
             var allDesigns = new List<CatalogDesign> { _testDesign1, _testDesign2 };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
             var nonExistentId = Guid.NewGuid();
 
-         
+            
             var result = await _catalogService.GetDetailsAsync(nonExistentId, _testUserId);
 
-           
-            Assert.IsNull(result);
+    
+            Assert.That(result, Is.Null);
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
         [Test]
         public async Task GetDetailsAsync_ReturnsNull_WhenDesignIsInactive()
         {
-        
+            
             var allDesigns = new List<CatalogDesign> { _testDesign1, _inactiveDesign };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-         
+       
             var result = await _catalogService.GetDetailsAsync(_inactiveDesignId, _testUserId);
 
-          
-            Assert.IsNull(result);
+            
+            Assert.That(result, Is.Null);
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
         [Test]
         public async Task GetDetailsAsync_SetsModel3DStatusToNone_WhenModel3DUrlIsEmpty()
         {
-          
+            
             var allDesigns = new List<CatalogDesign> { _testDesign2 };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
             
             var result = await _catalogService.GetDetailsAsync(_designId2, null);
 
-           
-            Assert.IsNotNull(result);
-            Assert.IsNull(result.Model3DUrl);
-            Assert.AreEqual(Model3DStatus.None, result.Model3DStatus);
+            
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Model3DUrl, Is.Null);
+            Assert.That(result.Model3DStatus, Is.EqualTo(Model3DStatus.None));
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
         [Test]
         public async Task GetDetailsAsync_SetsIsFavoritedToFalse_WhenUserIdIsNull()
         {
-         
+        
             var allDesigns = new List<CatalogDesign> { _testDesign1 };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-         
+     
             var result = await _catalogService.GetDetailsAsync(_designId1, null);
 
-           
-            Assert.IsNotNull(result);
-            Assert.IsFalse(result.IsFavorited);
+        
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.IsFavorited, Is.False);
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
         [Test]
         public async Task GetDetailsAsync_ReturnsZeroAverageRating_WhenNoReviews()
         {
-          
+           
             var allDesigns = new List<CatalogDesign> { _testDesign3 };
-            var mockQueryable = allDesigns.BuildMock();
-            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable);
+            var mockQueryable = allDesigns.BuildMockDbSet();
+            _catalogRepoMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-          
+            
             var result = await _catalogService.GetDetailsAsync(_designId3, null);
 
           
-            Assert.IsNotNull(result);
-            Assert.AreEqual(0, result.AverageRating);
-            Assert.AreEqual(0, result.ReviewCount);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.AverageRating, Is.EqualTo(0));
+            Assert.That(result.ReviewCount, Is.EqualTo(0));
             _catalogRepoMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
         #endregion
     }
-} 
+}
