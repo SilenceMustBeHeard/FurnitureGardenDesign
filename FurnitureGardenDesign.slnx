@@ -10,15 +10,14 @@
     <Project Path="FurnitureGardenDesign.Services.Core/FurnitureGardenDesign.Services.Core.csproj" />
   </Folder>
   <Folder Name="/Tests/">
+    <Project Path="FurnitureGardenDesign.Integration.Tests/FurnitureGardenDesign.Integration.Tests.csproj" Id="39b7d5b2-4e38-473b-bfce-fea23560d107" />
     <Project Path="FurnitureGardenDesign.Services.Tests/FurnitureGardenDesign.Services.Tests.csproj" Id="6f870db1-387a-4535-86a2-74db3a1591fe" />
-    <Project Path="FurnitureGardenDesign.Web.Tests/FurnitureGardenDesign.Web.Tests.csproj" />
-    <Project Path="FurnitureGardenDesignIntegrationTests/FurnitureGardenDesignIntegrationTests.csproj" />
+    <Project Path="FurnitureGardenDesign.Web.Tests/FurnitureGardenDesign.Web.Tests.csproj" Id="ee89c920-06dc-4fa0-82af-752f68a7ce6d" />
   </Folder>
   <Folder Name="/Web/">
     <Project Path="FurnitureGardenDesign.Web.Infrastructure/FurnitureGardenDesign.Web.Infrastructure.csproj" />
     <Project Path="FurnitureGardenDesign.Web.ViewModels/FurnitureGardenDesign.Web.ViewModels.csproj" />
     <Project Path="FurnitureGardenDesign.Web/FurnitureGardenDesign.Web.csproj" />
   </Folder>
-  <Project Path="FurnitureGardenDesign.Common/FurnitureGardenDesign.Common.csproj" />
   <Project Path="FurnitureGardenDesign.WebApi/FurnitureGardenDesign.WebApi.csproj" Id="682f3301-5b07-4ed4-822f-c35096ae9657" />
 </Solution>
