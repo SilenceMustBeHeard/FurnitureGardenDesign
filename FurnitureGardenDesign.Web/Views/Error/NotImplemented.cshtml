@@ -1,49 +1,50 @@
 ﻿@{
-    ViewData["Title"] = "Feature Under Construction";
-    var featureName = ViewBag.FeatureName as string ?? "This feature";
+    ViewData["Title"] = "Not Implemented";
+    string featureName = ViewBag.FeatureName ?? "This feature";
 }
 
-<div class="d-flex justify-content-center align-items-center min-vh-75">
-    <div class="card glass shadow-lg text-center p-5" style="max-width: 850px;">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card glassmorphism-card text-center p-5 animate__animated animate__fadeInUp">
+                
+                @* Error image *@
+                <div class="error-image-container mb-4">
+                    <img src="~/images/errors/under-construction.png"
+                         alt="Under Construction"
+                         class="img-fluid floating-animation"
+                         style="max-height: 220px;"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300x220/2c3e50/ffffff?text=🚧+Under+Construction'">
+                    </div>
 
-    
-        <img src="~/images/errors/dead-robot.png"
-             alt="Under construction"
-             class="img-fluid mb-4"
-             style="max-height: 700px;" />
+                    <div class="error-badge bg-warning bg-opacity-10 text-warning px-3 py-1 rounded-pill d-inline-block mx-auto mb-3">
+                        <small>⚠️ ERROR @(ViewBag.ErrorCode ?? 501)</small>
+                    </div>
 
-        <h1 class="fw-bold text-warning mb-3">
-            🚧 @featureName
-        </h1>
+                    <h1 class="display-5 fw-bold text-warning mb-3">
+                        <span class="d-block">🚧 Under Construction</span>
+                    </h1>
 
-        <h4 class="text-light mb-4">
-            is still being crafted.
-        </h4>
+                    <p class="text-muted mb-2">Oops! @featureName is still in development.</p>
+                    <p class="text-muted mb-4">We're working hard to bring you something amazing!</p>
 
-        <p class="text-light mb-4">
-            Our workshop is currently designing and refining this module.<br />
-            Quality takes time — and we build things properly.
-        </p>
+                    <div class="progress mb-4" style="height: 10px;">
+                        <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated"
+                             role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
 
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-
-            <a asp-controller="Home"
-               asp-action="Index"
-               class="btn btn-primary-glass px-4">
-                ⬅ Back to Home
-            </a>
-
-            <a asp-controller="Catalog"
-               asp-action="Index"
-               class="btn btn-outline-glass px-4">
-                Browse Catalog
-            </a>
-
+                    <div class="d-flex justify-content-center gap-3">
+                        <a asp-controller="Home"
+                               asp-action="Index"
+                               class="btn btn-warning btn-lg px-4 hover-scale">
+                            <i class="bi bi-house-door me-2"></i>Back to Home
+                        </a>
+                        <button onclick="history.back()"
+                                class="btn btn-outline-secondary btn-lg px-4 hover-scale">
+                            <i class="bi bi-arrow-left me-2"></i>Go Back
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <p class="text-muted small mt-4">
-            System Status: 501 – Not Implemented
-        </p>
-
     </div>
-</div>
