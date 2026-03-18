@@ -13,4 +13,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FurnitureGardenDesign.Web.Infrastructure\FurnitureGardenDesign.Web.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
