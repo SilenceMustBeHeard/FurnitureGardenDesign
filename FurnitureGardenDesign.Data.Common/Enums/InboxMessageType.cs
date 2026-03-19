@@ -10,7 +10,8 @@ namespace FurnitureGardenDesign.Data.Common.Enums
         DesignApproved = 1,
         DesignRejected = 2,
         SystemMessage = 3,
-        ChangesRequested = 4
+        ChangesRequested = 4,
+        ContactMessage = 5
     }
 
 }

@@ -18,6 +18,7 @@ namespace FurnitureGardenDesign.Data
         public virtual DbSet<Favorite> Favorites { get; set; } = null!;
         public virtual DbSet<InboxMessage> InboxMessages { get; set; } = null!;
         public virtual DbSet<SystemInboxMessage> SystemInboxMessages { get; set; } = null!;
+        public virtual DbSet<ContactMessage> ContactMessages { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Review> Reviews { get; set; } = null!;
        

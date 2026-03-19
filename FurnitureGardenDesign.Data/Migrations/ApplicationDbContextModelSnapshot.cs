@@ -388,6 +388,11 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -411,6 +416,10 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("SystemInboxMessages");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("SystemInboxMessage");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -548,6 +557,41 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.ContactMessage", b =>
+                {
+                    b.HasBaseType("FurnitureGardenDesign.Data.Models.SystemInboxMessage");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AppUserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CustomerEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("RespondedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Response")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Subject")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("AppUserId1");
+
+                    b.HasDiscriminator().HasValue("ContactMessage");
                 });
 
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.CatalogDesign", b =>
@@ -724,13 +768,28 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.ContactMessage", b =>
+                {
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", null)
+                        .WithMany("ContactMessages")
+                        .HasForeignKey("AppUserId");
+
+                    b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", null)
+                        .WithMany("SentContactMessages")
+                        .HasForeignKey("AppUserId1");
+                });
+
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.AppUser", b =>
                 {
+                    b.Navigation("ContactMessages");
+
                     b.Navigation("Favorites");
 
                     b.Navigation("InboxMessages");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("SentContactMessages");
 
                     b.Navigation("SentMessages");
 

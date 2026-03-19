@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FurnitureGardenDesign.Data.Models
 {
@@ -9,6 +10,10 @@ namespace FurnitureGardenDesign.Data.Models
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Address { get; set; }
+
+
+        [Phone(ErrorMessage = "Invalid phone number format.")]
+        public string? PhoneNumber { get; set; }
 
         // Navigation
         public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
@@ -22,6 +27,10 @@ namespace FurnitureGardenDesign.Data.Models
         // inbox messages navigation for system messages
         public ICollection<SystemInboxMessage> SystemInboxMessages { get; set; } = new HashSet<SystemInboxMessage>();
         public ICollection<SystemInboxMessage> SentSystemInboxMessages { get; set; } = new HashSet<SystemInboxMessage>();
+
+        // inbox messages navigation for contact messages
+        public ICollection<ContactMessage> ContactMessages { get; set; } = new HashSet<ContactMessage>();
+        public ICollection<ContactMessage> SentContactMessages { get; set; } = new HashSet<ContactMessage>();
 
 
     }
