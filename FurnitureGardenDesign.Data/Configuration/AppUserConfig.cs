@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Furniture_GardenDesign.Data.Configuration
+namespace FurnitureGardenDesign.Data.Configuration
 {
     public class ApplicationUserConfiguration : IEntityTypeConfiguration<AppUser>
     {
