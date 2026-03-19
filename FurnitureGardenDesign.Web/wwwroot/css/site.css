@@ -1219,7 +1219,7 @@ header {
 
 .error-image-container {
     position: relative;
-    min-height: 200px;
+    min-height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
