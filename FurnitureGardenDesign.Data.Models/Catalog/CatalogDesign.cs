@@ -1,10 +1,11 @@
 ﻿using FurnitureGardenDesign.Data.Common.Enums;
+using FurnitureGardenDesign.Data.Models.Interactions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FurnitureGardenDesign.Data.Models
+namespace FurnitureGardenDesign.Data.Models.Catalog
 {
     public class CatalogDesign : BaseDeletableEntity
     {

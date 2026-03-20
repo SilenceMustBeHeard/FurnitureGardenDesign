@@ -1,11 +1,6 @@
-﻿using FurnitureGardenDesign.Data.Models;
+﻿using FurnitureGardenDesign.Data.Models.Catalog;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
-using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Category;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Services.Core.Admin.Interfaces
 {

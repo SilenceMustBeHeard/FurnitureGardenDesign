@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-using FurnitureGardenDesign.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FurnitureGardenDesign.Data.Models.Catalog;
 
 namespace FurnitureGardenDesign.Data.Configuration
 {

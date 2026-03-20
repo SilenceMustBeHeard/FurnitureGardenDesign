@@ -1,13 +1,9 @@
-﻿using FurnitureGardenDesign.Data.Models;
+﻿using FurnitureGardenDesign.Data.Models.Interactions;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Review;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
 {

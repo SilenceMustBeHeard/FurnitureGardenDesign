@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace FurnitureGardenDesign.Data.Models
+namespace FurnitureGardenDesign.Data.Models.Messages
 {
     public class SystemInboxMessage : BaseDeletableEntity
     {

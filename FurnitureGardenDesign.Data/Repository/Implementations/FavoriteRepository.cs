@@ -1,4 +1,4 @@
-﻿using FurnitureGardenDesign.Data.Models;
+﻿using FurnitureGardenDesign.Data.Models.Interactions;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;

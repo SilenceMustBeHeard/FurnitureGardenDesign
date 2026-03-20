@@ -1,4 +1,4 @@
-﻿using FurnitureGardenDesign.Data.Models;
+﻿using FurnitureGardenDesign.Data.Models.Catalog;
 using System;
 using System.Collections.Generic;
 using System.Text;

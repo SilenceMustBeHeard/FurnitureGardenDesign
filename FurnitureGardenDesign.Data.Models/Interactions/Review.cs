@@ -1,7 +1,8 @@
-﻿using System;
+﻿using FurnitureGardenDesign.Data.Models.Catalog;
+using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace FurnitureGardenDesign.Data.Models
+namespace FurnitureGardenDesign.Data.Models.Interactions
 {
     public class Review : BaseDeletableEntity
     {

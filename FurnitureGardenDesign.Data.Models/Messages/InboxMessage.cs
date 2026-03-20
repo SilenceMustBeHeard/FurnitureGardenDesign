@@ -1,9 +1,10 @@
 ﻿using FurnitureGardenDesign.Data.Common.Enums;
+using FurnitureGardenDesign.Data.Models.Catalog;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FurnitureGardenDesign.Data.Models
+namespace FurnitureGardenDesign.Data.Models.Messages
 {
     public class InboxMessage : BaseDeletableEntity
     {

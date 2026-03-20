@@ -1,6 +1,7 @@
 ﻿using Furniture_GardenDesign.Data.Enums;
 using FurnitureGardenDesign.Data.Common.Enums;
-using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Data.Models.Catalog;
+using FurnitureGardenDesign.Data.Models.Messages;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 
 using FurnitureGardenDesign.Services.Core.Manager.Interfaces;

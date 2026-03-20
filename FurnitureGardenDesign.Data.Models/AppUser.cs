@@ -1,4 +1,6 @@
 ﻿
+using FurnitureGardenDesign.Data.Models.Interactions;
+using FurnitureGardenDesign.Data.Models.Messages;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

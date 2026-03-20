@@ -1,5 +1,5 @@
 ﻿using Furniture_GardenDesign.Data.Enums;
-using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Data.Models.Interactions;
 
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;

@@ -1,5 +1,5 @@
 ﻿using Furniture_GardenDesign.Data.Enums;
-using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Data.Models.Interactions;
 using System;
 using System.Collections.Generic;
 using System.Text;

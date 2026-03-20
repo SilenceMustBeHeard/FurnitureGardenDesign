@@ -1,5 +1,4 @@
-﻿using FurnitureGardenDesign.Data.Models;
-
+﻿using FurnitureGardenDesign.Data.Models.Catalog;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;

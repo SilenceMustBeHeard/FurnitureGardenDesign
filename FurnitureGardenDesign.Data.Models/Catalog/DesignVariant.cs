@@ -1,7 +1,8 @@
-﻿using System;
+﻿using FurnitureGardenDesign.Data.Models.Interactions;
+using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace FurnitureGardenDesign.Data.Models
+namespace FurnitureGardenDesign.Data.Models.Catalog
 {
     public class DesignVariant : BaseDeletableEntity
     {

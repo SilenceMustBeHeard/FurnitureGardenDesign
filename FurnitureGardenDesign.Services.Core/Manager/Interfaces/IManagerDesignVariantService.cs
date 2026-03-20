@@ -1,4 +1,4 @@
-﻿using FurnitureGardenDesign.Data.Models;
+﻿using FurnitureGardenDesign.Data.Models.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.DesignVariants;
 
 namespace FurnitureGardenDesign.Services.Core.Manager.Interfaces

@@ -1,10 +1,11 @@
 ﻿
 using Furniture_GardenDesign.Data.Enums;
+using FurnitureGardenDesign.Data.Models.Catalog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace FurnitureGardenDesign.Data.Models
+namespace FurnitureGardenDesign.Data.Models.Interactions
 {
     public class Order : BaseDeletableEntity
     {

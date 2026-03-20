@@ -2,6 +2,7 @@
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
+using FurnitureGardenDesign.Data.Models.Catalog;
 
 namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
 {
@@ -19,7 +20,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
         // adds new catalog design 
         public async Task AddCatalogAsync(CatalogViewModelCreate model)
         {
-            var catalog = new Data.Models.CatalogDesign
+            var catalog = new CatalogDesign
             {
                 Id = Guid.NewGuid(),
                 Title = model.Title,

@@ -1,6 +1,7 @@
-﻿using System;
+﻿using FurnitureGardenDesign.Data.Models.Catalog;
+using System;
 
-namespace FurnitureGardenDesign.Data.Models
+namespace FurnitureGardenDesign.Data.Models.Interactions
 {
     public class Favorite 
     {
