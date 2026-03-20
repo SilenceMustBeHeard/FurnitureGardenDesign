@@ -1,6 +1,7 @@
 ﻿@using FurnitureGardenDesign.Data.Common.Enums
 @using FurnitureGardenDesign.Web.ViewModels.User
-@model List<InboxMessageViewModel>
+@using FurnitureGardenDesign.Web.ViewModels.Admin
+@model AdminInboxViewModel
 
 @{
     ViewData["Title"] = "Admin Inbox";
@@ -8,56 +9,153 @@
 
 <div class="container py-5">
     <div class="card glass-card p-5 text-light shadow-lg border-0 rounded-4">
-        <h2 class="fw-bold mb-4"> Inbox</h2>
+        <h2 class="fw-bold mb-4">Admin Inbox</h2>
 
-        @if (!Model.Any())
-        {
-            <div class="text-center py-5">
-                <i class="bi bi-inbox fs-1 opacity-50"></i>
-                <p class="mt-3">No messages in your inbox.</p>
-            </div>
-        }
-        else
-        {
-            <div class="d-flex flex-column gap-3">
-                @foreach (var message in Model)
+        @* Tab navigation *@
+        <ul class="nav nav-tabs mb-3 border-bottom-0" id="adminInboxTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active bg-transparent text-light border-0 border-bottom border-2"
+                        id="design-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#design"
+                        type="button"
+                        role="tab"
+                        style="border-bottom-color: #c09a6c !important;">
+                    <i class="bi bi-pencil-square me-2"></i>Design Messages
+                    @if (Model.DesignMessages.Count(x => !x.IsRead) > 0)
+                    {
+                        <span class="badge bg-warning text-dark ms-2">@Model.DesignMessages.Count(x => !x.IsRead)</span>
+                    }
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link bg-transparent text-light border-0 border-bottom border-2"
+                        id="contact-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#contact"
+                        type="button"
+                        role="tab">
+                    <i class="bi bi-chat-dots me-2"></i>Contact Messages
+                    @if (Model.ContactMessages.Count(x => !x.IsRead) > 0)
+                    {
+                        <span class="badge bg-warning text-dark ms-2">@Model.ContactMessages.Count(x => !x.IsRead)</span>
+                    }
+                </button>
+            </li>
+        </ul>
+
+        @* Tab content *@
+        <div class="tab-content" id="adminInboxTabsContent">
+
+           @*  Design Messages Tab *@
+            <div class="tab-pane fade show active" id="design" role="tabpanel">
+                @if (!Model.DesignMessages.Any())
                 {
-                    <div class="glass-list-item p-3 message-card @(message.IsRead ? "" : "unread")">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div class="flex-grow-1">
-                                <div class="d-flex align-items-center gap-2 mb-2">
-                                    @if (message.Type == InboxMessageType.DesignApproved)
-                                    {
-                                        <span class="badge bg-success">Approval</span>
-                                    }
-                                    else if (message.Type == InboxMessageType.DesignSent)
-                                    {
-                                        <span class="badge bg-info">New Design</span>
-                                    }
-                                    <small class="text-muted">
-                                        @message.CreatedOn.ToLocalTime().ToString("dd MMM yyyy HH:mm")
-                                    </small>
+                    <div class="text-center py-5">
+                        <i class="bi bi-envelope-open opacity-50 fs-1"></i>
+                        <p class="mt-3 mb-0 opacity-75">No design messages</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex flex-column gap-3" style="max-height: 500px; overflow-y: auto; padding-right: 10px;">
+                        @foreach (var message in Model.DesignMessages)
+                        {
+                            <a asp-area="Admin"
+                                   asp-controller="AdminProfile"
+                                   asp-action="MessageDetails"
+                                   asp-route-id="@message.Id"
+                                   class="text-decoration-none">
+                                <div class="glass-list-item p-3 message-card @(message.IsRead ? "read" : "unread")">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                @if (message.Type == InboxMessageType.DesignApproved)
+                                                {
+                                                    <span class="badge bg-success">Approval</span>
+                                                }
+                                                else if (message.Type == InboxMessageType.DesignSent)
+                                                {
+                                                    <span class="badge bg-info">New Design</span>
+                                                }
+                                                <small class="text-muted">
+                                                    @message.CreatedOn.ToLocalTime().ToString("dd MMM yyyy HH:mm")
+                                                </small>
+                                            </div>
+                                            <p class="mb-2">@(message.Notes?.Length > 100 ? message.Notes?.Substring(0, 100) + "..." : message.Notes ?? "No notes")</p>
+                                            <div class="d-flex gap-2">
+                                                <span class="btn btn-primary-glass btn-sm">View Details</span>
+                                            </div>
+                                        </div>
+                                        @if (!message.IsRead)
+                                        {
+                                            <span class="badge bg-warning text-dark">New</span>
+                                        }
+                                    </div>
                                 </div>
-
-                                <p class="mb-2">@message.Notes</p>
-
-                                <div class="d-flex gap-2">
-                                    <a asp-action="MessageDetails"
-                                       asp-route-id="@message.Id"
-                                       class="btn btn-primary-glass btn-sm">
-                                        View Details
-                                    </a>
-                                </div>
-                            </div>
-
-                            @if (!message.IsRead)
-                            {
-                                <span class="badge bg-warning text-dark">New</span>
-                            }
-                        </div>
+                            </a>
+                        }
                     </div>
                 }
             </div>
-        }
+
+           @* Contact Messages *@
+            <div class="tab-pane fade" id="contact" role="tabpanel">
+                @if (!Model.ContactMessages.Any())
+                {
+                    <div class="text-center py-5">
+                        <i class="bi bi-chat-dots opacity-50 fs-1"></i>
+                        <p class="mt-3 mb-0 opacity-75">No contact messages</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex flex-column gap-3" style="max-height: 500px; overflow-y: auto; padding-right: 10px;">
+                        @foreach (var message in Model.ContactMessages)
+                        {
+                            <a asp-area="Admin"
+                                   asp-controller="ContactMessage"
+                                   asp-action="Details"
+                                   asp-route-id="@message.Id"
+                                   class="text-decoration-none">
+                                <div class="glass-list-item p-3 message-card @(message.IsRead ? "read" : "unread")">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <span class="badge bg-info">Contact</span>
+                                                <small class="text-muted">
+                                                    @message.CreatedOn.ToLocalTime().ToString("dd MMM yyyy HH:mm")
+                                                </small>
+                                            </div>
+                                            <div class="mb-2">
+                                                <strong>@message.Subject</strong>
+                                            </div>
+                                            <p class="mb-2">@(message.Message.Length > 100 ? message.Message.Substring(0, 100) + "..." : message.Message)</p>
+                                            <div class="small text-muted mb-2">
+                                                <i class="bi bi-person me-1"></i>From: @message.SenderName
+                                            </div>
+                                            @if (!string.IsNullOrEmpty(message.Response))
+                                            {
+                                                <div class="small text-success">
+                                                    <i class="bi bi-check-circle me-1"></i>Responded
+                                                </div>
+                                            }
+                                            <div class="d-flex gap-2 mt-2">
+                                                <span class="btn btn-primary-glass btn-sm">View & Respond</span>
+                                            </div>
+                                        </div>
+                                        @if (!message.IsRead)
+                                        {
+                                            <span class="badge bg-warning text-dark">New</span>
+                                        }
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>
+

@@ -13,6 +13,7 @@ namespace FurnitureGardenDesign.Data.Models.Messages
 
         public string SenderId { get; set; } = null!;
         public string ReceiverId { get; set; } = null!;
+        public string? RespondedById { get; set; }
 
         [Required(ErrorMessage = "Subject is required.")]
         [MinLength(3, ErrorMessage = "Subject must be at least 3 characters long.")]
@@ -32,11 +33,14 @@ namespace FurnitureGardenDesign.Data.Models.Messages
 
         public bool IsRead { get; set; }
         public DateTime? RespondedAt { get; set; }
+      
 
         [MaxLength(5000, ErrorMessage = "Response cannot exceed 5000 characters.")]
         public string? Response { get; set; }
 
+
         // Navigation
+        public virtual AppUser? RespondedBy { get; set; }
         public virtual AppUser Sender { get; set; } = null!;
         public virtual AppUser Receiver { get; set; } = null!;
     }

@@ -14,6 +14,9 @@ namespace FurnitureGardenDesign.Web.Controllers
             _contactMessageService = contactMessageService;
         }
 
+
+        
+
         [HttpGet]
         public IActionResult Index()
         {

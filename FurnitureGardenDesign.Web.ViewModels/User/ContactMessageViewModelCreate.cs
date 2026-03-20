@@ -7,14 +7,16 @@ namespace FurnitureGardenDesign.Web.ViewModels.User
 {
     public class ContactMessageCreateViewModel
     {
-       
 
-        [Required(ErrorMessage = "Please enter a subject.")]
-        [StringLength(100, MinimumLength = 3, ErrorMessage = "Subject must be between 3 and 100 characters.")]
+
+        [Required(ErrorMessage = "Subject is required.")]
+        [MinLength(3, ErrorMessage = "Subject must be at least 3 characters long.")]
+        [MaxLength(200, ErrorMessage = "Subject cannot exceed 200 characters.")]
         public string Subject { get; set; } = null!;
 
-        [Required(ErrorMessage = "Please enter your message.")]
-        [StringLength(2000, MinimumLength = 10, ErrorMessage = "Message must be between 10 and 2000 characters.")]
+        [Required(ErrorMessage = "Message is required.")]
+        [MinLength(10, ErrorMessage = "Message must be at least 10 characters long.")]
+        [MaxLength(5000, ErrorMessage = "Message cannot exceed 5000 characters.")]
         public string Message { get; set; } = null!;
     }
 }

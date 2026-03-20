@@ -15,16 +15,24 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         private readonly UserManager<AppUser> _userManager;
         private readonly IInboxMessageService _inboxMessageService; 
         private readonly ISystemInboxMessageService _systemInboxMessageService; 
+        private readonly IContactMessageClientService _contactMessageClientService; 
         public ProfileService(
+
             IAppUserRepository userRepository,
             UserManager<AppUser> userManager,
             IInboxMessageService inboxMessageService, 
-            ISystemInboxMessageService systemInboxMessageService) 
+            ISystemInboxMessageService systemInboxMessageService,
+            IContactMessageClientService contactMessageClientService
+
+            ) 
+
         {
+
             _userRepository = userRepository;
             _userManager = userManager;
             _inboxMessageService = inboxMessageService;
             _systemInboxMessageService = systemInboxMessageService; 
+            _contactMessageClientService = contactMessageClientService;
         }
 
 
@@ -39,9 +47,10 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             if (user == null)
                 return null;
 
-           
+            // Get all types of messages
             var inboxMessages = await _inboxMessageService.GetUserMessagesAsync(userId);
             var systemMessages = await _systemInboxMessageService.GetUserMessagesAsync(userId);
+            var contactMessages = await _contactMessageClientService.GetUserMessagesAsync(userId); 
 
             return new ProfileViewModel
             {
@@ -50,8 +59,14 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Address = user.Address,
-                Inbox = inboxMessages ?? new List<InboxMessageViewModel>(),
-                SystemInbox = systemMessages ?? new List<SystemInboxMessageViewModel>()
+                Inbox = inboxMessages?.ToList() 
+                ?? new List<InboxMessageViewModel>(),
+
+                SystemInbox = systemMessages?.ToList()
+                ?? new List<SystemInboxMessageViewModel>(),
+
+                ContactMessages = contactMessages?.ToList() 
+                ?? new List<ContactMessageDetailsViewModel>() 
             };
         }
 

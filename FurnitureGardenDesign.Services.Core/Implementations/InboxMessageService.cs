@@ -6,6 +6,7 @@ using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 namespace FurnitureGardenDesign.Services.Core.Implementations
 {
     public class InboxMessageService : IInboxMessageService
@@ -92,6 +93,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             var systemUnreadCount = await _systemMessageRepository
                 .GetAllAttached()
                 .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
+            
 
           
             return inboxUnreadCount + systemUnreadCount;

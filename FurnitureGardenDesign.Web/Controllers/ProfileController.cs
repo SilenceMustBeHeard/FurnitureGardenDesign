@@ -1,4 +1,5 @@
 ﻿using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Services.Core.Admin.Implementations;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces;
@@ -16,16 +17,18 @@ namespace FurnitureGardenDesign.Web.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IInboxMessageService _inboxMessageService;
         private readonly ISystemInboxMessageService _systemInboxMessageService;
-
+        private readonly IContactMessageService _contactMessageService;
 
 
 
         public ProfileController(
+                IContactMessageService contactMessageService,
             ISystemInboxMessageService systemInboxMessageService,
             IProfileService profileService,
             UserManager<AppUser> userManager,
             IInboxMessageService inboxMessageService)
         {
+            _contactMessageService = contactMessageService;
             _systemInboxMessageService = systemInboxMessageService;
             _profileService = profileService;
             _userManager = userManager;
@@ -46,6 +49,7 @@ namespace FurnitureGardenDesign.Web.Controllers
             var model = await _profileService.GetProfileAsync(user.Id);
             return View(model);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> MarkAsRead(Guid id)
@@ -153,7 +157,26 @@ namespace FurnitureGardenDesign.Web.Controllers
             return View("SystemMessageDetails", viewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ContactMessageDetails(Guid id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                TempData["Error"] = "You must be logged in to perform this action.";
+                return RedirectToAction("Login", "Account");
+            }
 
+            var viewModel = await _contactMessageService.GetMessageDetailsAsync(id, user.Id);
+
+            if (viewModel == null)
+            {
+                TempData["Error"] = "Message not found or you do not have permission to view it.";
+                return NotFound();
+            }
+
+            return View(viewModel);
+        }
 
         [HttpGet]
         public async Task<IActionResult> AdminInbox()

@@ -2,6 +2,7 @@
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Web.ViewModels.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,19 +17,20 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IInboxMessageService _inboxMessageService;
         private readonly ISystemInboxMessageService _systemInboxMessageService;
-
-
+        private readonly IContactMessageService _contactMessageService;  // Add this
 
         public AdminProfileController(
             ISystemInboxMessageService systemInboxMessageService,
             IProfileService profileService,
             UserManager<AppUser> userManager,
-            IInboxMessageService inboxMessageService)
+            IInboxMessageService inboxMessageService,
+            IContactMessageService contactMessageService)  // Add this parameter
         {
             _systemInboxMessageService = systemInboxMessageService;
             _profileService = profileService;
             _userManager = userManager;
             _inboxMessageService = inboxMessageService;
+            _contactMessageService = contactMessageService;  // Initialize
         }
 
         [HttpGet]
@@ -39,7 +41,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
             {
                 TempData["Error"] = "You must be logged in to perform this action.";
                 return RedirectToAction("Login", "Account");
-
             }
 
             var model = await _profileService.GetProfileAsync(user.Id);
@@ -54,7 +55,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
             {
                 TempData["Error"] = "You must be logged in to perform this action.";
                 return RedirectToAction("Login", "Account");
-
             }
 
             await _inboxMessageService.MarkMessageAsReadAsync(id, user.Id);
@@ -91,7 +91,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
             {
                 TempData["Error"] = "You must be logged in to perform this action.";
                 return RedirectToAction("Login", "Account");
-
             }
 
             var viewModel = await _inboxMessageService.GetMessageDetailsAsync(id, user.Id);
@@ -104,6 +103,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 
             return View(viewModel);
         }
+
         [HttpGet]
         public async Task<IActionResult> SystemInbox()
         {
@@ -117,7 +117,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
             var messages = await _systemInboxMessageService.GetAdminMessagesAsync(user.Id);
             return View(messages);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -163,10 +162,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
             return View("SystemMessageDetails", viewModel);
         }
 
-
-
-
-
         [HttpGet]
         public async Task<IActionResult> AdminInbox()
         {
@@ -177,7 +172,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-
             var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
             var isManager = await _userManager.IsInRoleAsync(user, "Manager");
 
@@ -187,9 +181,19 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var messages = await _inboxMessageService.GetAdminMessagesAsync(user.Id);
+            var userId = _userManager.GetUserId(User);
 
-            return View(messages);
+            // Get both types of messages
+            var designMessages = await _inboxMessageService.GetAdminMessagesAsync(userId);
+            var contactMessages = await _contactMessageService.GetAdminMessagesAsync(userId);
+
+            var model = new AdminInboxViewModel
+            {
+                DesignMessages = designMessages,
+                ContactMessages = contactMessages
+            };
+
+            return View(model);
         }
     }
 }
