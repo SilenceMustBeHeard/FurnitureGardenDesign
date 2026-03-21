@@ -14,20 +14,20 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
         private readonly IInboxMessageRepository _messageRepository;
         private readonly ISystemInboxMessageRepository _systemMessageRepository;
-        
+        private readonly IContactMessageRepository _contactMessageRepository;
         private readonly IAppUserRepository _userRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public InboxMessageService(
             IInboxMessageRepository messageRepository, 
-           
+          IContactMessageRepository contactMessageRepository,
             ISystemInboxMessageRepository systemMessageRepository,
             UserManager<AppUser> userManager,
                 IAppUserRepository userRepository,
             RoleManager<IdentityRole> roleManager)
         {
-           
+           _contactMessageRepository = contactMessageRepository;
             _systemMessageRepository = systemMessageRepository;
             _messageRepository = messageRepository;
             _userManager = userManager;
@@ -97,11 +97,13 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 .GetAllAttached()
                 .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
 
-            
-         
+            var contactUnreadCount = await _contactMessageRepository
+                .GetAllAttached()
+                .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
 
 
-            return inboxUnreadCount + systemUnreadCount;
+
+            return inboxUnreadCount + systemUnreadCount + contactUnreadCount;
         }
 
 
