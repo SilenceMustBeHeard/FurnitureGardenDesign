@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FurnitureGardenDesign.Data.Configurations
+namespace FurnitureGardenDesign.Data.Configuration.Interactions
 {
     public class FavoriteConfiguration : IEntityTypeConfiguration<Favorite>
     {

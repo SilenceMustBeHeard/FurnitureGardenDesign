@@ -368,13 +368,12 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SenderId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Subject")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -689,20 +688,20 @@ namespace FurnitureGardenDesign.Data.Migrations
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Messages.ContactMessage", b =>
                 {
                     b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "Receiver")
-                        .WithMany("ContactMessages")
+                        .WithMany("ReceivedContactMessages")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "RespondedBy")
                         .WithMany()
-                        .HasForeignKey("RespondedById");
+                        .HasForeignKey("RespondedById")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "Sender")
                         .WithMany("SentContactMessages")
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Receiver");
 
@@ -720,13 +719,13 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "Receiver")
-                        .WithMany("InboxMessages")
+                        .WithMany("ReceivedDesignMessages")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "Sender")
-                        .WithMany("SentMessages")
+                        .WithMany("SentDesignMessages")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -740,13 +739,13 @@ namespace FurnitureGardenDesign.Data.Migrations
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Messages.SystemInboxMessage", b =>
                 {
                     b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "Receiver")
-                        .WithMany("SystemInboxMessages")
+                        .WithMany("ReceivedSystemMessages")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FurnitureGardenDesign.Data.Models.AppUser", "Sender")
-                        .WithMany("SentSystemInboxMessages")
+                        .WithMany("SentSystemMessages")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -808,21 +807,21 @@ namespace FurnitureGardenDesign.Data.Migrations
 
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.AppUser", b =>
                 {
-                    b.Navigation("ContactMessages");
-
                     b.Navigation("Favorites");
-
-                    b.Navigation("InboxMessages");
 
                     b.Navigation("Orders");
 
+                    b.Navigation("ReceivedContactMessages");
+
+                    b.Navigation("ReceivedDesignMessages");
+
+                    b.Navigation("ReceivedSystemMessages");
+
                     b.Navigation("SentContactMessages");
 
-                    b.Navigation("SentMessages");
+                    b.Navigation("SentDesignMessages");
 
-                    b.Navigation("SentSystemInboxMessages");
-
-                    b.Navigation("SystemInboxMessages");
+                    b.Navigation("SentSystemMessages");
                 });
 
             modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Catalog.CatalogDesign", b =>

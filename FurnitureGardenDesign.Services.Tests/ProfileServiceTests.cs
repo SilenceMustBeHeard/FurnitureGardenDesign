@@ -17,10 +17,12 @@ namespace FurnitureGardenDesign.Services.Tests
         private Mock<UserManager<AppUser>> _userManagerMock;
         private Mock<IInboxMessageService> _inboxMessageServiceMock;
         private Mock<ISystemInboxMessageService> _systemInboxMessageServiceMock;
+        private Mock<IContactMessageClientService> _contactMessageClientServiceMock;
         private ProfileService _profileService;
 
         private AppUser _testUser;
         private string _testUserId;
+        private List<ContactMessageCreateViewModel> _testContactMessages;
         private List<InboxMessageViewModel> _testInboxMessages;
         private List<SystemInboxMessageViewModel> _testSystemMessages;
 
@@ -36,13 +38,14 @@ namespace FurnitureGardenDesign.Services.Tests
 
             _inboxMessageServiceMock = new Mock<IInboxMessageService>(MockBehavior.Strict);
             _systemInboxMessageServiceMock = new Mock<ISystemInboxMessageService>(MockBehavior.Strict);
+            _contactMessageClientServiceMock = new Mock<IContactMessageClientService>(MockBehavior.Strict);
 
             _profileService = new ProfileService(
                 _userRepositoryMock.Object,
                 _userManagerMock.Object,
                 _inboxMessageServiceMock.Object,
-                _systemInboxMessageServiceMock.Object);
-
+                _systemInboxMessageServiceMock.Object,
+                _contactMessageClientServiceMock.Object);
             SeedTestData();
         }
 

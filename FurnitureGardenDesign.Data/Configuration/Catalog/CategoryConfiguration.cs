@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using FurnitureGardenDesign.Data.Models.Catalog;
 
-namespace FurnitureGardenDesign.Data.Configuration
+namespace FurnitureGardenDesign.Data.Configuration.Catalog
 {
     public class CategoryConfiguration : IEntityTypeConfiguration<Category> 
     {
