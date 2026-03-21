@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/API/">
+    <Project Path="FurnitureGardenDesign.WebApi/FurnitureGardenDesign.WebApi.csproj" Id="682f3301-5b07-4ed4-822f-c35096ae9657" />
+  </Folder>
   <Folder Name="/Data/">
     <Project Path="FurnitureGardenDesign.Data.Common/FurnitureGardenDesign.Data.Common.csproj" />
     <Project Path="FurnitureGardenDesign.Data.Models/FurnitureGardenDesign.Data.Models.csproj" />
@@ -19,5 +22,4 @@
     <Project Path="FurnitureGardenDesign.Web.ViewModels/FurnitureGardenDesign.Web.ViewModels.csproj" />
     <Project Path="FurnitureGardenDesign.Web/FurnitureGardenDesign.Web.csproj" />
   </Folder>
-  <Project Path="FurnitureGardenDesign.WebApi/FurnitureGardenDesign.WebApi.csproj" Id="682f3301-5b07-4ed4-822f-c35096ae9657" />
 </Solution>

@@ -70,7 +70,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
             message.Response = response;
             message.RespondedAt = DateTime.UtcNow;
             message.RespondedById = adminId;
-            message.IsRead = true;
+            message.IsRead = false;
 
             await _messageRepository.UpdateAsync(message);
         }

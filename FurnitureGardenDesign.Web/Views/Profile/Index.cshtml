@@ -106,11 +106,12 @@
                                     role="tab">
                                 <i class="bi bi-chat-dots me-2"></i>Contact Messages
                                 @{
-                                    var unreadContactCount = Model.ContactMessages?.Count(x => !x.IsRead) ?? 0;
+                                    // Count messages that have a response AND are not yet read by the user
+                                    var unreadRespondedCount = Model.ContactMessages?.Count(x => !x.IsRead) ?? 0;
                                 }
-                                @if (unreadContactCount > 0)
+                                @if (unreadRespondedCount > 0)
                                 {
-                                    <span class="badge bg-warning text-dark ms-2">@unreadContactCount</span>
+                                    <span class="badge bg-warning text-dark ms-2">@unreadRespondedCount</span>
                                 }
                             </button>
                         </li>
@@ -119,7 +120,7 @@
                     @* Tab content *@
                     <div class="tab-content" id="inboxTabsContent">
 
-                       @*  Design Messages  *@
+                        @* Design Messages *@
                         <div class="tab-pane fade show active" id="design" role="tabpanel">
                             @if (Model.Inbox == null || !Model.Inbox.Any())
                             {
@@ -141,7 +142,7 @@
                             }
                         </div>
 
-                    @*  System Messages *@
+                        @* System Messages *@
                         <div class="tab-pane fade" id="system" role="tabpanel">
                             @if (Model.SystemInbox == null || !Model.SystemInbox.Any())
                             {
@@ -163,17 +164,20 @@
                             }
                         </div>
 
-                        @* Contact Messages *@
+                        @* Contact Messages - Only shows messages with responses *@
                         <div class="tab-pane fade" id="contact" role="tabpanel">
                             @if (Model.ContactMessages == null || !Model.ContactMessages.Any())
                             {
                                 <div class="text-center py-5">
                                     <i class="bi bi-chat-dots opacity-50 fs-1"></i>
                                     <p class="mt-3 mb-0 opacity-75">
-                                        You haven't sent any contact messages yet.
+                                        No responded messages yet.
+                                    </p>
+                                    <p class="small text-muted mt-2">
+                                        When an admin responds to your inquiry, it will appear here.
                                     </p>
                                     <a asp-controller="Contact" asp-action="Index" class="btn btn-outline-glass mt-3">
-                                        <i class="bi bi-envelope me-2"></i>Contact Us
+                                        <i class="bi bi-envelope me-2"></i>Send a Message
                                     </a>
                                 </div>
                             }
@@ -193,4 +197,3 @@
         </div>
     </div>
 </div>
-

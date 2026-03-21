@@ -83,17 +83,17 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         // grouped by subject and message content to combine duplicates
         public async Task<List<ContactMessageDetailsViewModel>> GetUserMessagesAsync(string userId)
         {
-            // Get all messages sent by this user
+            
             var messages = await _messageRepository
                 .GetAllAttached()
                 .Include(m => m.Receiver)
                 .Include(m => m.RespondedBy)
                 .Include(m => m.Sender)
-                .Where(m => m.SenderId == userId)
+                .Where(m => m.SenderId == userId && !string.IsNullOrEmpty(m.Response))  
                 .OrderByDescending(m => m.CreatedOn)
                 .ToListAsync();
 
-            // Group by subject and message content to combine duplicates
+           
             var groupedMessages = messages
                 .GroupBy(m => new { m.Subject, m.Message })
                 .Select(g => new ContactMessageDetailsViewModel
@@ -134,7 +134,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             if (message == null)
                 return null;
 
-           
+          
             if (!message.IsRead)
             {
                 message.IsRead = true;
@@ -151,7 +151,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                     && m.Message == message.Message)
                 .ToListAsync();
 
-          
+           
             var respondedCopy = allCopies.FirstOrDefault(m => !string.IsNullOrEmpty(m.Response));
             var anyCopyRead = allCopies.Any(m => m.IsRead);
             var earliestDate = allCopies.Min(m => m.CreatedOn);
@@ -167,9 +167,9 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 SenderEmail = message.Sender?.Email ?? string.Empty,
                 ReceiverName = "Admin Team",
                 ReceiverEmail = "support@furnituregardendesign.com",
-                IsRead = anyCopyRead,  
+                IsRead = anyCopyRead,
                 CreatedOn = earliestDate,
-                Response = respondedCopy?.Response,
+                Response = respondedCopy?.Response,  
                 RespondedAt = respondedCopy?.RespondedAt,
                 RespondedByName = respondedCopy?.RespondedBy != null
                     ? $"{respondedCopy.RespondedBy.FirstName} {respondedCopy.RespondedBy.LastName}"
