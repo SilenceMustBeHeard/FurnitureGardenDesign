@@ -105,8 +105,10 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                         ? $"{g.First().Sender.FirstName} {g.First().Sender.LastName}"
                         : "Unknown",
                     SenderEmail = g.First().Sender?.Email ?? string.Empty,
-                    ReceiverName = "Admin Team",
-                    ReceiverEmail = "support@furnituregardendesign.com",
+                    ReceiverName = g.First().Receiver != null
+                        ? $"{g.First().Receiver.FirstName} {g.First().Receiver.LastName}"
+                        : "Unknown",
+                    ReceiverEmail = g.First().Receiver?.Email ?? string.Empty,
                     IsRead = g.Any(m => m.IsRead),
                     CreatedOn = g.Min(m => m.CreatedOn),
                     Response = g.FirstOrDefault(m => !string.IsNullOrEmpty(m.Response))?.Response,
@@ -165,8 +167,10 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                     ? $"{message.Sender.FirstName} {message.Sender.LastName}"
                     : "Unknown",
                 SenderEmail = message.Sender?.Email ?? string.Empty,
-                ReceiverName = "Admin Team",
-                ReceiverEmail = "support@furnituregardendesign.com",
+                ReceiverName = message.Receiver != null
+                    ? $"{message.Receiver.FirstName} {message.Receiver.LastName}"
+                    : "Unknown",
+                ReceiverEmail = message.Receiver?.Email ?? string.Empty,
                 IsRead = anyCopyRead,
                 CreatedOn = earliestDate,
                 Response = respondedCopy?.Response,  
