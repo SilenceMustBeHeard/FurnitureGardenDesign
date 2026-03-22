@@ -60,10 +60,7 @@
             <div class="col-xl-7 col-lg-6">
                 <div class="h-100 text-light">
 
-
-
-                   
-                    @*  tab  navigation *@
+                    @* Tab navigation *@
                     <ul class="nav nav-tabs mb-3 border-bottom-0" id="inboxTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active bg-transparent text-light border-0 border-bottom border-2"
@@ -100,11 +97,28 @@
                                 }
                             </button>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link bg-transparent text-light border-0 border-bottom border-2"
+                                    id="contact-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#contact"
+                                    type="button"
+                                    role="tab">
+                                <i class="bi bi-chat-dots me-2"></i>Contact Messages
+                                @{
+                                    var unreadContactCount = Model.ContactMessages?.Count(x => !x.IsRead) ?? 0;
+                                }
+                                @if (unreadContactCount > 0)
+                                {
+                                    <span class="badge bg-warning text-dark ms-2">@unreadContactCount</span>
+                                }
+                            </button>
+                        </li>
                     </ul>
-                    
-                 
-                    @*   tab content *@
+
+                    @* Tab content *@
                     <div class="tab-content" id="inboxTabsContent">
+
                         <!-- Design Messages Tab -->
                         <div class="tab-pane fade show active" id="design" role="tabpanel">
                             @if (Model.Inbox == null || !Model.Inbox.Any())
@@ -127,7 +141,7 @@
                             }
                         </div>
 
-                        @* System message tab *@
+                        <!-- System Messages Tab -->
                         <div class="tab-pane fade" id="system" role="tabpanel">
                             @if (Model.SystemInbox == null || !Model.SystemInbox.Any())
                             {
@@ -148,6 +162,28 @@
                                 </div>
                             }
                         </div>
+
+                        <!-- Contact Messages Tab -->
+                        <div class="tab-pane fade" id="contact" role="tabpanel">
+                            @if (Model.ContactMessages == null || !Model.ContactMessages.Any())
+                            {
+                                <div class="text-center py-5">
+                                    <i class="bi bi-chat-dots opacity-50 fs-1"></i>
+                                    <p class="mt-3 mb-0 opacity-75">
+                                        No contact messages from customers
+                                    </p>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="d-flex flex-column gap-3" style="max-height: 500px; overflow-y: auto; padding-right: 10px;">
+                                    @foreach (var message in Model.ContactMessages)
+                                    {
+                                        @await Html.PartialAsync("_ContactInboxItem", message)
+                                    }
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
@@ -155,5 +191,3 @@
     </div>
 </div>
 
-
-}

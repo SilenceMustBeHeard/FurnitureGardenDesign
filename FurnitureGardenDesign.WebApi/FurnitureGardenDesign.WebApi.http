@@ -1,6 +1,0 @@
-@FurnitureGardenDesign.WebApi_HostAddress = http://localhost:5052
-
-GET {{FurnitureGardenDesign.WebApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -2,6 +2,8 @@
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Services.Core.Manager.Interfaces;
+using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,23 +14,25 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers
     [Authorize(Roles = "Manager")]
     public class ManagerProfileController : Controller
     {
+
         private readonly IProfileService _profileService;
         private readonly UserManager<AppUser> _userManager;
         private readonly IInboxMessageService _inboxMessageService;
         private readonly ISystemInboxMessageService _systemInboxMessageService;
-
-
+        private readonly IManagerContactMessageService _contactMessageService;  // Add this
 
         public ManagerProfileController(
             ISystemInboxMessageService systemInboxMessageService,
             IProfileService profileService,
             UserManager<AppUser> userManager,
-            IInboxMessageService inboxMessageService)
+            IInboxMessageService inboxMessageService,
+            IManagerContactMessageService contactMessageService) 
         {
-         _systemInboxMessageService = systemInboxMessageService;
+            _systemInboxMessageService = systemInboxMessageService;
             _profileService = profileService;
             _userManager = userManager;
             _inboxMessageService = inboxMessageService;
+            _contactMessageService = contactMessageService; 
         }
 
         [HttpGet]
@@ -39,10 +43,16 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers
             {
                 TempData["Error"] = "You must be logged in to perform this action.";
                 return RedirectToAction("Login", "Account");
-
             }
 
             var model = await _profileService.GetProfileAsync(user.Id);
+
+        
+            var contactMessages = await _contactMessageService.GetAdminMessagesAsync(user.Id);
+
+         
+            model.ContactMessages = contactMessages ?? new List<ContactMessageDetailsViewModel>();
+
             return View(model);
         }
 
