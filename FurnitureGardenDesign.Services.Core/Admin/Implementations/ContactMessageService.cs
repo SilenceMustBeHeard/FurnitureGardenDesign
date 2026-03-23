@@ -50,28 +50,43 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
                 .ToListAsync();
         }
 
-        public async Task RespondToMessageAsync(Guid messageId, string response, string adminId)
+        public async Task RespondToConversationAsync(Guid messageId, string response, string adminId)
         {
-            var message = await _messageRepository
+          
+            var originalMessage = await _messageRepository
+                .GetAllAttached()
+                .Include(m => m.Sender)
                 .FirstOrDefaultAsync(m => m.Id == messageId)
                 ?? throw new ArgumentException("Message not found");
 
+           
+            var allCopies = await _messageRepository
+                .GetAllAttached()
+                .Where(m => m.SenderId == originalMessage.SenderId
+                    && m.Subject == originalMessage.Subject
+                    && m.Message == originalMessage.Message)
+                .ToListAsync();
 
-            if (!string.IsNullOrEmpty(message.Response))
+         
+            if (allCopies.Any(c => !string.IsNullOrEmpty(c.Response)))
             {
                 throw new InvalidOperationException("This message has already been responded to.");
             }
 
-            message.Response = response;
-            message.RespondedAt = DateTime.UtcNow;
-            message.RespondedById = adminId;
-            message.IsReadByAdmin = true;
+          
+            foreach (var copy in allCopies)
+            {
+                copy.Response = response;
+                copy.RespondedAt = DateTime.UtcNow;
+                copy.RespondedById = adminId;
+                copy.IsReadByAdmin = true;  
 
-            await _messageRepository.UpdateAsync(message);
+                await _messageRepository.UpdateAsync(copy);
+            }
         }
 
 
-        public async Task<ContactMessageDetailsViewModel?> GetMessageDetailsAsync(Guid messageId, string userId)
+        public async Task<ContactMessageDetailsViewModel?> GetMessageDetailsAsync(Guid messageId, string managerId)
         {
             var message = await _messageRepository
                 .GetAllAttached()
@@ -79,24 +94,18 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
                 .Include(m => m.Receiver)
                 .Include(m => m.RespondedBy)
                 .FirstOrDefaultAsync(m => m.Id == messageId
-                    && (m.SenderId == userId || m.ReceiverId == userId));
+                    && (m.SenderId == managerId || m.ReceiverId == managerId));
 
             if (message == null) return null;
 
-        
-            if (message.ReceiverId == userId && !message.IsReadByAdmin)
+         
+            if (message.ReceiverId == managerId && !message.IsReadByAdmin)
             {
                 message.IsReadByAdmin = true;
                 await _messageRepository.UpdateAsync(message);
             }
 
-            
-            if (message.SenderId == userId && !string.IsNullOrEmpty(message.Response) && !message.IsRead)
-            {
-                message.IsRead = true;
-                await _messageRepository.UpdateAsync(message);
-            }
-
+           
             return new ContactMessageDetailsViewModel
             {
                 Id = message.Id,
@@ -109,7 +118,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
                 IsRead = message.IsRead,
                 IsReadByAdmin = message.IsReadByAdmin,
                 CreatedOn = message.CreatedOn,
-                Response = message.Response,
+                Response = message.Response,  
                 RespondedAt = message.RespondedAt,
                 RespondedByName = message.RespondedBy?.FullName
             };

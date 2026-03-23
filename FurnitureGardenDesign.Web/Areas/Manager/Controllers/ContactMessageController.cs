@@ -50,8 +50,8 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers
         [HttpGet]
         public async Task<IActionResult> Respond(Guid id)
         {
-            var adminId = _userManager.GetUserId(User);
-            var message = await _contactMessageService.GetMessageDetailsAsync(id, adminId);
+            var managerId = _userManager.GetUserId(User);  
+            var message = await _contactMessageService.GetMessageDetailsAsync(id, managerId);
 
             if (message == null)
             {
@@ -59,7 +59,7 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers
                 return NotFound();
             }
 
-           
+            
             if (!string.IsNullOrEmpty(message.Response))
             {
                 TempData["Error"] = "This message has already been responded to.";
@@ -90,20 +90,17 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers
 
             var adminId = _userManager.GetUserId(User);
 
-         
-            var existingMessage = await _contactMessageService.GetMessageDetailsAsync(model.Id, adminId);
-            if (existingMessage != null && !string.IsNullOrEmpty(existingMessage.Response))
+            try
             {
-                TempData["Error"] = "This message has already been responded to.";
+                await _contactMessageService.RespondToConversationAsync(model.Id, model.Response, adminId);
+                TempData["Success"] = "Response sent successfully!";
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Error"] = ex.Message;
                 return RedirectToAction(nameof(Details), new { id = model.Id });
             }
 
-            await _contactMessageService.RespondToMessageAsync(
-                model.Id,
-                model.Response,
-                adminId);
-
-            TempData["Success"] = "Response sent successfully!";
             return RedirectToAction(nameof(Details), new { id = model.Id });
         }
 

@@ -67,7 +67,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            // Check if already responded
+           
             if (!string.IsNullOrEmpty(message.Response))
             {
                 TempData["Error"] = "This message has already been responded to.";
@@ -98,20 +98,17 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers
 
             var adminId = _userManager.GetUserId(User);
 
-           
-            var existingMessage = await _contactMessageService.GetMessageDetailsAsync(model.Id, adminId);
-            if (existingMessage != null && !string.IsNullOrEmpty(existingMessage.Response))
+            try
             {
-                TempData["Error"] = "This message has already been responded to.";
+                await _contactMessageService.RespondToConversationAsync(model.Id, model.Response, adminId);
+                TempData["Success"] = "Response sent successfully!";
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Error"] = ex.Message;
                 return RedirectToAction(nameof(Details), new { id = model.Id });
             }
 
-            await _contactMessageService.RespondToMessageAsync(
-                model.Id,
-                model.Response,
-                adminId);
-
-            TempData["Success"] = "Response sent successfully!";
             return RedirectToAction(nameof(Details), new { id = model.Id });
         }
 

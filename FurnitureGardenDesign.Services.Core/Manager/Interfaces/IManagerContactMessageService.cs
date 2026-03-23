@@ -10,7 +10,7 @@ namespace FurnitureGardenDesign.Services.Core.Manager.Interfaces
     {
         Task<List<ContactMessageDetailsViewModel>> GetAdminMessagesAsync(string managerId);
         Task<ContactMessageDetailsViewModel?> GetMessageDetailsAsync(Guid messageId, string managerId);
-        Task RespondToMessageAsync(Guid messageId, string response, string managerId);
+        Task RespondToConversationAsync(Guid messageId, string response, string adminId);
         Task MarkMessageAsReadAsync(Guid messageId, string managerId);
         Task<int> GetUnreadCountAsync(string managerId);
     }

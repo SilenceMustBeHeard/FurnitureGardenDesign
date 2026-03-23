@@ -40,17 +40,17 @@ namespace FurnitureGardenDesign.Services.Tests
         [SetUp]
         public void SetUp()
         {
-           _contactMessageRepositoryMock = new Mock<IContactMessageRepository>(MockBehavior.Strict);
+            _contactMessageRepositoryMock = new Mock<IContactMessageRepository>(MockBehavior.Strict);
             _messageRepositoryMock = new Mock<IInboxMessageRepository>(MockBehavior.Strict);
             _systemMessageRepositoryMock = new Mock<ISystemInboxMessageRepository>(MockBehavior.Strict);
             _userRepositoryMock = new Mock<IAppUserRepository>(MockBehavior.Strict);
 
-          
+
             var store = new Mock<IUserStore<AppUser>>();
             _userManagerMock = new Mock<UserManager<AppUser>>(
                 store.Object, null, null, null, null, null, null, null, null);
 
-          
+
             var roleStore = new Mock<IRoleStore<IdentityRole>>();
             _roleManagerMock = new Mock<RoleManager<IdentityRole>>(
                 roleStore.Object, null, null, null, null);
@@ -152,23 +152,23 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetUserMessagesAsync_ReturnsMessagesForUser_OrderedByCreatedOnDesc()
         {
-          
+
             var mockQueryable = _testMessages.BuildMockDbSet<InboxMessage>(); // FIXED
             _messageRepositoryMock
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-         
+
             var result = await _inboxMessageService.GetUserMessagesAsync(_testUserId);
 
-          
+
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count, Is.EqualTo(2)); // Only messages for _testUserId
 
-            
+
             Assert.That(result[0].CreatedOn, Is.GreaterThan(result[1].CreatedOn));
 
-          
+
             var firstMessage = result[0];
             Assert.That(firstMessage.Id, Is.EqualTo(_testMessageId));
             Assert.That(firstMessage.DesignVariantId, Is.EqualTo(_testDesignVariantId));
@@ -187,7 +187,7 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetUserMessagesAsync_ExcludesMessagesWithNullDesignVariant()
         {
-           
+
             var messageWithNullDesign = new InboxMessage
             {
                 Id = Guid.NewGuid(),
@@ -204,7 +204,7 @@ namespace FurnitureGardenDesign.Services.Tests
 
             var result = await _inboxMessageService.GetUserMessagesAsync(_testUserId);
 
-            
+
             Assert.That(result.Count, Is.EqualTo(2)); // Should exclude the one with null DesignVariant
             _messageRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
@@ -212,17 +212,17 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetUserMessagesAsync_ExcludesMessagesWithDeletedDesignVariant()
         {
-            
+
             _testDesignVariant.IsDeleted = true;
             var mockQueryable = _testMessages.BuildMockDbSet<InboxMessage>(); // FIXED
             _messageRepositoryMock
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-          
+
             var result = await _inboxMessageService.GetUserMessagesAsync(_testUserId);
 
-           
+
             Assert.That(result, Is.Empty);
             _messageRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
@@ -230,16 +230,16 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetUserMessagesAsync_ReturnsEmptyList_WhenNoMessagesForUser()
         {
-            
-            var mockQueryable = _testMessages.BuildMockDbSet<InboxMessage>(); 
+
+            var mockQueryable = _testMessages.BuildMockDbSet<InboxMessage>();
             _messageRepositoryMock
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-            
+
             var result = await _inboxMessageService.GetUserMessagesAsync("non-existent-user");
 
-           
+
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.Empty);
             _messageRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
@@ -252,7 +252,7 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task MarkMessageAsReadAsync_MarksMessageAsRead_WhenMessageExists()
         {
-           
+
             _testMessage.IsRead = false;
 
             _messageRepositoryMock
@@ -263,10 +263,10 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(r => r.UpdateAsync(It.IsAny<InboxMessage>()))
                 .ReturnsAsync(true);
 
-          
+
             await _inboxMessageService.MarkMessageAsReadAsync(_testMessageId, _testUserId);
 
-          
+
             Assert.That(_testMessage.IsRead, Is.True);
             _messageRepositoryMock.Verify(r => r.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<InboxMessage, bool>>>()), Times.Once);
             _messageRepositoryMock.Verify(r => r.UpdateAsync(_testMessage), Times.Once);
@@ -275,15 +275,15 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task MarkMessageAsReadAsync_DoesNothing_WhenMessageDoesNotExist()
         {
-           
+
             _messageRepositoryMock
                 .Setup(r => r.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<InboxMessage, bool>>>()))
                 .ReturnsAsync((InboxMessage)null);
 
-          
+
             await _inboxMessageService.MarkMessageAsReadAsync(_testMessageId, _testUserId);
 
-           
+
             _messageRepositoryMock.Verify(r => r.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<InboxMessage, bool>>>()), Times.Once);
             _messageRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<InboxMessage>()), Times.Never);
         }
@@ -291,15 +291,15 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task MarkMessageAsReadAsync_DoesNothing_WhenMessageBelongsToDifferentUser()
         {
-          
+
             _messageRepositoryMock
                 .Setup(r => r.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<InboxMessage, bool>>>()))
-                .ReturnsAsync((InboxMessage)null); 
+                .ReturnsAsync((InboxMessage)null);
 
-            
+
             await _inboxMessageService.MarkMessageAsReadAsync(_testMessageId, "different-user");
 
-           
+
             _messageRepositoryMock.Verify(r => r.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<InboxMessage, bool>>>()), Times.Once);
             _messageRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<InboxMessage>()), Times.Never);
         }
@@ -311,7 +311,7 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetUnreadCountAsync_ReturnsSumOfInboxAndSystemUnreadMessages()
         {
-           
+
             var inboxMessages = new List<InboxMessage>
             {
                 new InboxMessage { ReceiverId = _testUserId, IsRead = false },
@@ -336,10 +336,10 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(r => r.GetAllAttached())
                 .Returns(systemMock.Object);
 
-          
+
             var result = await _inboxMessageService.GetUnreadCountAsync(_testUserId);
 
-            
+
             Assert.That(result, Is.EqualTo(3)); // 2 inbox + 1 system = 3
             _messageRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
             _systemMessageRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
@@ -348,7 +348,7 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetUnreadCountAsync_ReturnsZero_WhenNoUnreadMessages()
         {
-            
+
             var inboxMessages = new List<InboxMessage>
             {
                 new InboxMessage { ReceiverId = _testUserId, IsRead = true }
@@ -370,17 +370,17 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(r => r.GetAllAttached())
                 .Returns(systemMock.Object);
 
-            
+
             var result = await _inboxMessageService.GetUnreadCountAsync(_testUserId);
 
-            
+
             Assert.That(result, Is.EqualTo(0));
         }
 
         [Test]
         public async Task GetUnreadCountAsync_ReturnsZero_WhenNoMessagesAtAll()
         {
-           
+
             var emptyInbox = new List<InboxMessage>().BuildMockDbSet<InboxMessage>(); // FIXED
             var emptySystem = new List<SystemInboxMessage>().BuildMockDbSet<SystemInboxMessage>(); // FIXED
 
@@ -392,10 +392,10 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(r => r.GetAllAttached())
                 .Returns(emptySystem.Object);
 
-          
+
             var result = await _inboxMessageService.GetUnreadCountAsync(_testUserId);
 
-           
+
             Assert.That(result, Is.EqualTo(0));
         }
 
@@ -406,7 +406,7 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetMessageDetailsAsync_ReturnsMessageDetails_AndMarksAsRead()
         {
-           
+
             var messages = new List<InboxMessage> { _testMessage };
             var mockQueryable = messages.BuildMockDbSet<InboxMessage>(); // FIXED
 
@@ -418,10 +418,10 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(r => r.UpdateAsync(It.IsAny<InboxMessage>()))
                 .ReturnsAsync(true);
 
-          
+
             var result = await _inboxMessageService.GetMessageDetailsAsync(_testMessageId, _testUserId);
 
-          
+
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(_testMessageId));
             Assert.That(result.DesignVariantId, Is.EqualTo(_testDesignVariantId));
@@ -440,7 +440,7 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetMessageDetailsAsync_ReturnsNull_WhenMessageDoesNotExist()
         {
-           
+
             var messages = new List<InboxMessage>();
             var mockQueryable = messages.BuildMockDbSet<InboxMessage>(); // FIXED
 
@@ -448,10 +448,10 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-         
+
             var result = await _inboxMessageService.GetMessageDetailsAsync(_testMessageId, _testUserId);
 
-           
+
             Assert.That(result, Is.Null);
             _messageRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<InboxMessage>()), Times.Never);
         }
@@ -459,7 +459,7 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetMessageDetailsAsync_ReturnsNull_WhenMessageBelongsToDifferentUser()
         {
-       
+
             var messages = new List<InboxMessage> { _testMessage };
             var mockQueryable = messages.BuildMockDbSet<InboxMessage>(); // FIXED
 
@@ -467,10 +467,10 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-            
+
             var result = await _inboxMessageService.GetMessageDetailsAsync(_testMessageId, "different-user");
 
-          
+
             Assert.That(result, Is.Null);
             _messageRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<InboxMessage>()), Times.Never);
         }
@@ -486,10 +486,10 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-         
+
             var result = await _inboxMessageService.GetMessageDetailsAsync(_testMessageId, _testUserId);
 
-         
+
             Assert.That(result, Is.Null);
             _messageRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<InboxMessage>()), Times.Never);
         }
@@ -501,11 +501,11 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task ApproveDesignAsync_ApprovesDesign_AndNotifiesAllAdminsAndManagers()
         {
-          
+
             _testDesignVariant.IsApproved = false;
 
             var messages = new List<InboxMessage> { _testMessage };
-            var mockQueryable = messages.BuildMockDbSet<InboxMessage>(); 
+            var mockQueryable = messages.BuildMockDbSet<InboxMessage>();
 
             _messageRepositoryMock
                 .Setup(r => r.GetAllAttached())
@@ -513,18 +513,18 @@ namespace FurnitureGardenDesign.Services.Tests
 
             _messageRepositoryMock
                 .Setup(r => r.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<InboxMessage, bool>>>()))
-                .ReturnsAsync(_testMessage); 
+                .ReturnsAsync(_testMessage);
 
             _messageRepositoryMock
                 .Setup(r => r.AddAsync(It.IsAny<InboxMessage>()))
                 .Returns(Task.CompletedTask);
 
-            var usersMock = _testUsers.BuildMockDbSet<AppUser>(); 
+            var usersMock = _testUsers.BuildMockDbSet<AppUser>();
             _userRepositoryMock
                 .Setup(r => r.GetAllAttached())
                 .Returns(usersMock.Object);
 
-          
+
             _userManagerMock
                 .Setup(um => um.GetRolesAsync(It.Is<AppUser>(u => u.Id == _testAdminId)))
                 .ReturnsAsync(new List<string> { "Admin" });
@@ -541,14 +541,14 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(um => um.GetRolesAsync(It.Is<AppUser>(u => u.Id == "other-user")))
                 .ReturnsAsync(new List<string> { "User" });
 
-          
+
             var result = await _inboxMessageService.ApproveDesignAsync(_testMessageId, _testUserId);
 
-          
+
             Assert.That(result, Is.Not.Null);
             Assert.That(_testDesignVariant.IsApproved, Is.True);
 
-           
+
             _messageRepositoryMock.Verify(r => r.AddAsync(It.Is<InboxMessage>(m =>
                 m.Type == InboxMessageType.DesignApproved &&
                 m.ReceiverId == _testSenderId)), Times.Once);
@@ -561,7 +561,7 @@ namespace FurnitureGardenDesign.Services.Tests
                 m.Type == InboxMessageType.DesignApproved &&
                 m.ReceiverId == _testManagerId)), Times.Once);
 
-           
+
             _messageRepositoryMock.Verify(r => r.AddAsync(It.Is<InboxMessage>(m =>
                 m.ReceiverId == _testUserId)), Times.Never);
 
@@ -572,7 +572,7 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task ApproveDesignAsync_DoesNotApprove_WhenAlreadyApproved()
         {
-          
+
             _testDesignVariant.IsApproved = true;
 
             var messages = new List<InboxMessage> { _testMessage };
@@ -582,14 +582,14 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-          
+
             var result = await _inboxMessageService.ApproveDesignAsync(_testMessageId, _testUserId);
 
-            
-            Assert.That(result, Is.Not.Null);
-            Assert.That(_testDesignVariant.IsApproved, Is.True); 
 
-           
+            Assert.That(result, Is.Not.Null);
+            Assert.That(_testDesignVariant.IsApproved, Is.True);
+
+
             _messageRepositoryMock.Verify(r => r.AddAsync(It.IsAny<InboxMessage>()), Times.Never);
             _userRepositoryMock.Verify(r => r.GetAllAttached(), Times.Never);
         }
@@ -597,7 +597,7 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task ApproveDesignAsync_ReturnsNull_WhenMessageDoesNotExist()
         {
-           
+
             var messages = new List<InboxMessage>();
             var mockQueryable = messages.BuildMockDbSet<InboxMessage>(); // FIXED
 
@@ -605,10 +605,10 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-           
+
             var result = await _inboxMessageService.ApproveDesignAsync(_testMessageId, _testUserId);
 
-           
+
             Assert.That(result, Is.Null);
             _messageRepositoryMock.Verify(r => r.AddAsync(It.IsAny<InboxMessage>()), Times.Never);
         }
@@ -616,7 +616,7 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task ApproveDesignAsync_ReturnsNull_WhenDesignVariantIsNull()
         {
-           
+
             _testMessage.DesignVariant = null;
             var messages = new List<InboxMessage> { _testMessage };
             var mockQueryable = messages.BuildMockDbSet<InboxMessage>(); // FIXED
@@ -625,15 +625,15 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-           
+
             var result = await _inboxMessageService.ApproveDesignAsync(_testMessageId, _testUserId);
 
-           
+
             Assert.That(result, Is.Null);
             _messageRepositoryMock.Verify(r => r.AddAsync(It.IsAny<InboxMessage>()), Times.Never);
         }
 
-       
+
 
         #endregion
 
@@ -642,7 +642,7 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetAdminMessagesAsync_ReturnsMessagesForAdmin_WithAllDetails()
         {
-           
+
             var adminMessages = _testMessages.Where(m => m.ReceiverId == _testAdminId).ToList();
             var mockQueryable = _testMessages.BuildMockDbSet<InboxMessage>();
 
@@ -650,10 +650,10 @@ namespace FurnitureGardenDesign.Services.Tests
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-            
+
             var result = await _inboxMessageService.GetAdminMessagesAsync(_testAdminId);
 
-          
+
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count, Is.EqualTo(1));
 
@@ -669,17 +669,17 @@ namespace FurnitureGardenDesign.Services.Tests
         [Test]
         public async Task GetAdminMessagesAsync_ReturnsEmptyList_WhenNoMessagesForAdmin()
         {
-           
-            var mockQueryable = _testMessages.BuildMockDbSet<InboxMessage>(); 
+
+            var mockQueryable = _testMessages.BuildMockDbSet<InboxMessage>();
 
             _messageRepositoryMock
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-           
+
             var result = await _inboxMessageService.GetAdminMessagesAsync("non-existent-admin");
 
-           
+
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.Empty);
             _messageRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
@@ -689,21 +689,20 @@ namespace FurnitureGardenDesign.Services.Tests
 
         #region Constructor Tests
 
-       
+
 
         [Test]
         public void Constructor_WithValidDependencies_CreatesInstance()
         {
-            
-            var service = new InboxMessageService(
+
+          var service = new InboxMessageService(
                 _messageRepositoryMock.Object,
+                _contactMessageRepositoryMock.Object,
                 _systemMessageRepositoryMock.Object,
                 _userManagerMock.Object,
                 _userRepositoryMock.Object,
-                _roleManagerMock.Object,
-                _contactMessageRepositoryMock.Object);
+                _roleManagerMock.Object);
 
-           
             Assert.That(service, Is.Not.Null);
         }
 

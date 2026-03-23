@@ -24,9 +24,9 @@ namespace FurnitureGardenDesign.Services.Core.Manager.Implementations
             return await _contactMessageService.GetMessageDetailsAsync(messageId, managerId);
         }
 
-        public async Task RespondToMessageAsync(Guid messageId, string response, string managerId)
+      public async Task RespondToConversationAsync(Guid messageId, string response, string adminId)
         {
-            await _contactMessageService.RespondToMessageAsync(messageId, response, managerId);
+            await _contactMessageService.RespondToConversationAsync(messageId, response, adminId);
         }
 
         public async Task MarkMessageAsReadAsync(Guid messageId, string managerId)
