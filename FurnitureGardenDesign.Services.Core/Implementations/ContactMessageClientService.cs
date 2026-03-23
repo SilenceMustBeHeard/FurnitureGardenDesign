@@ -3,6 +3,7 @@ using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Models.Messages;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
+
 using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -26,9 +27,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             _userRepository = userRepository;
         }
 
-
-        // sends a contact message to all admins/managers
-        // ensuring no duplicates for the same subject/message from the same sender
         public async Task SendContactMessageAsync(ContactMessageCreateViewModel model, ClaimsPrincipal userPrincipal)
         {
             var sender = await _userManager.GetUserAsync(userPrincipal)
@@ -48,7 +46,8 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                     Message = model.Message,
                     Type = InboxMessageType.ContactMessage,
                     CreatedOn = DateTime.UtcNow,
-                    IsRead = false
+                    IsRead = false,
+                    IsReadByAdmin = false
                 })
                 .ToList();
 
@@ -59,9 +58,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             }
         }
 
-
-        // retrieves all contact messages sent by the user that have a RESPONSE,
-        // grouped by subject/message
         public async Task<List<ContactMessageDetailsViewModel>> GetUserMessagesAsync(string userId)
         {
             var messages = await _messageRepository
@@ -84,6 +80,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                     ReceiverName = "Admin Team",
                     ReceiverEmail = "support@furnituregardendesign.com",
                     IsRead = g.All(m => m.IsRead),
+                    IsReadByAdmin = g.All(m => m.IsReadByAdmin),
                     CreatedOn = g.Min(m => m.CreatedOn),
                     Response = g.FirstOrDefault(m => !string.IsNullOrEmpty(m.Response))?.Response,
                     RespondedAt = g.FirstOrDefault(m => m.RespondedAt.HasValue)?.RespondedAt,
@@ -91,9 +88,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 })
                 .ToList();
         }
-
-        // retrieves the full conversation for a specific message
-        // marks it as read, and returns details
 
         public async Task<ContactMessageDetailsViewModel?> GetMessageDetailsAsync(Guid messageId, string userId)
         {
@@ -121,6 +115,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 ReceiverName = "Admin Team",
                 ReceiverEmail = "support@furnituregardendesign.com",
                 IsRead = conversation.All(m => m.IsRead),
+                IsReadByAdmin = conversation.All(m => m.IsReadByAdmin),
                 CreatedOn = conversation.Min(m => m.CreatedOn),
                 Response = respondedCopy?.Response,
                 RespondedAt = respondedCopy?.RespondedAt,
@@ -128,19 +123,18 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             };
         }
 
-        public async Task MarkMessageAsReadAsync(Guid messageId, string userId)
+        public async Task<int> GetUserUnreadCountAsync(string userId)
         {
-            var message = await _messageRepository
-                .FirstOrDefaultAsync(m => m.Id == messageId && m.ReceiverId == userId);
+            var messages = await _messageRepository
+                .GetAllAttached()
+                .Where(m => m.SenderId == userId && !string.IsNullOrEmpty(m.Response))
+                .ToListAsync();
 
-            if (message != null)
-            {
-                message.IsRead = true;
-                await _messageRepository.UpdateAsync(message);
-            }
+            return messages
+                .GroupBy(m => new { m.Subject, m.Message })
+                .Count(g => !g.All(m => m.IsRead));
         }
 
-        // Helper methods
         private async Task<HashSet<string>> GetAllAdminAndManagerIds()
         {
             var allUsers = await _userRepository.GetAllAttached().ToListAsync();
@@ -156,8 +150,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             return adminIds;
         }
 
-
-        // retrieves all existing recipients for the same sender and subject to prevent duplicates
         private async Task<HashSet<string>> GetExistingRecipients(string senderId, string subject)
         {
             var recipients = await _messageRepository
@@ -169,8 +161,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             return recipients.ToHashSet();
         }
 
-
-        // retrieves the full conversation for a specific message based on subject/message and sender
         private async Task<List<ContactMessage>> GetConversation(ContactMessage message, string userId)
         {
             return await _messageRepository
@@ -181,8 +171,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 .ToListAsync();
         }
 
-
-        // marks all messages in the conversation as read
         private async Task MarkConversationAsRead(List<ContactMessage> conversation)
         {
             var unreadMessages = conversation.Where(m => !m.IsRead).ToList();
@@ -191,6 +179,25 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 msg.IsRead = true;
                 await _messageRepository.UpdateAsync(msg);
             }
+        }
+
+
+
+
+
+
+
+        public async Task<int> GetUserUnreadResponsesCountAsync(string userId)
+        {
+            var messages = await _messageRepository
+                .GetAllAttached()
+                .Where(m => m.SenderId == userId && !string.IsNullOrEmpty(m.Response))
+                .ToListAsync();
+
+           
+            return messages
+                .GroupBy(m => new { m.Subject, m.Message })
+                .Count(g => !g.All(m => m.IsRead));
         }
     }
 }

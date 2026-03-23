@@ -22,8 +22,9 @@ namespace FurnitureGardenDesign.Web.ViewModels.User
             public string ReceiverName { get; set; } = null!;
             public string ReceiverEmail { get; set; } = null!;
 
-            // Status information
-            public bool IsRead { get; set; }
+        // Status information
+        public bool IsReadByAdmin { get; set; }
+        public bool IsRead { get; set; }
             public DateTime CreatedOn { get; set; }
 
             // Response info

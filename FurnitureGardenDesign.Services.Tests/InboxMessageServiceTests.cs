@@ -16,6 +16,7 @@ namespace FurnitureGardenDesign.Services.Tests
     {
         private Mock<IInboxMessageRepository> _messageRepositoryMock;
         private Mock<ISystemInboxMessageRepository> _systemMessageRepositoryMock;
+        private Mock<IContactMessageRepository> _contactMessageRepositoryMock;
         private Mock<IAppUserRepository> _userRepositoryMock;
         private Mock<UserManager<AppUser>> _userManagerMock;
         private Mock<RoleManager<IdentityRole>> _roleManagerMock;
@@ -23,12 +24,14 @@ namespace FurnitureGardenDesign.Services.Tests
 
         private string _testUserId;
         private string _testAdminId;
+
         private string _testManagerId;
         private string _testSenderId;
         private Guid _testMessageId;
         private Guid _testDesignVariantId;
         private Guid _testOrderId;
         private InboxMessage _testMessage;
+        private ContactMessage _testContactMessage;
         private DesignVariant _testDesignVariant;
         private Order _testOrder;
         private List<InboxMessage> _testMessages;
@@ -37,6 +40,7 @@ namespace FurnitureGardenDesign.Services.Tests
         [SetUp]
         public void SetUp()
         {
+           _contactMessageRepositoryMock = new Mock<IContactMessageRepository>(MockBehavior.Strict);
             _messageRepositoryMock = new Mock<IInboxMessageRepository>(MockBehavior.Strict);
             _systemMessageRepositoryMock = new Mock<ISystemInboxMessageRepository>(MockBehavior.Strict);
             _userRepositoryMock = new Mock<IAppUserRepository>(MockBehavior.Strict);
@@ -53,6 +57,7 @@ namespace FurnitureGardenDesign.Services.Tests
 
             _inboxMessageService = new InboxMessageService(
                 _messageRepositoryMock.Object,
+                _contactMessageRepositoryMock.Object,
                 _systemMessageRepositoryMock.Object,
                 _userManagerMock.Object,
                 _userRepositoryMock.Object,
@@ -695,7 +700,8 @@ namespace FurnitureGardenDesign.Services.Tests
                 _systemMessageRepositoryMock.Object,
                 _userManagerMock.Object,
                 _userRepositoryMock.Object,
-                _roleManagerMock.Object);
+                _roleManagerMock.Object,
+                _contactMessageRepositoryMock.Object);
 
            
             Assert.That(service, Is.Not.Null);

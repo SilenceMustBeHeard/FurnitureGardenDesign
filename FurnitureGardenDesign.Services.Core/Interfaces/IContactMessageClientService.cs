@@ -10,5 +10,6 @@ namespace FurnitureGardenDesign.Services.Core.Interfaces
         Task SendContactMessageAsync(ContactMessageCreateViewModel model, ClaimsPrincipal userPrincipal);
         Task<List<ContactMessageDetailsViewModel>> GetUserMessagesAsync(string userId);
         Task<ContactMessageDetailsViewModel?> GetMessageDetailsAsync(Guid messageId, string userId);
+        Task<int> GetUserUnreadResponsesCountAsync(string userId);
     }
 }

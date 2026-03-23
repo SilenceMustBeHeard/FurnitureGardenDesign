@@ -17,6 +17,7 @@ namespace FurnitureGardenDesign.Data.Models.Messages
         [MaxLength(5000, ErrorMessage = "Message cannot exceed 5000 characters.")]
         public string Message { get; set; } = null!;
 
+        public bool IsReadByAdmin { get; set; }
         public DateTime? RespondedAt { get; set; }
 
         [MaxLength(5000, ErrorMessage = "Response cannot exceed 5000 characters.")]

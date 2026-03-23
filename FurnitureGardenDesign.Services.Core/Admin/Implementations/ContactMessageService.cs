@@ -2,6 +2,7 @@
 using FurnitureGardenDesign.Data.Models.Messages;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
+
 using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +25,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
             _userManager = userManager;
         }
 
-        // retrieves all contact messages for the admin
-        // including sender and responder details, ordered by creation date
         public async Task<List<ContactMessageDetailsViewModel>> GetAdminMessagesAsync(string adminId)
         {
             return await _messageRepository
@@ -39,9 +38,10 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
                     Id = m.Id,
                     Subject = m.Subject,
                     Message = m.Message,
-                    SenderName = m.Sender!.FullName,
-                    SenderEmail = m.Sender.Email!,
+                    SenderName = m.Sender!.FullName ?? "Unknown",
+                    SenderEmail = m.Sender!.Email ?? string.Empty,
                     IsRead = m.IsRead,
+                    IsReadByAdmin = m.IsReadByAdmin,
                     CreatedOn = m.CreatedOn,
                     Response = m.Response,
                     RespondedAt = m.RespondedAt,
@@ -50,24 +50,27 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
                 .ToListAsync();
         }
 
-        // allows the admin to respond to a contact message
-        // updating the message with the response details
         public async Task RespondToMessageAsync(Guid messageId, string response, string adminId)
         {
             var message = await _messageRepository
                 .FirstOrDefaultAsync(m => m.Id == messageId)
                 ?? throw new ArgumentException("Message not found");
 
+
+            if (!string.IsNullOrEmpty(message.Response))
+            {
+                throw new InvalidOperationException("This message has already been responded to.");
+            }
+
             message.Response = response;
             message.RespondedAt = DateTime.UtcNow;
             message.RespondedById = adminId;
-            message.IsRead = false; 
+            message.IsReadByAdmin = true;
 
             await _messageRepository.UpdateAsync(message);
         }
 
 
-        // retrieves the details of a specific contact message for a user
         public async Task<ContactMessageDetailsViewModel?> GetMessageDetailsAsync(Guid messageId, string userId)
         {
             var message = await _messageRepository
@@ -80,8 +83,15 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
 
             if (message == null) return null;
 
-           
-            if (message.ReceiverId == userId && !message.IsRead)
+        
+            if (message.ReceiverId == userId && !message.IsReadByAdmin)
+            {
+                message.IsReadByAdmin = true;
+                await _messageRepository.UpdateAsync(message);
+            }
+
+            
+            if (message.SenderId == userId && !string.IsNullOrEmpty(message.Response) && !message.IsRead)
             {
                 message.IsRead = true;
                 await _messageRepository.UpdateAsync(message);
@@ -92,11 +102,12 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
                 Id = message.Id,
                 Subject = message.Subject,
                 Message = message.Message,
-                SenderName = message.Sender!.FullName,
-                SenderEmail = message.Sender!.Email!,
-                ReceiverName = message.Receiver!.FullName,
-                ReceiverEmail = message.Receiver!.Email!,
+                SenderName = message.Sender?.FullName ?? "Unknown",
+                SenderEmail = message.Sender?.Email ?? string.Empty,
+                ReceiverName = message.Receiver?.FullName ?? "Unknown",
+                ReceiverEmail = message.Receiver?.Email ?? string.Empty,
                 IsRead = message.IsRead,
+                IsReadByAdmin = message.IsReadByAdmin,
                 CreatedOn = message.CreatedOn,
                 Response = message.Response,
                 RespondedAt = message.RespondedAt,
@@ -105,16 +116,14 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
         }
 
 
-        // retrieves the count of unread messages for a specific user
         public async Task<int> GetUnreadCountAsync(string userId)
         {
+           
             return await _messageRepository
                 .GetAllAttached()
-                .CountAsync(m => m.ReceiverId == userId && !m.IsRead);
+                .CountAsync(m => m.ReceiverId == userId && !m.IsReadByAdmin);
         }
 
-        // retrieves all contact messages sent by the user
-        // ordered by creation date
         public async Task<List<ContactMessageDetailsViewModel>> GetUserMessagesAsync(string userId)
         {
             return await _messageRepository
@@ -128,19 +137,19 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
                     Id = m.Id,
                     Subject = m.Subject,
                     Message = m.Message,
-                    SenderName = m.Sender!.FullName,
-                    SenderEmail = m.Sender!.Email!,
-                    ReceiverName = m.Receiver!.FullName,
-                    ReceiverEmail = m.Receiver!.Email!,
+                    SenderName = m.Sender!.FullName ?? "Unknown",
+                    SenderEmail = m.Sender!.Email ?? string.Empty,
+                    ReceiverName = m.Receiver!.FullName ?? "Unknown",
+                    ReceiverEmail = m.Receiver!.Email ?? string.Empty,
                     IsRead = m.IsRead,
+                    IsReadByAdmin = m.IsReadByAdmin,
                     CreatedOn = m.CreatedOn,
                     Response = m.Response,
                     RespondedAt = m.RespondedAt
                 })
                 .ToListAsync();
         }
-
-        // allows the user to mark a specific message as read
+       
         public async Task MarkMessageAsReadAsync(Guid messageId, string userId)
         {
             var message = await _messageRepository
@@ -148,7 +157,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
 
             if (message != null)
             {
-                message.IsRead = true;
+                message.IsReadByAdmin = true;
                 await _messageRepository.UpdateAsync(message);
             }
         }

@@ -50,8 +50,8 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers
         [HttpGet]
         public async Task<IActionResult> Respond(Guid id)
         {
-            var managerId = _userManager.GetUserId(User);
-            var message = await _contactMessageService.GetMessageDetailsAsync(id, managerId);
+            var adminId = _userManager.GetUserId(User);
+            var message = await _contactMessageService.GetMessageDetailsAsync(id, adminId);
 
             if (message == null)
             {
@@ -59,7 +59,7 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers
                 return NotFound();
             }
 
-            // Check if already responded
+           
             if (!string.IsNullOrEmpty(message.Response))
             {
                 TempData["Error"] = "This message has already been responded to.";
@@ -88,12 +88,20 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers
                 return View(model);
             }
 
-            var managerId = _userManager.GetUserId(User);
+            var adminId = _userManager.GetUserId(User);
+
+         
+            var existingMessage = await _contactMessageService.GetMessageDetailsAsync(model.Id, adminId);
+            if (existingMessage != null && !string.IsNullOrEmpty(existingMessage.Response))
+            {
+                TempData["Error"] = "This message has already been responded to.";
+                return RedirectToAction(nameof(Details), new { id = model.Id });
+            }
 
             await _contactMessageService.RespondToMessageAsync(
                 model.Id,
                 model.Response,
-                managerId);
+                adminId);
 
             TempData["Success"] = "Response sent successfully!";
             return RedirectToAction(nameof(Details), new { id = model.Id });

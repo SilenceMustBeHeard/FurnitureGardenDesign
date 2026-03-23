@@ -19,6 +19,13 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
+        public IInboxMessageRepository Object1 { get; }
+        public ISystemInboxMessageRepository Object2 { get; }
+        public UserManager<AppUser> Object3 { get; }
+        public IAppUserRepository Object4 { get; }
+        public RoleManager<IdentityRole> Object5 { get; }
+        public IContactMessageRepository Object6 { get; }
+
         public InboxMessageService(
             IInboxMessageRepository messageRepository, 
           IContactMessageRepository contactMessageRepository,
@@ -35,11 +42,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             _roleManager = roleManager;
         }
 
-
-
-
-
-
+      
 
         public async Task<List<InboxMessageViewModel>> GetUserMessagesAsync(string userId)
         {
@@ -84,6 +87,18 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             await _messageRepository.UpdateAsync(message);
         }
 
+        public async Task<int> GetUserUnreadContactResponsesCountAsync(string userId)
+        {
+            var messages = await _contactMessageRepository
+                .GetAllAttached()
+                .Where(m => m.SenderId == userId && !string.IsNullOrEmpty(m.Response))
+                .ToListAsync();
+
+            return messages
+                .GroupBy(m => new { m.Subject, m.Message })
+                .Count(g => !g.All(m => m.IsRead));
+        }
+
         // gets the count of unread messages
         public async Task<int> GetUnreadCountAsync(string userId)
         {
@@ -102,6 +117,24 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                 .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
 
 
+
+            return inboxUnreadCount + systemUnreadCount + contactUnreadCount;
+        }
+
+        public async Task<int> GetUnreadCountForAdminAndManagerAsync(string userId)
+        {
+            var inboxUnreadCount = await _messageRepository
+                .GetAllAttached()
+                .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
+
+            var systemUnreadCount = await _systemMessageRepository
+                .GetAllAttached()
+                .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
+
+           
+            var contactUnreadCount = await _contactMessageRepository
+                .GetAllAttached()
+                .CountAsync(x => x.ReceiverId == userId && !x.IsReadByAdmin);
 
             return inboxUnreadCount + systemUnreadCount + contactUnreadCount;
         }
@@ -179,7 +212,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
                     recipientIds.Add(originalMessage.SenderId);
                 }
 
-                // 3. IMPORTANT: Find ALL admins and managers, not just the original sender!
+             
                 var allUsers = await _userRepository.GetAllAttached().ToListAsync();
 
                 foreach (var user in allUsers)

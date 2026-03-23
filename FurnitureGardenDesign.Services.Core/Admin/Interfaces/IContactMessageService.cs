@@ -12,7 +12,8 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Interfaces
 
         Task<List<ContactMessageDetailsViewModel>> GetAdminMessagesAsync(string adminId);
         Task RespondToMessageAsync(Guid messageId, string response, string adminId);
-       // Task CreateMessageAsync(ContactMessage message);
+        // Task CreateMessageAsync(ContactMessage message);
+     
         Task<List<ContactMessageDetailsViewModel>> GetUserMessagesAsync(string userId);
 
     }

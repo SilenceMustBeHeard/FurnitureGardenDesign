@@ -106,12 +106,12 @@
                                     role="tab">
                                 <i class="bi bi-chat-dots me-2"></i>Contact Messages
                                 @{
-                                    // Count messages that have a response AND are not yet read by the user
-                                    var unreadRespondedCount = Model.ContactMessages?.Count(x => !x.IsRead) ?? 0;
+                                   
+                                    var unreadContactCount = Model.ContactMessages?.Count(x => !x.IsRead) ?? 0;
                                 }
-                                @if (unreadRespondedCount > 0)
+                                @if (unreadContactCount > 0)
                                 {
-                                    <span class="badge bg-warning text-dark ms-2">@unreadRespondedCount</span>
+                                    <span class="badge bg-warning text-dark ms-2">@unreadContactCount</span>
                                 }
                             </button>
                         </li>
@@ -120,7 +120,7 @@
                     @* Tab content *@
                     <div class="tab-content" id="inboxTabsContent">
 
-                        @* Design Messages *@
+                    @*  Design message *@
                         <div class="tab-pane fade show active" id="design" role="tabpanel">
                             @if (Model.Inbox == null || !Model.Inbox.Any())
                             {
@@ -142,7 +142,7 @@
                             }
                         </div>
 
-                        @* System Messages *@
+                  @* System MEssage *@
                         <div class="tab-pane fade" id="system" role="tabpanel">
                             @if (Model.SystemInbox == null || !Model.SystemInbox.Any())
                             {
@@ -164,7 +164,7 @@
                             }
                         </div>
 
-                        @* Contact Messages - Only shows messages with responses *@
+                      @* Contact Message *@
                         <div class="tab-pane fade" id="contact" role="tabpanel">
                             @if (Model.ContactMessages == null || !Model.ContactMessages.Any())
                             {
@@ -197,3 +197,4 @@
         </div>
     </div>
 </div>
+
