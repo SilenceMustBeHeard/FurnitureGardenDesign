@@ -3,7 +3,6 @@ using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Models.Messages;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
-
 using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,17 +13,14 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
     public class ContactMessageClientService : IContactMessageClientService
     {
         private readonly IContactMessageRepository _messageRepository;
-        private readonly IAppUserRepository _userRepository;
         private readonly UserManager<AppUser> _userManager;
 
         public ContactMessageClientService(
             IContactMessageRepository messageRepository,
-            UserManager<AppUser> userManager,
-            IAppUserRepository userRepository)
+            UserManager<AppUser> userManager)
         {
             _messageRepository = messageRepository;
             _userManager = userManager;
-            _userRepository = userRepository;
         }
 
         public async Task SendContactMessageAsync(ContactMessageCreateViewModel model, ClaimsPrincipal userPrincipal)
@@ -32,61 +28,63 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             var sender = await _userManager.GetUserAsync(userPrincipal)
                 ?? throw new ArgumentException("You must be logged in to send a contact message.");
 
-            var adminIds = await GetAllAdminAndManagerIds();
-            var existingRecipients = await GetExistingRecipients(sender.Id, model.Subject);
+         
+            var adminUser = (await _userManager.GetUsersInRoleAsync("Admin")).FirstOrDefault()
+                ?? throw new InvalidOperationException("No admin user found in the system.");
 
-            var newMessages = adminIds
-                .Where(id => id != sender.Id && !existingRecipients.Contains(id))
-                .Select(id => new ContactMessage
+           
+            var existingMessage = await _messageRepository
+                .GetAllAttached()
+                .FirstOrDefaultAsync(m => m.SenderId == sender.Id
+                    && m.Subject == model.Subject
+                    && m.Message == model.Message
+                    && m.ReceiverId == adminUser.Id);
+
+            if (existingMessage == null)
+            {
+                var contactMessage = new ContactMessage
                 {
                     Id = Guid.NewGuid(),
                     SenderId = sender.Id,
-                    ReceiverId = id,
+                    ReceiverId = adminUser.Id,
                     Subject = model.Subject,
                     Message = model.Message,
                     Type = InboxMessageType.ContactMessage,
                     CreatedOn = DateTime.UtcNow,
                     IsRead = false,
                     IsReadByAdmin = false
-                })
-                .ToList();
+                };
 
-            if (newMessages.Any())
-            {
-                await _messageRepository.AddRangeAsync(newMessages);
+                await _messageRepository.AddAsync(contactMessage);
                 await _messageRepository.SaveChangesAsync();
             }
         }
 
         public async Task<List<ContactMessageDetailsViewModel>> GetUserMessagesAsync(string userId)
         {
-            var messages = await _messageRepository
+            return await _messageRepository
                 .GetAllAttached()
                 .Include(m => m.Sender)
                 .Include(m => m.RespondedBy)
                 .Where(m => m.SenderId == userId && !string.IsNullOrEmpty(m.Response))
                 .OrderByDescending(m => m.CreatedOn)
-                .ToListAsync();
-
-            return messages
-                .GroupBy(m => new { m.Subject, m.Message })
-                .Select(g => new ContactMessageDetailsViewModel
+                .Select(m => new ContactMessageDetailsViewModel
                 {
-                    Id = g.First().Id,
-                    Subject = g.Key.Subject,
-                    Message = g.Key.Message,
-                    SenderName = g.First().Sender?.FullName ?? "Unknown",
-                    SenderEmail = g.First().Sender?.Email ?? string.Empty,
-                    ReceiverName = "Admin Team",
-                    ReceiverEmail = "support@furnituregardendesign.com",
-                    IsRead = g.All(m => m.IsRead),
-                    IsReadByAdmin = g.All(m => m.IsReadByAdmin),
-                    CreatedOn = g.Min(m => m.CreatedOn),
-                    Response = g.FirstOrDefault(m => !string.IsNullOrEmpty(m.Response))?.Response,
-                    RespondedAt = g.FirstOrDefault(m => m.RespondedAt.HasValue)?.RespondedAt,
-                    RespondedByName = g.FirstOrDefault(m => m.RespondedBy != null)?.RespondedBy?.FullName
+                    Id = m.Id,
+                    Subject = m.Subject,
+                    Message = m.Message,
+                    SenderName = m.Sender!.FullName ?? "Unknown",
+                    SenderEmail = m.Sender!.Email ?? string.Empty,
+                    ReceiverName = "Admin",
+                    ReceiverEmail = "admin@furnituregarden.com",
+                    IsRead = m.IsRead,
+                    IsReadByAdmin = m.IsReadByAdmin,
+                    CreatedOn = m.CreatedOn,
+                    Response = m.Response,
+                    RespondedAt = m.RespondedAt,
+                    RespondedByName = m.RespondedBy!.FullName
                 })
-                .ToList();
+                .ToListAsync();
         }
 
         public async Task<ContactMessageDetailsViewModel?> GetMessageDetailsAsync(Guid messageId, string userId)
@@ -100,104 +98,38 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
 
             if (message == null) return null;
 
-            var conversation = await GetConversation(message, userId);
-            await MarkConversationAsRead(conversation);
-
-            var respondedCopy = conversation.FirstOrDefault(m => !string.IsNullOrEmpty(m.Response));
+       
+            if (!string.IsNullOrEmpty(message.Response) && !message.IsRead)
+            {
+                message.IsRead = true;
+                await _messageRepository.UpdateAsync(message);
+            }
 
             return new ContactMessageDetailsViewModel
             {
                 Id = message.Id,
                 Subject = message.Subject,
                 Message = message.Message,
-                SenderName = message.Sender?.FullName ?? "Unknown",
-                SenderEmail = message.Sender?.Email ?? string.Empty,
-                ReceiverName = "Admin Team",
-                ReceiverEmail = "support@furnituregardendesign.com",
-                IsRead = conversation.All(m => m.IsRead),
-                IsReadByAdmin = conversation.All(m => m.IsReadByAdmin),
-                CreatedOn = conversation.Min(m => m.CreatedOn),
-                Response = respondedCopy?.Response,
-                RespondedAt = respondedCopy?.RespondedAt,
-                RespondedByName = respondedCopy?.RespondedBy?.FullName
+                SenderName = message.Sender!.FullName ?? "Unknown",
+                SenderEmail = message.Sender!.Email ?? string.Empty,
+                ReceiverName = "Admin",
+                ReceiverEmail = "admin@furnituregarden.com",
+                IsRead = message.IsRead,
+                IsReadByAdmin = message.IsReadByAdmin,
+                CreatedOn = message.CreatedOn,
+                Response = message.Response,
+                RespondedAt = message.RespondedAt,
+                RespondedByName = message.RespondedBy?.FullName
             };
         }
 
-        public async Task<int> GetUserUnreadCountAsync(string userId)
-        {
-            var messages = await _messageRepository
-                .GetAllAttached()
-                .Where(m => m.SenderId == userId && !string.IsNullOrEmpty(m.Response))
-                .ToListAsync();
-
-            return messages
-                .GroupBy(m => new { m.Subject, m.Message })
-                .Count(g => !g.All(m => m.IsRead));
-        }
-
-        private async Task<HashSet<string>> GetAllAdminAndManagerIds()
-        {
-            var allUsers = await _userRepository.GetAllAttached().ToListAsync();
-            var adminIds = new HashSet<string>();
-
-            foreach (var user in allUsers)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                if (roles.Contains("Admin") || roles.Contains("Manager"))
-                    adminIds.Add(user.Id);
-            }
-
-            return adminIds;
-        }
-
-        private async Task<HashSet<string>> GetExistingRecipients(string senderId, string subject)
-        {
-            var recipients = await _messageRepository
-                .GetAllAttached()
-                .Where(m => m.SenderId == senderId && m.Subject == subject)
-                .Select(m => m.ReceiverId)
-                .ToListAsync();
-
-            return recipients.ToHashSet();
-        }
-
-        private async Task<List<ContactMessage>> GetConversation(ContactMessage message, string userId)
+        public async Task<int> GetUserUnreadResponsesCountAsync(string userId)
         {
             return await _messageRepository
                 .GetAllAttached()
-                .Where(m => m.SenderId == userId
-                    && m.Subject == message.Subject
-                    && m.Message == message.Message)
-                .ToListAsync();
-        }
-
-        private async Task MarkConversationAsRead(List<ContactMessage> conversation)
-        {
-            var unreadMessages = conversation.Where(m => !m.IsRead).ToList();
-            foreach (var msg in unreadMessages)
-            {
-                msg.IsRead = true;
-                await _messageRepository.UpdateAsync(msg);
-            }
-        }
-
-
-
-
-
-
-
-        public async Task<int> GetUserUnreadResponsesCountAsync(string userId)
-        {
-            var messages = await _messageRepository
-                .GetAllAttached()
-                .Where(m => m.SenderId == userId && !string.IsNullOrEmpty(m.Response))
-                .ToListAsync();
-
-           
-            return messages
-                .GroupBy(m => new { m.Subject, m.Message })
-                .Count(g => !g.All(m => m.IsRead));
+                .CountAsync(m => m.SenderId == userId
+                    && !string.IsNullOrEmpty(m.Response)
+                    && !m.IsRead);
         }
     }
 }

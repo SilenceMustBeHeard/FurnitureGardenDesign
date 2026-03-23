@@ -17,18 +17,16 @@ namespace FurnitureGardenDesign.Web.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IInboxMessageService _inboxMessageService;
         private readonly ISystemInboxMessageService _systemInboxMessageService;
-        private readonly IContactMessageService _contactMessageService;
-
-
+        private readonly IContactMessageClientService _contactMessageClientService; 
 
         public ProfileController(
-                IContactMessageService contactMessageService,
+            IContactMessageClientService contactMessageClientService, 
             ISystemInboxMessageService systemInboxMessageService,
             IProfileService profileService,
             UserManager<AppUser> userManager,
             IInboxMessageService inboxMessageService)
         {
-            _contactMessageService = contactMessageService;
+            _contactMessageClientService = contactMessageClientService; 
             _systemInboxMessageService = systemInboxMessageService;
             _profileService = profileService;
             _userManager = userManager;
@@ -49,7 +47,6 @@ namespace FurnitureGardenDesign.Web.Controllers
             var model = await _profileService.GetProfileAsync(user.Id);
             return View(model);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> MarkAsRead(Guid id)
@@ -110,7 +107,6 @@ namespace FurnitureGardenDesign.Web.Controllers
             return View(viewModel);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApproveDesign(Guid id)
@@ -133,8 +129,6 @@ namespace FurnitureGardenDesign.Web.Controllers
             TempData["Success"] = "Design approved successfully!";
             return RedirectToAction(nameof(MessageDetails), new { id });
         }
-
-
 
         [HttpGet]
         public async Task<IActionResult> SystemMessageDetails(Guid id)
@@ -167,7 +161,8 @@ namespace FurnitureGardenDesign.Web.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var viewModel = await _contactMessageService.GetMessageDetailsAsync(id, user.Id);
+           
+            var viewModel = await _contactMessageClientService.GetMessageDetailsAsync(id, user.Id);
 
             if (viewModel == null)
             {
@@ -187,7 +182,6 @@ namespace FurnitureGardenDesign.Web.Controllers
                 TempData["Error"] = "You must be logged in to perform this action.";
                 return RedirectToAction("Login", "Account");
             }
-
 
             var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
             var isManager = await _userManager.IsInRoleAsync(user, "Manager");

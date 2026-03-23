@@ -60,7 +60,7 @@
             <div class="col-xl-7 col-lg-6">
                 <div class="h-100 text-light">
 
-                    @* Tab navigation *@
+                    @* Tab navigation - ONLY Design and System Messages *@
                     <ul class="nav nav-tabs mb-3 border-bottom-0" id="inboxTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active bg-transparent text-light border-0 border-bottom border-2"
@@ -97,30 +97,12 @@
                                 }
                             </button>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link bg-transparent text-light border-0 border-bottom border-2"
-                                    id="contact-tab"
-                                    data-bs-toggle="tab"
-                                    data-bs-target="#contact"
-                                    type="button"
-                                    role="tab">
-                                <i class="bi bi-chat-dots me-2"></i>Contact Messages
-                                @{
-                                    
-                                    var unreadContactCount = Model.ContactMessages?.Count(x => !x.IsReadByAdmin) ?? 0;
-                                }
-                                @if (unreadContactCount > 0)
-                                {
-                                    <span class="badge bg-warning text-dark ms-2">@unreadContactCount</span>
-                                }
-                            </button>
-                        </li>
                     </ul>
 
                     @* Tab content *@
                     <div class="tab-content" id="inboxTabsContent">
 
-                        @* Design Messages *@
+                        @* Design Messages Tab *@
                         <div class="tab-pane fade show active" id="design" role="tabpanel">
                             @if (Model.Inbox == null || !Model.Inbox.Any())
                             {
@@ -142,7 +124,7 @@
                             }
                         </div>
 
-                      @*   System Messages Tab *@
+                        @* System Messages Tab *@
                         <div class="tab-pane fade" id="system" role="tabpanel">
                             @if (Model.SystemInbox == null || !Model.SystemInbox.Any())
                             {
@@ -163,68 +145,10 @@
                                 </div>
                             }
                         </div>
-
-                      @* Contact Messages *@
-                        <div class="tab-pane fade" id="contact" role="tabpanel">
-                            @if (Model.ContactMessages == null || !Model.ContactMessages.Any())
-                            {
-                                <div class="text-center py-5">
-                                    <i class="bi bi-chat-dots opacity-50 fs-1"></i>
-                                    <p class="mt-3 mb-0 opacity-75">No contact messages</p>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="d-flex flex-column gap-3" style="max-height: 500px; overflow-y: auto; padding-right: 10px;">
-                                    @foreach (var message in Model.ContactMessages)
-                                    {
-                                        <a asp-area="Manager"
-                                               asp-controller="ContactMessage"
-                                               asp-action="Details"
-                                               asp-route-id="@message.Id"
-                                               class="text-decoration-none">
-                                            <div class="glass-list-item p-3 message-card @(message.IsReadByAdmin ? "read" : "unread")">
-                                                <div class="d-flex justify-content-between align-items-start">
-                                                    <div class="flex-grow-1">
-                                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                                            <span class="badge bg-info">Contact</span>
-                                                            <small class="text-muted">
-                                                                @message.CreatedOn.ToLocalTime().ToString("dd MMM yyyy HH:mm")
-                                                            </small>
-                                                        </div>
-                                                        <div class="mb-2">
-                                                            <strong>@message.Subject</strong>
-                                                        </div>
-                                                        <p class="mb-2">@(message.Message.Length > 100 ? message.Message.Substring(0, 100) + "..." : message.Message)</p>
-                                                        <div class="small text-muted mb-2">
-                                                            <i class="bi bi-person me-1"></i>From: @message.SenderName
-                                                        </div>
-                                                        @if (!string.IsNullOrEmpty(message.Response))
-                                                        {
-                                                            <div class="small text-success">
-                                                                <i class="bi bi-check-circle me-1"></i>Responded
-                                                            </div>
-                                                        }
-                                                        <div class="d-flex gap-2 mt-2">
-                                                            <span class="btn btn-primary-glass btn-sm">View & Respond</span>
-                                                        </div>
-                                                    </div>
-                                                    @if (!message.IsReadByAdmin)
-                                                    {
-                                                        <span class="badge bg-warning text-dark">New</span>
-                                                    }
-                                                </div>
-                                            </div>
-                                        </a>
-                                    }
-                                </div>
-                            }
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 

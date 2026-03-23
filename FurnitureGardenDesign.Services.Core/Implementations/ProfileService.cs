@@ -2,7 +2,6 @@
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
-
 using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +15,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
         private readonly IInboxMessageService _inboxMessageService;
         private readonly ISystemInboxMessageService _systemInboxMessageService;
         private readonly IContactMessageClientService _contactMessageClientService;
-        private readonly IContactMessageService _contactMessageService; 
+        private readonly IContactMessageService _contactMessageService;
 
         public ProfileService(
             IAppUserRepository userRepository,
@@ -24,19 +23,16 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             IInboxMessageService inboxMessageService,
             ISystemInboxMessageService systemInboxMessageService,
             IContactMessageClientService contactMessageClientService,
-            IContactMessageService contactMessageService) 
+            IContactMessageService contactMessageService)
         {
             _userRepository = userRepository;
             _userManager = userManager;
             _inboxMessageService = inboxMessageService;
             _systemInboxMessageService = systemInboxMessageService;
             _contactMessageClientService = contactMessageClientService;
-            _contactMessageService = contactMessageService;  
+            _contactMessageService = contactMessageService;
         }
 
-
-        // get all profile information for a user
-        //including their messages and contact messages
         public async Task<ProfileViewModel?> GetProfileAsync(string userId)
         {
             var user = await _userRepository
@@ -46,26 +42,26 @@ namespace FurnitureGardenDesign.Services.Core.Implementations
             if (user == null)
                 return null;
 
-          
             var inboxMessages = await _inboxMessageService.GetUserMessagesAsync(userId);
             var systemMessages = await _systemInboxMessageService.GetUserMessagesAsync(userId);
 
-          
             var roles = await _userManager.GetRolesAsync(user);
-            var isAdminOrManager = roles.Contains("Admin") || roles.Contains("Manager");
+            var isAdmin = roles.Contains("Admin");  
+            var isManager = roles.Contains("Manager");
 
-            List<ContactMessageDetailsViewModel> contactMessages;
+            List<ContactMessageDetailsViewModel> contactMessages = new List<ContactMessageDetailsViewModel>();
 
-            if (isAdminOrManager)
+            if (isAdmin)
             {
               
                 contactMessages = await _contactMessageService.GetAdminMessagesAsync(userId);
             }
-            else
+            else if (!isManager)
             {
                
                 contactMessages = await _contactMessageClientService.GetUserMessagesAsync(userId);
             }
+          
 
             return new ProfileViewModel
             {

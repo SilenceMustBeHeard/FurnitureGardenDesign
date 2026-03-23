@@ -19,20 +19,20 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IInboxMessageService _inboxMessageService;
         private readonly ISystemInboxMessageService _systemInboxMessageService;
-        private readonly IManagerContactMessageService _contactMessageService;  // Add this
+      
 
         public ManagerProfileController(
             ISystemInboxMessageService systemInboxMessageService,
             IProfileService profileService,
             UserManager<AppUser> userManager,
-            IInboxMessageService inboxMessageService,
-            IManagerContactMessageService contactMessageService) 
+            IInboxMessageService inboxMessageService)
+          
         {
             _systemInboxMessageService = systemInboxMessageService;
             _profileService = profileService;
             _userManager = userManager;
             _inboxMessageService = inboxMessageService;
-            _contactMessageService = contactMessageService; 
+           
         }
 
         [HttpGet]
@@ -48,10 +48,10 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers
             var model = await _profileService.GetProfileAsync(user.Id);
 
         
-            var contactMessages = await _contactMessageService.GetAdminMessagesAsync(user.Id);
+          
 
          
-            model.ContactMessages = contactMessages ?? new List<ContactMessageDetailsViewModel>();
+         
 
             return View(model);
         }
