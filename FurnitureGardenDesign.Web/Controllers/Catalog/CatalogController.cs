@@ -46,7 +46,7 @@ namespace FurnitureGardenDesign.Web.Controllers.Catalog
             ViewData["CurrentPage"] = isGuest ? 1 : page;
             ViewData["PageSize"] = isGuest ? 3 : pageSize;
             ViewData["TotalItems"] = totalItems;
-            ViewData["IsGuest"] = isGuest; // Add this to view data
+            ViewData["IsGuest"] = isGuest; 
 
             return View(designs);
         }
