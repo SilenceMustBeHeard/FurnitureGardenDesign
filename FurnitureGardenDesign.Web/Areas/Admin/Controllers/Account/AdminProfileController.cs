@@ -1,7 +1,8 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Services.Core.Implementations;
-using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Services.Core.Interfaces.Account;
+using FurnitureGardenDesign.Services.Core.Interfaces.Message;
 using FurnitureGardenDesign.Web.ViewModels.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

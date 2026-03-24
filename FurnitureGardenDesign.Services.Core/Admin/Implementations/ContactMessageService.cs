@@ -1,6 +1,6 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Models.Messages;
-using FurnitureGardenDesign.Data.Repository.Interfaces;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Message;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 
 using FurnitureGardenDesign.Web.ViewModels.User;

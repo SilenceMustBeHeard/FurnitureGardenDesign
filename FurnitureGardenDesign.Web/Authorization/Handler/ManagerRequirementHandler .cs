@@ -1,5 +1,5 @@
 ﻿using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Services.Core.Interfaces.Account;
 using FurnitureGardenDesign.Web.Authorization.Requirements;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;

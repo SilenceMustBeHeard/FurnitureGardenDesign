@@ -1,5 +1,6 @@
 ﻿using FurnitureGardenDesign.Data.Models.Interactions;
-using FurnitureGardenDesign.Data.Repository.Interfaces;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Catalog;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Review;

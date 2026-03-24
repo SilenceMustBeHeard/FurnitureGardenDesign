@@ -1,6 +1,6 @@
 ﻿using FurnitureGardenDesign.Data.Models.Catalog;
-using FurnitureGardenDesign.Data.Repository.Interfaces;
-using FurnitureGardenDesign.Services.Core.Implementations;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Catalog;
+using FurnitureGardenDesign.Services.Core.Implementations.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Category;
 using Moq;
 using NUnit.Framework;

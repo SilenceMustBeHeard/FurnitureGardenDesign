@@ -1,8 +1,9 @@
-﻿using FurnitureGardenDesign.Data.Repository.Interfaces;
-using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
-using FurnitureGardenDesign.Services.Core.Implementations;
+﻿using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using FurnitureGardenDesign.Data.Models.Catalog;
+using FurnitureGardenDesign.Services.Core.Implementations.Catalog;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Catalog;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
 
 namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
 {

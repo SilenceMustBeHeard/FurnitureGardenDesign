@@ -1,5 +1,5 @@
 ﻿using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Services.Core.Interfaces.Account;
 using FurnitureGardenDesign.Web.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

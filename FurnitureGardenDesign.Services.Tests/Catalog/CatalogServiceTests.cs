@@ -1,8 +1,9 @@
 ﻿using FurnitureGardenDesign.Data.Common.Enums;
 using FurnitureGardenDesign.Data.Models.Catalog;
 using FurnitureGardenDesign.Data.Models.Interactions;
-using FurnitureGardenDesign.Data.Repository.Interfaces;
-using FurnitureGardenDesign.Services.Core.Implementations;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Catalog;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
+using FurnitureGardenDesign.Services.Core.Implementations.Catalog;
 using MockQueryable.Moq;
 using Moq;
 

@@ -22,4 +22,23 @@
     <ProjectReference Include="..\FurnitureGardenDesign.Web.ViewModels\FurnitureGardenDesign.Web.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Admin\Implementations\Account\" />
+    <Folder Include="Admin\Implementations\Catalog\" />
+    <Folder Include="Admin\Implementations\Interactions\" />
+    <Folder Include="Admin\Implementations\Message\" />
+    <Folder Include="Admin\Interfaces\Account\" />
+    <Folder Include="Admin\Interfaces\Catalog\" />
+    <Folder Include="Admin\Interfaces\Interactions\" />
+    <Folder Include="Admin\Interfaces\Message\" />
+    <Folder Include="Manager\Implementations\Account\" />
+    <Folder Include="Manager\Implementations\Catalog\" />
+    <Folder Include="Manager\Implementations\Interactions\" />
+    <Folder Include="Manager\Implementations\Message\" />
+    <Folder Include="Manager\Interfaces\Account\" />
+    <Folder Include="Manager\Interfaces\Catalog\" />
+    <Folder Include="Manager\Interfaces\Interactions\" />
+    <Folder Include="Manager\Interfaces\Message\" />
+  </ItemGroup>
+
 </Project>

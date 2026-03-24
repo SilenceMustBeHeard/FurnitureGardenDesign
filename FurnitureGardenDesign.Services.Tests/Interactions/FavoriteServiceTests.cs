@@ -1,5 +1,5 @@
 ﻿using FurnitureGardenDesign.Data.Models.Interactions;
-using FurnitureGardenDesign.Data.Repository.Interfaces;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
 using FurnitureGardenDesign.Services.Core.Implementations;
 using Moq;
 using NUnit.Framework;

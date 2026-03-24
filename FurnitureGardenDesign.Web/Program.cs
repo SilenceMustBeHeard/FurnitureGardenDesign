@@ -1,10 +1,10 @@
 ﻿using FurnitureGardenDesign.Data;
 using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Data.Repository.Interfaces;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Catalog;
 using FurnitureGardenDesign.Data.Seeding;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
-using FurnitureGardenDesign.Services.Core.Implementations;
-using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Services.Core.Implementations.Catalog;
+using FurnitureGardenDesign.Services.Core.Interfaces.Catalog;
 using FurnitureGardenDesign.Web.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

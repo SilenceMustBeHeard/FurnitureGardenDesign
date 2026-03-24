@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using System.Linq;
 using System.Threading.Tasks;
+using FurnitureGardenDesign.Services.Core.Interfaces.Catalog;
 
 namespace FurnitureGardenDesign.Web.Controllers.Interactions
 {

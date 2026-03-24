@@ -2,8 +2,8 @@
 using FurnitureGardenDesign.Data.Common.Enums;
 using FurnitureGardenDesign.Data.Models.Catalog;
 using FurnitureGardenDesign.Data.Models.Messages;
-using FurnitureGardenDesign.Data.Repository.Interfaces;
-
+using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Message;
 using FurnitureGardenDesign.Services.Core.Manager.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.DesignVariants;
 using Microsoft.EntityFrameworkCore;

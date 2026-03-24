@@ -1,5 +1,5 @@
 ﻿using FurnitureGardenDesign.Data.Models.Catalog;
-using FurnitureGardenDesign.Data.Repository.Interfaces;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Category;
 
 namespace FurnitureGardenDesign.Services.Core.Admin.Interfaces

@@ -1,4 +1,5 @@
 ﻿using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Services.Core.Interfaces.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿using FurnitureGardenDesign.Services.Core.Interfaces;
+﻿using FurnitureGardenDesign.Services.Core.Interfaces.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Category;
 using System;
