@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FurnitureGardenDesign.Services.Tests
+namespace FurnitureGardenDesign.Services.Tests.Interactions
 {
     [TestFixture]
-    public class ReviewServiceTests
+    public class OrderServiceTests
     {
     }
 }

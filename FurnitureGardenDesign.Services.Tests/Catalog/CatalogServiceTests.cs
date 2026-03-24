@@ -6,7 +6,7 @@ using FurnitureGardenDesign.Services.Core.Implementations;
 using MockQueryable.Moq;
 using Moq;
 
-namespace FurnitureGardenDesign.Services.Tests
+namespace FurnitureGardenDesign.Services.Tests.Catalog
 {
     [TestFixture]
     public class CatalogServiceTests

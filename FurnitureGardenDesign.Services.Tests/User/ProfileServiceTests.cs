@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Moq;
 using MockQueryable.Moq;
 
-namespace FurnitureGardenDesign.Services.Tests
+namespace FurnitureGardenDesign.Services.Tests.User
 {
     [TestFixture]
     public class ProfileServiceTests

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FurnitureGardenDesign.Services.Tests
+namespace FurnitureGardenDesign.Services.Tests.Catalog
 {
     [TestFixture]
     public class CategoryServiceClientTests

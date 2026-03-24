@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using MockQueryable.Moq;
 using Moq;
 
-namespace FurnitureGardenDesign.Services.Tests
+namespace FurnitureGardenDesign.Services.Tests.Messages
 {
     [TestFixture]
     public class InboxMessageServiceTests

@@ -3,7 +3,6 @@ using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Models.Messages;
 using FurnitureGardenDesign.Data.Repository.Interfaces;
 using FurnitureGardenDesign.Services.Core.Implementations;
-
 using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using MockQueryable.Moq;
@@ -15,7 +14,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace FurnitureGardenDesign.Services.Tests
+namespace FurnitureGardenDesign.Services.Tests.Messages
 {
     [TestFixture]
     public class ContactMessageClientServiceTests
