@@ -4,7 +4,7 @@ using FurnitureGardenDesign.Data.Models.Messages;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Account;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Message;
 using FurnitureGardenDesign.Services.Core.Interfaces.Message;
-using FurnitureGardenDesign.Web.ViewModels.User;
+using FurnitureGardenDesign.Web.ViewModels.Messages;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

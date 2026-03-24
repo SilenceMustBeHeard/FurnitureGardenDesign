@@ -4,7 +4,7 @@ using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces.Account;
 using FurnitureGardenDesign.Services.Core.Interfaces.Message;
-using FurnitureGardenDesign.Web.ViewModels;
+using FurnitureGardenDesign.Web.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 namespace FurnitureGardenDesign.Web.ViewComponents

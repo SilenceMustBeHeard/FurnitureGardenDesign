@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace FurnitureGardenDesign.Web.ViewModels.User
+namespace FurnitureGardenDesign.Web.ViewModels.Messages
 {
     public class SystemInboxMessageViewModel
     {

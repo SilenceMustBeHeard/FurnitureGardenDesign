@@ -1,12 +1,12 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
-using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using MockQueryable.Moq;
 using FurnitureGardenDesign.Services.Core.Implementations.Account;
 using FurnitureGardenDesign.Services.Core.Interfaces.Message;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Account;
+using FurnitureGardenDesign.Web.ViewModels.Messages;
 
 namespace FurnitureGardenDesign.Services.Tests.User
 {

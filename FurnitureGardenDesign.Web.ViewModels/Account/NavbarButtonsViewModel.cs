@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FurnitureGardenDesign.Web.ViewModels
+namespace FurnitureGardenDesign.Web.ViewModels.Account
 {
     public class NavbarButtonsViewModel
     {

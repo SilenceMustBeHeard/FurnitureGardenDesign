@@ -1,6 +1,5 @@
 ﻿using FurnitureGardenDesign.Services.Core.Interfaces.Message;
-using FurnitureGardenDesign.Web.ViewModels.User;
-
+using FurnitureGardenDesign.Web.ViewModels.Messages;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureGardenDesign.Web.Controllers.Message

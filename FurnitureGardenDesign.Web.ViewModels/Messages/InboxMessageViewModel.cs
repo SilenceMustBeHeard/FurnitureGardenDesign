@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FurnitureGardenDesign.Web.ViewModels.User
+namespace FurnitureGardenDesign.Web.ViewModels.Messages
 {
     public class InboxMessageViewModel
     {

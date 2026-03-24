@@ -36,4 +36,10 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Catalog\Admin\" />
+    <Folder Include="Interactions\Admin\" />
+    <Folder Include="Messages\Admin\" />
+  </ItemGroup>
+
 </Project>

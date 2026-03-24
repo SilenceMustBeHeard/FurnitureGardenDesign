@@ -1,5 +1,5 @@
 ﻿
-using FurnitureGardenDesign.Web.ViewModels.User;
+using FurnitureGardenDesign.Web.ViewModels.Messages;
 
 namespace FurnitureGardenDesign.Services.Core.Admin.Interfaces
 {

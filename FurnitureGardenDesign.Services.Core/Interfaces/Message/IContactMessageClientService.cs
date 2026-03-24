@@ -1,4 +1,4 @@
-﻿using FurnitureGardenDesign.Web.ViewModels.User;
+﻿using FurnitureGardenDesign.Web.ViewModels.Messages;
 using System.Security.Claims;
 
 namespace FurnitureGardenDesign.Services.Core.Interfaces.Message

@@ -3,7 +3,7 @@ using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Models.Messages;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Message;
 using FurnitureGardenDesign.Services.Core.Implementations.Message;
-using FurnitureGardenDesign.Web.ViewModels.User;
+using FurnitureGardenDesign.Web.ViewModels.Messages;
 using Microsoft.AspNetCore.Identity;
 using MockQueryable.Moq;
 using Moq;

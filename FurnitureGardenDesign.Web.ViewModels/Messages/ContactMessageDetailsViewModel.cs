@@ -1,7 +1,7 @@
-﻿    using System;
+﻿using System;
 
 
-namespace FurnitureGardenDesign.Web.ViewModels.User
+namespace FurnitureGardenDesign.Web.ViewModels.Messages
 {
 
    
