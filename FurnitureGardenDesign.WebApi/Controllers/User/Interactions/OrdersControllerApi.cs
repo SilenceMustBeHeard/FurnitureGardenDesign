@@ -37,8 +37,8 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Interactions
 
       
 
+      
         [HttpPost("create")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OrderFormViewModel model)
         {
             if (!ModelState.IsValid)
