@@ -23,10 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Admin\Implementations\Account\" />
-    <Folder Include="Admin\Implementations\Catalog\" />
-    <Folder Include="Admin\Implementations\Interactions\" />
-    <Folder Include="Admin\Implementations\Message\" />
     <Folder Include="Admin\Interfaces\Account\" />
     <Folder Include="Admin\Interfaces\Catalog\" />
     <Folder Include="Admin\Interfaces\Interactions\" />

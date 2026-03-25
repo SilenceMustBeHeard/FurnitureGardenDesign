@@ -6,7 +6,7 @@ using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Review;
 using Microsoft.EntityFrameworkCore;
 
-namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
+namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions
 {
     public class ReviewManagementService : IReviewManagementService
     {

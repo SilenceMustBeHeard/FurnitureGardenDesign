@@ -8,7 +8,7 @@ using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.DesignVariants;
 using Microsoft.EntityFrameworkCore;
 
-namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
+namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions
 {
     public class AdminDesignVariantService : IAdminDesignVariantService
     {

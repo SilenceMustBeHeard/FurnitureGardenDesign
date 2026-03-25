@@ -5,7 +5,7 @@ using FurnitureGardenDesign.Services.Core.Implementations.Catalog;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Catalog;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
 
-namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
+namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
 {
     public class CatalogManagementService : CatalogService, ICatalogManagementService
     {

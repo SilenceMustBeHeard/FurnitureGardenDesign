@@ -1,8 +1,9 @@
 ﻿using FurnitureGardenDesign.Data.Models.Catalog;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Catalog;
+using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Category;
 
-namespace FurnitureGardenDesign.Services.Core.Admin.Interfaces
+namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
 {
     public class CategoryService : ICategoryService
     {

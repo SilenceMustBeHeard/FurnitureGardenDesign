@@ -7,7 +7,7 @@ using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Messages;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-namespace FurnitureGardenDesign.Services.Core.Admin.Implementations
+namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Message
 {
     public class SystemInboxMessageService : ISystemInboxMessageService
     {
