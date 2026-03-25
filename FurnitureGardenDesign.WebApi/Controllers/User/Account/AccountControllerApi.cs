@@ -2,7 +2,7 @@
 using FurnitureGardenDesign.Web.ViewModels.Account;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Account
+namespace FurnitureGardenDesign.WebApi.Controllers.User.Account
 {
     [Route("api/[controller]")]
     [ApiController]

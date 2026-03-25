@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Account
+namespace FurnitureGardenDesign.WebApi.Controllers.User.Account
 {
     [Route("api/[controller]")]
     [ApiController]

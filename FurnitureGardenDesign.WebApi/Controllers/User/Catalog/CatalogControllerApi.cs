@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Controller
+namespace FurnitureGardenDesign.WebApi.Controllers.User.Catalog
 {
     [Route("api/[controller]")]
     [ApiController]

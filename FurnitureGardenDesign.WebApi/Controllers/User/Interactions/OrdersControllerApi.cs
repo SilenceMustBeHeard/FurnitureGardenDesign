@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Interactions
+namespace FurnitureGardenDesign.WebApi.Controllers.User.Interactions
 {
     [Route("api/[controller]")]
     [ApiController]

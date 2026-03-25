@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace FurnitureGardenDesign.WebApi.Controllers
+namespace FurnitureGardenDesign.WebApi.Controllers.User.Account
 {
     [Route("api/[controller]")]
     [ApiController]
