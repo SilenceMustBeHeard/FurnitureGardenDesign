@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Admin\Message\" />
     <Folder Include="Controllers\Admin\Catalog\" />
   </ItemGroup>
 
