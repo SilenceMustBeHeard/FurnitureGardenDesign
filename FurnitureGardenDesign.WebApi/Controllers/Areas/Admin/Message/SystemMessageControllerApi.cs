@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Admin.Message
+namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Message
 {
     [Route("api/admin/[controller]")]
     [ApiController]

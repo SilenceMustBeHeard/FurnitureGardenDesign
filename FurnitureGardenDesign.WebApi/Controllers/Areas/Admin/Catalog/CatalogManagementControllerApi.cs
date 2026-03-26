@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Admin.Catalog
+namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Catalog
 {
     [Route("api/[controller]")]
     [ApiController]

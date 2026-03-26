@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Admin
+namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Interactions
+
 {
-    [Route("api/admin/[controller]")]
+    [Route("api/manager/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Manager")]
     public class OrderManagementControllerApi : ControllerBase
     {
         private readonly IOrderService _orderService;

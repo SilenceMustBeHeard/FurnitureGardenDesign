@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Account
+namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Account
 {
-    [Route("api/admin/[controller]")]
+    [Route("api/manager/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Manager")]
     public class AccountControllerApi : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;

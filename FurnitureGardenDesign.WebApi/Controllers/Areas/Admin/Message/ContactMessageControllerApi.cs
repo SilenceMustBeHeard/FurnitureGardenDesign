@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Admin.Message
+namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Message
 {
     [Route("api/[controller]")]
     [ApiController]

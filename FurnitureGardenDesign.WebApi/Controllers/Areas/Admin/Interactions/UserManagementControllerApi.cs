@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Admin
+namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions
 {
     [Route("api/admin/[controller]")]
     [ApiController]

@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Admin.Interactions
+namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Interactgions
+
 {
-    [Route("api/[controller]")]
+    [Route("api/manager/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Manager")]
     public class DesignVariantControllerApi : ControllerBase
     {
        
