@@ -21,8 +21,4 @@
     <ProjectReference Include="..\FurnitureGardenDesign.Web.ViewModels\FurnitureGardenDesign.Web.ViewModels.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\Admin\Catalog\" />
-  </ItemGroup>
-
 </Project>

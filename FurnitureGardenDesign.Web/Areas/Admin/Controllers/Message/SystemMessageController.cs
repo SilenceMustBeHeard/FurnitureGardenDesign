@@ -51,7 +51,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
                     .Select(u => new UserSelectViewModel
                     {
                         Id = u.Id,
-                        FullName = u.FirstName + " " + u.LastName,
+                        FullName = u.FullName,
                         Email = u.Email ?? string.Empty
                     })
                     .ToListAsync()
@@ -79,7 +79,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
                 .Select(u => new UserSelectViewModel
                 {
                     Id = u.Id,
-                    FullName = u.FirstName + " " + u.LastName,
+                    FullName = u.FullName,
                     Email = u.Email ?? string.Empty
                 })
                 .ToListAsync();
