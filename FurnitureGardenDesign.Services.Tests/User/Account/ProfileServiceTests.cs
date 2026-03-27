@@ -8,7 +8,7 @@ using FurnitureGardenDesign.Services.Core.Interfaces.Message;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Account;
 using FurnitureGardenDesign.Web.ViewModels.Messages;
 
-namespace FurnitureGardenDesign.Services.Tests.User
+namespace FurnitureGardenDesign.Services.Tests.User.Profile
 {
     [TestFixture]
     public class ProfileServiceTests

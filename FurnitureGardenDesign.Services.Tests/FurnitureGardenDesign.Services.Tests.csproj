@@ -37,9 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Catalog\Admin\" />
-    <Folder Include="Interactions\Admin\" />
-    <Folder Include="Messages\Admin\" />
+    <Folder Include="Admin\Catalog\" />
+    <Folder Include="Admin\Interactions\" />
+    <Folder Include="Admin\Account\" />
   </ItemGroup>
 
 </Project>

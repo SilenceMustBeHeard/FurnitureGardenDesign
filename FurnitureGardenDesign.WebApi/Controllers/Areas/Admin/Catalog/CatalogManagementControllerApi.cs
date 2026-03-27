@@ -34,7 +34,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Catalog
 
 
         [HttpGet("list")]
-      
+
         public async Task<IActionResult> EditList()
         {
             var catalogues = await _catalogManagementService.GetAllCataloguesForAdminAsync();
@@ -46,47 +46,47 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Catalog
         public async Task<IActionResult> ToggleActive(Guid id)
         {
             await _catalogManagementService.ToggleCatalogAsync(id);
-          
+
             return Ok(new { message = "Catalogue status changed!" });
         }
 
         [HttpGet("create")]
-      
+
         public async Task<IActionResult> Create()
         {
             var model = new CatalogViewModelCreate();
-          
+
             return Ok(model);
         }
 
-      
+
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CatalogViewModelCreate model)
         {
             if (!ModelState.IsValid)
             {
-               return BadRequest(ModelState);
+                return BadRequest(ModelState);
             }
 
             await _catalogManagementService.AddCatalogAsync(model);
-          
-            return Ok(new {message = "Catalogue created successfully!"});
+
+            return Ok(new { message = "Catalogue created successfully!" });
         }
 
-      
+
         [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var model = await _catalogManagementService.GetCatalogForEditByIdAsync(id);
             if (model == null)
-            { return NotFound(new {error = "Design Not Found!"}); }
+            { return NotFound(new { error = "Design Not Found!" }); }
 
-           
+
             return Ok(model);
         }
-            
-      
-      
+
+
+
         [HttpPost("edit")]
         public async Task<IActionResult> Edit(Guid id, [FromBody] CatalogViewModelEdit model)
         {
@@ -96,12 +96,12 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Catalog
             }
 
             await _catalogManagementService.EditCatalogAsync(model.Id, model);
-          
-            return Ok(new {messagte = "Catalog Design edited successfully!"});
+
+            return Ok(new { messagte = "Catalog Design edited successfully!" });
         }
 
         [HttpGet("admin-index")]
-       
+
         public async Task<IActionResult> AdminIndex(int page = 1, int pageSize = 9)
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -109,11 +109,11 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Catalog
 
             var designs = await _catalogManagementService.GetPublicCatalogAsync(userId, page, pageSize, isGuest);
 
-          
+
             return Ok(designs);
         }
 
-       
+
         [HttpGet("details")]
         public async Task<IActionResult> Details(Guid id)
         {
@@ -123,8 +123,8 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Catalog
 
             if (model == null)
             {
-               
-                return NotFound(new { message = "Design not found."});
+
+                return NotFound(new { message = "Design not found." });
             }
 
             return Ok(model);
@@ -165,11 +165,12 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Catalog
             return Ok(isNowFavorited);
         }
 
-      
-    public class ReviewRequest
-    {
-        public int Rating { get; set; }
-        public string? Comment { get; set; }
+
+        public class ReviewRequest
+        {
+            public int Rating { get; set; }
+            public string? Comment { get; set; }
+        }
     }
 }
     

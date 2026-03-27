@@ -1,5 +1,4 @@
-﻿using FurnitureGardenDesign.Data.Common.Enums;
-using FurnitureGardenDesign.Data.Models;
+﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Models.Messages;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Account;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Message;
@@ -7,17 +6,17 @@ using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Messages;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Message
 {
     public class SystemInboxMessageService : ISystemInboxMessageService
     {
-
         private readonly ISystemInboxMessageRepository _messageRepository;
         private readonly IAppUserRepository _userRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public SystemInboxMessageService(ISystemInboxMessageRepository messageRepository, 
+        public SystemInboxMessageService(ISystemInboxMessageRepository messageRepository,
             UserManager<AppUser> userManager,
                 IAppUserRepository userRepository,
             RoleManager<IdentityRole> roleManager)
@@ -27,20 +26,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Message
             _userRepository = userRepository;
             _roleManager = roleManager;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         // marks a message as read
         public async Task MarkMessageAsReadAsync(Guid messageId, string userId)
@@ -62,7 +47,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Message
                 .GetAllAttached()
                 .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
         }
-        
 
         public async Task<SystemInboxMessageViewModel?> GetMessageDetailsAsync(Guid messageId, string userId)
         {
@@ -76,19 +60,17 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Message
             message.IsRead = true;
             await _messageRepository.UpdateAsync(message);
 
-            
-
             return new SystemInboxMessageViewModel
             {
-               Id = messageId,
-               Description = message.Description,
+                Id = messageId,
+                Description = message.Description,
                 IsRead = message.IsRead,
                 CreatedOn = message.CreatedOn,
                 Type = message.Type,
                 SenderId = message.SenderId
             };
         }
-      
+
         public async Task CreateMessageAsync(SystemInboxMessage message)
         {
             await _messageRepository.AddAsync(message);
@@ -107,9 +89,8 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Message
                     IsRead = m.IsRead,
                     CreatedOn = m.CreatedOn,
                     Type = m.Type,
-                    
-                    SenderId = m.SenderId 
-                    
+
+                    SenderId = m.SenderId
                 })
                 .ToListAsync();
         }
@@ -118,17 +99,16 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Message
         {
             return await _messageRepository
                 .GetAllAttached()
-                
-               
+
                 .Where(m => m.ReceiverId == adminId)
                 .OrderByDescending(m => m.CreatedOn)
                 .Select(m => new SystemInboxMessageViewModel
                 {
                     Id = m.Id,
-                   Description = m.Description,
-                   IsRead = m.IsRead,
-                   CreatedOn = m.CreatedOn,
-                   Type = m.Type
+                    Description = m.Description,
+                    IsRead = m.IsRead,
+                    CreatedOn = m.CreatedOn,
+                    Type = m.Type
                 })
                 .ToListAsync();
         }

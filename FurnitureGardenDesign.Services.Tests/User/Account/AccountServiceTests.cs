@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 
-namespace FurnitureGardenDesign.Services.Tests.User
+namespace FurnitureGardenDesign.Services.Tests.User.Profile
 {
     [TestFixture]
     public class AccountServiceTests
