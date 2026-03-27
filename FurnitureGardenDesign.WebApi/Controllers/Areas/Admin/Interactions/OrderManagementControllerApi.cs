@@ -43,7 +43,9 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
-                return Unauthorized(new { message = "User not authenticated." });
+            { 
+                return Unauthorized(new { message = "User not authenticated." }); 
+            }
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -65,7 +67,9 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions
             var result = await _orderService.RejectOrderAsync(id);
 
             if (result)
+            { 
                 return Ok(new { message = "Order has been rejected." });
+            }
 
             return BadRequest(new { message = "Failed to reject order." });
         }
@@ -76,7 +80,9 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions
             var order = await _orderService.GetByIdAsync(id);
 
             if (order == null)
-                return NotFound(new { message = "Order not found." });
+            { 
+                return NotFound(new { message = "Order not found." }); 
+            }
 
             return Ok(order);
         }

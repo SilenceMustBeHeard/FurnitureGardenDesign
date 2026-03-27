@@ -69,36 +69,36 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions
             }
 
 
-          
+
+
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var variant = await _designVariantService.GetDesignVariantByIdAsync(id);
+
+            if (variant == null)
+            {
+                return NotFound(new { message = "Design variant not found." });
+            }
+
+                return Ok(new
+                {
+                    variant.Id,
+                    variant.OrderId,
+                    variant.Image2DUrl,
+                    variant.Model3DUrl,
+                    variant.Notes,
+                    variant.IsApproved,
+                    OrderDescription = variant.Order?.Description,
+                    OrderDimensions = variant.Order?.Dimensions,
+                    ReferenceImageUrl = variant.Order?.ReferenceImageUrl
+                });
 
 
             
-            [HttpGet("{id}")]
-            public async Task<IActionResult> Details(Guid id)
-            {
-                var variant = await _designVariantService.GetDesignVariantByIdAsync(id);
-
-                if (variant == null)
-                {
-                   return NotFound(new { message = "Design variant not found." });
-            }
-
-                var model = new DesignVariantViewModel
-                {
-                    Id = variant.Id,
-                    OrderId = variant.OrderId,
-                    Image2DUrl = variant.Image2DUrl,
-                    Model3DUrl = variant.Model3DUrl,
-                    Notes = variant.Notes,
-                    IsApproved = variant.IsApproved,
-
-                    OrderDescription = variant.Order.Description,
-                    OrderDimensions = variant.Order.Dimensions,
-                    ReferenceImageUrl = variant.Order.ReferenceImageUrl
-                };
-
-                return Ok(model);
-            }
+        }
 
 
 

@@ -41,7 +41,9 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions
         public async Task<IActionResult> AssignRole([FromBody] ChangeUserRoleViewModel model)
         {
             if (!ModelState.IsValid || string.IsNullOrWhiteSpace(model.NewRole))
+            { 
                 return BadRequest(new { error = "Please select a valid role." });
+            }
 
             var result = await _userService.ChangeUserRoleAsync(model, GetUserId());
 
@@ -58,7 +60,9 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions
             var result = await _userService.DisableUser(userId);
 
             if (result.Failed)
+            {
                 return NotFound(new { error = "User not found!" });
+            }
 
             return Ok(new { message = "User disabled successfully!" });
         }

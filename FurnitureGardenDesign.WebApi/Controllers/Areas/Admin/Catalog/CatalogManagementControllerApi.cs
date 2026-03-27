@@ -55,7 +55,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Catalog
         public async Task<IActionResult> Create()
         {
             var model = new CatalogViewModelCreate();
-            await LoadCategoriesAsync(model);
+          
             return Ok(model);
         }
 
@@ -81,7 +81,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Catalog
             if (model == null)
             { return NotFound(new {error = "Design Not Found!"}); }
 
-            await LoadCategoriesAsync(model);
+           
             return Ok(model);
         }
             
@@ -165,26 +165,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Catalog
             return Ok(isNowFavorited);
         }
 
-        private async Task LoadCategoriesAsync(CatalogViewModelCreate model)
-        {
-            var categories = await _categoryServiceClient.GetAllActiveCategoriesForClientAsync();
-            model.Categories = categories.Select(c => new SelectListItem
-            {
-                Value = c.Id.ToString(),
-                Text = c.Name
-            }).ToList();
-        }
-
-        private async Task LoadCategoriesAsync(CatalogViewModelEdit model)
-        {
-            var categories = await _categoryServiceClient.GetAllActiveCategoriesForClientAsync();
-            model.Categories = categories.Select(c => new SelectListItem
-            {
-                Value = c.Id.ToString(),
-                Text = c.Name
-            }).ToList();
-        }
-    }
+      
     public class ReviewRequest
     {
         public int Rating { get; set; }

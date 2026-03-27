@@ -1,7 +1,6 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Messages;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,8 +37,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Message
 
             if (message == null)
             {
-               
-                return NotFound(new {error = "Message not found."});
+                return NotFound(new { error = "Message not found." });
             }
 
             return Ok(message);
@@ -53,18 +51,16 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Message
 
             if (message == null)
             {
-
                 return NotFound(new { error = "Message not found." });
             }
 
-
             if (!string.IsNullOrEmpty(message.Response))
             {
-
                 return BadRequest(new { error = "This message has already been responded to." });
             }
 
-            var model = new ContactMessageResponseViewModel
+            return Ok(new
+
             {
                 Id = message.Id,
                 Subject = message.Subject,
@@ -72,13 +68,10 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Message
                 SenderEmail = message.SenderEmail,
                 OriginalMessage = message.Message,
                 Response = string.Empty
-            };
-
-            return Ok(model);
+            });
         }
 
         [HttpPost("respond/{id}")]
-
         public async Task<IActionResult> Respond(Guid id, [FromBody] ContactMessageResponseViewModel model)
         {
             if (!ModelState.IsValid)
@@ -95,11 +88,8 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Message
             }
             catch (InvalidOperationException ex)
             {
-               return BadRequest(new {error = ex.Message });
+                return BadRequest(new { error = ex.Message });
             }
-
-           
         }
     }
 }
-    

@@ -41,58 +41,41 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Message
         [HttpGet("create")]
         public async Task<IActionResult> Create(string? userId = null)
         {
-            var model = new SystemInboxMessageCreateViewModel
-            {
-                ReceiverId = userId,
-                AvailableUsers = await _userRepository
-                    .GetAllAttached()
-                    .Select(u => new UserSelectViewModel
-                    {
-                        Id = u.Id,
-                        FullName = u.FullName,
-                        Email = u.Email ?? string.Empty
-                    })
-                    .ToListAsync()
-            };
-
-            if (!string.IsNullOrEmpty(userId))
-            {
-                var selectedUser = model.AvailableUsers.FirstOrDefault(u => u.Id == userId);
-                if (selectedUser != null)
+            var availableUsers = await _userRepository
+                .GetAllAttached()
+                .Select(u => new
                 {
-                    model.ReceiverName = selectedUser.FullName;
-                }
+                    u.Id,
+                    FullName = u.FullName,
+                    u.Email
+                })
+                .ToListAsync();
+
+            if (!string.IsNullOrEmpty(userId) && !availableUsers.Any(u => u.Id == userId))
+            {
+                return BadRequest(new { error = "User not found." }); 
             }
 
-            return Ok(model);
+            return Ok(new
+            {
+                ReceiverId = userId,
+                AvailableUsers = availableUsers,
+                ReceiverName = availableUsers.FirstOrDefault(u => u.Id == userId)!.FullName
+            });
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] SystemInboxMessageCreateViewModel model)
         {
-            
-            model.AvailableUsers = await _userRepository
-                .GetAllAttached()
-                .Select(u => new UserSelectViewModel
-                {
-                    Id = u.Id,
-                    FullName = u.FullName,
-                    Email = u.Email ?? string.Empty
-                })
-                .ToListAsync();
-
-            if (!string.IsNullOrEmpty(model.ReceiverId))
-            {
-                var selectedUser = model.AvailableUsers.FirstOrDefault(u => u.Id == model.ReceiverId);
-                if (selectedUser != null)
-                {
-                    model.ReceiverName = selectedUser.FullName;
-                }
-            }
-
             if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+         
+            var receiver = await _userManager.FindByIdAsync(model.ReceiverId ?? "");
+
+            if (receiver == null)
             { 
-                return BadRequest(ModelState); 
+                return BadRequest(new { error = "Receiver not found." }); 
             }
 
             var adminId = _userManager.GetUserId(User);
@@ -110,7 +93,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Message
 
             await _systemMessageService.CreateMessageAsync(message);
 
-            return Ok(new { message = "Message sent successfully!" });
+            return Ok(new { message = "Message sent successfully!", id = message.Id });
         }
 
         [HttpGet("{id}")]

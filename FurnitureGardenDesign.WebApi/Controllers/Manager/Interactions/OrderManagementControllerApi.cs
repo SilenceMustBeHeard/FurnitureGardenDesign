@@ -3,7 +3,6 @@ using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
 namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Interactions
@@ -28,15 +27,9 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Interactions
         [HttpGet("create")]
         public async Task<IActionResult> Create()
         {
-            var categories = await _categoryService.GetAllActiveCategoriesAsync();
-            return Ok(new OrderFormViewModel
-            {
-                Categories = categories.Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
-                })
-            });
+
+            return Ok(new OrderFormViewModel());
+          
         }
 
         [HttpPost("create")]
@@ -44,10 +37,14 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Interactions
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
+            {
                 return Unauthorized(new { message = "User not authenticated." });
+            }
 
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
             await _orderService.CreateOrderAsync(userId, model);
             return Ok(new { message = "Order created successfully." });
@@ -66,7 +63,9 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Interactions
             var result = await _orderService.RejectOrderAsync(id);
 
             if (result)
+            {
                 return Ok(new { message = "Order has been rejected." });
+            }
 
             return BadRequest(new { message = "Failed to reject order." });
         }
@@ -77,7 +76,9 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Interactions
             var order = await _orderService.GetByIdAsync(id);
 
             if (order == null)
+            {
                 return NotFound(new { message = "Order not found." });
+            }
 
             return Ok(order);
         }

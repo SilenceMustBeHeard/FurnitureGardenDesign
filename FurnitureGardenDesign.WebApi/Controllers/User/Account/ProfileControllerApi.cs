@@ -63,27 +63,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Account
             return Ok(new { success = "Message marked as read successfully." });
         }
 
-        [HttpGet("proxy-image")]
-        public async Task<IActionResult> ProxyImage(string url)
-        {
-            using var client = new HttpClient();
-            var bytes = await client.GetByteArrayAsync(url);
-            var contentType = GetContentType(url);
-            return File(bytes, contentType);
-        }
-
-        private string GetContentType(string url)
-        {
-            var ext = Path.GetExtension(url).ToLowerInvariant();
-            return ext switch
-            {
-                ".jpg" or ".jpeg" => "image/jpeg",
-                ".png" => "image/png",
-                ".gif" => "image/gif",
-                ".webp" => "image/webp",
-                _ => "application/octet-stream"
-            };
-        }
+    
 
         [HttpGet("message-details")]
         public async Task<IActionResult> MessageDetails(Guid id)

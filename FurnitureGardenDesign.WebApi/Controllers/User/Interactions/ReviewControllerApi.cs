@@ -18,11 +18,6 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Interactions
             _reviewService = reviewService;
         }
 
-
-
-
-
-      
         [HttpGet("write")]
         public async Task<IActionResult> Write(Guid id)
         {
@@ -34,7 +29,6 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Interactions
 
             if (model == null)
             {
-              
                 return BadRequest(new { error = "You have already reviewed this design." });
             }
 
@@ -49,22 +43,19 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Interactions
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
             if (string.IsNullOrEmpty(userId))
+            {
                 return Unauthorized();
+            }
 
             var result = await _reviewService.CreateReviewAsync(userId, model);
 
             if (!result.Success)
             {
-               
                 return Unauthorized(new { error = "You must be logged in to add a review." });
             }
 
-          
             return Ok(new { message = "Review added successfully." });
         }
-
-
-     
 
         [HttpGet("reviews")]
         public async Task<IActionResult> Reviews(Guid id)
@@ -72,7 +63,6 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Interactions
             var reviews = await _reviewService.GetReviewsByDesignIdAsync(id);
 
             return Ok(reviews);
-
         }
     }
 }

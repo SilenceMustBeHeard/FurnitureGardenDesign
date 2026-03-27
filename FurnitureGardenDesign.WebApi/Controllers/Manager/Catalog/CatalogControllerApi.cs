@@ -12,7 +12,6 @@ using System.Security.Claims;
 
 namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Catalog
 {
-
     [Route("api/manager/[controller]")]
     [ApiController]
     [Authorize(Roles = "Manager")]
@@ -32,18 +31,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Catalog
             _favoriteService = favoriteService;
         }
 
-
-
-      
-
-
-        
-
- 
-      
-
         [HttpGet("catalog-index")]
-       
         public async Task<IActionResult> CatalogIndex(int page = 1, int pageSize = 9)
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -51,11 +39,9 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Catalog
 
             var designs = await _catalogManagementService.GetPublicCatalogAsync(userId, page, pageSize, isGuest);
 
-          
             return Ok(designs);
         }
 
-       
         [HttpGet("details")]
         public async Task<IActionResult> Details(Guid id)
         {
@@ -65,8 +51,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Catalog
 
             if (model == null)
             {
-               
-                return NotFound(new { message = "Design not found."});
+                return NotFound(new { message = "Design not found." });
             }
 
             return Ok(model);
@@ -91,7 +76,6 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Catalog
             return Ok();
         }
 
-
         [HttpPost("{id}/favorite")]
         [Authorize]
         public async Task<ActionResult<bool>> ToggleFavorite(Guid id)
@@ -106,31 +90,11 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Catalog
             bool isNowFavorited = await _favoriteService.ToggleFavoriteAsync(userId, id);
             return Ok(isNowFavorited);
         }
-
-        private async Task LoadCategoriesAsync(CatalogViewModelCreate model)
-        {
-            var categories = await _categoryServiceClient.GetAllActiveCategoriesForClientAsync();
-            model.Categories = categories.Select(c => new SelectListItem
-            {
-                Value = c.Id.ToString(),
-                Text = c.Name
-            }).ToList();
-        }
-
-        private async Task LoadCategoriesAsync(CatalogViewModelEdit model)
-        {
-            var categories = await _categoryServiceClient.GetAllActiveCategoriesForClientAsync();
-            model.Categories = categories.Select(c => new SelectListItem
-            {
-                Value = c.Id.ToString(),
-                Text = c.Name
-            }).ToList();
-        }
     }
+
     public class ReviewRequest
     {
         public int Rating { get; set; }
         public string? Comment { get; set; }
     }
 }
-    
