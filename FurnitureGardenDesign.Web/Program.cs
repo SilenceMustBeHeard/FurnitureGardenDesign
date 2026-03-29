@@ -67,11 +67,34 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
+    // Apply migrations first
+    await context.Database.MigrateAsync();
+
+    // Seed Identity (Roles and Users) - idempotent (safe to run multiple times)
     await IdentitySeeder.SeedRolesAsync(roleManager);
     await IdentitySeeder.SeedAdminAsync(userManager);
     await IdentitySeeder.SeedManagerAsync(userManager);
 
-    await DbSeeder.SeedAsync(context);
+    // Seed Catalog Data - ONLY if Categories table is empty
+    var anyCategories = await context.Categories.AnyAsync();
+    if (!anyCategories)
+    {
+        try
+        {
+            await DbSeeder.SeedCategoriesAsync(context);
+            await DbSeeder.SeedCatalogAsync(context);
+            Console.WriteLine("✅ Database seeding completed successfully!");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Seeding failed: {ex.Message}");
+            throw;
+        }
+    }
+    else
+    {
+        Console.WriteLine("📦 Categories already exist. Skipping catalog data seeding.");
+    }
 }
 
 // Static files with .glb support for 3D models
@@ -86,16 +109,12 @@ if (!app.Environment.IsDevelopment())
 }
 else
 {
-    // In development, show detailed errors but still use custom error pages for status codes
     app.UseDeveloperExceptionPage();
 }
 
-// Use status code pages with re-execute
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
-
 app.UseHttpsRedirection();
 
-// Serve static files with the custom content type provider
 app.UseStaticFiles(new StaticFileOptions
 {
     ContentTypeProvider = provider
@@ -105,15 +124,13 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Custom error handling for 404 when no endpoint found
+// Custom error handling for 404
 app.Use(async (context, next) =>
 {
     await next();
     if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
     {
-        // Re-execute the error handling middleware
-        var originalPath = context.Request.Path;
-        context.Items["originalPath"] = originalPath;
+        context.Items["originalPath"] = context.Request.Path;
         context.Request.Path = "/Error/404";
         await next();
     }
