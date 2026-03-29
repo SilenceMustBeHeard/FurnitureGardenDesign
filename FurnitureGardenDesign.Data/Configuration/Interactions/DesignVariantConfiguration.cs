@@ -13,8 +13,7 @@ namespace FurnitureGardenDesign.Data.Configuration.Interactions
         {
             builder.HasKey(d => d.Id);
 
-            builder.Property(d => d.IsDeleted)
-                  .HasDefaultValue(false);
+         
 
 
             builder.HasQueryFilter(d => !d.IsDeleted);

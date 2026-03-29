@@ -99,14 +99,14 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
 
 
         // retrieves a specific catalog design by its ID
-        public Task<CatalogViewModelEdit?> GetCatalogForEditByIdAsync(Guid id)
+        // Fixed version
+        public async Task<CatalogViewModelEdit?> GetCatalogForEditByIdAsync(Guid id)
         {
-           var catalog =  _catalogRepository.GetByIdAsync(id).Result;
+            var catalog = await _catalogRepository.GetByIdAsync(id);
             if (catalog == null)
-            {
-                return Task.FromResult<CatalogViewModelEdit?>(null);
-            }
-            var model = new CatalogViewModelEdit
+                return null;
+
+            return new CatalogViewModelEdit
             {
                 Id = catalog.Id,
                 Title = catalog.Title,
@@ -119,9 +119,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
                 IsDeleted = catalog.IsDeleted,
                 Model3DStatus = catalog.Model3DStatus
             };
-
-
-            return Task.FromResult<CatalogViewModelEdit?>(model);
         }
         // toggles the active/deleted status of a catalog design
         public async Task ToggleCatalogAsync(Guid id)

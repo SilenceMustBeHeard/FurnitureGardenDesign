@@ -21,7 +21,7 @@ namespace FurnitureGardenDesign.Data.Models.Catalog
 
 
         //flag
-        public bool IsDeleted { get; set; } = true;
+        public bool IsDeleted { get; set; } = false;
 
 
         // Navigation properties

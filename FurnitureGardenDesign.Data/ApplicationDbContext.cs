@@ -24,64 +24,55 @@ namespace FurnitureGardenDesign.Data
         public virtual DbSet<ContactMessage> ContactMessages { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Review> Reviews { get; set; } = null!;
-       
-
-
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            // Apply all configurations from assembly
+        
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-            //  GLOBAL QUERY FILTERS 
+         
 
-            // Soft delete
-            builder
-                .Entity<Order>()
-                .HasQueryFilter(o => !o.IsDeleted); // filter for order
+        
+            builder.Entity<Order>()
+                .HasQueryFilter(o => !o.IsDeleted);
 
+            builder.Entity<DesignVariant>()
+                .HasQueryFilter(d => !d.IsDeleted);
 
+            builder.Entity<CatalogDesign>()
+                .HasQueryFilter(c => !c.IsDeleted);
 
-            builder
-                .Entity<CatalogDesign>()
-                .HasQueryFilter(c => !c.IsDeleted); // filter for catalogDesign
-
-
-            builder
-                .Entity<Category>()
-                .HasQueryFilter(c => c.IsDeleted); // filter for category
+            builder.Entity<Category>()
+                .HasQueryFilter(c => !c.IsDeleted);
 
 
-     
+         
+            builder.Entity<Review>()
+                .HasQueryFilter(r => r.CatalogDesign != null && !r.CatalogDesign.IsDeleted);
 
+         
+            builder.Entity<InboxMessage>()
+                .HasQueryFilter(m => m.DesignVariant != null && !m.DesignVariant.IsDeleted);
 
-            // Reviews and Favorites not needed to filter out
+      
 
-            // Automatic set for Created on
-            builder
-                .Entity<Order>()
+            builder.Entity<Order>()
                 .Property(o => o.CreatedOn)
-                .HasDefaultValueSql("GETUTCDATE()");  // if not set any value, giving it currnet UTC time
+                .HasDefaultValueSql("GETUTCDATE()");
 
-            builder
-              .Entity<DesignVariant>()
-              .Property(o => o.CreatedOn)
-              .HasDefaultValueSql("GETUTCDATE()");  // if not set any value, giving it currnet UTC time
+            builder.Entity<DesignVariant>()
+                .Property(d => d.CreatedOn)
+                .HasDefaultValueSql("GETUTCDATE()");
 
-
-
-            builder
-                .Entity<CatalogDesign>()
-                .Property(c => c.Id)             // Can be added new CatalogDesign id without thinking if  ef or ssql will give it value
-                .HasDefaultValueSql("NEWID()"); // automatically set new guid for id if not set in insert. 
-
-
+            builder.Entity<CatalogDesign>()
+                .Property(c => c.Id)
+                .HasDefaultValueSql("NEWID()");
 
             builder.Entity<Review>()
                 .Property(r => r.CreatedOn)
-                .HasDefaultValueSql("GETUTCDATE()");  // if not set any value, giving it currnet UTC time
+                .HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }

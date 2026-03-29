@@ -13,12 +13,9 @@ namespace FurnitureGardenDesign.Data.Configuration.Catalog
         {
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.IsDeleted)
-                   .HasDefaultValue(false);
 
 
-            builder.HasQueryFilter(f => !f.IsDeleted);
-
+           
             builder.HasMany(c => c.Orders)
                    .WithOne(o => o.Category)
                    .HasForeignKey(o => o.CategoryId)
