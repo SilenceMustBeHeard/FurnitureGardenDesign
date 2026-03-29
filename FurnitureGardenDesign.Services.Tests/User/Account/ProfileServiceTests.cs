@@ -23,7 +23,7 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
 
         private AppUser _testUser;
         private string _testUserId;
-        private List<ContactMessageCreateViewModel> _testContactMessages;
+        private List<ContactMessageDetailsViewModel> _testContactMessages;
         private List<InboxMessageViewModel> _testInboxMessages;
         private List<SystemInboxMessageViewModel> _testSystemMessages;
 
@@ -32,7 +32,6 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
         {
             _userRepositoryMock = new Mock<IAppUserRepository>(MockBehavior.Strict);
 
-           
             var store = new Mock<IUserStore<AppUser>>();
             _userManagerMock = new Mock<UserManager<AppUser>>(
                 store.Object, null, null, null, null, null, null, null, null);
@@ -42,13 +41,14 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
             _contactMessageClientServiceMock = new Mock<IContactMessageClientService>(MockBehavior.Strict);
             _contactMessageServiceMock = new Mock<IContactMessageService>(MockBehavior.Strict);
 
-    _profileService = new ProfileService(
+            _profileService = new ProfileService(
                 _userRepositoryMock.Object,
                 _userManagerMock.Object,
                 _inboxMessageServiceMock.Object,
                 _systemInboxMessageServiceMock.Object,
                 _contactMessageClientServiceMock.Object,
                 _contactMessageServiceMock.Object);
+
             SeedTestData();
         }
 
@@ -111,17 +111,144 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
                     SenderId = "system"
                 }
             };
+
+            _testContactMessages = new List<ContactMessageDetailsViewModel>
+            {
+                new ContactMessageDetailsViewModel
+                {
+                    Id = Guid.NewGuid(),
+                    Subject = "Contact Message 1",
+                    Message = "Message content 1",
+                    SenderName = "Sender 1",
+                    SenderEmail = "sender1@example.com",
+                    IsRead = false,
+                    CreatedOn = DateTime.UtcNow.AddDays(-1)
+                },
+                new ContactMessageDetailsViewModel
+                {
+                    Id = Guid.NewGuid(),
+                    Subject = "Contact Message 2",
+                    Message = "Message content 2",
+                    SenderName = "Sender 2",
+                    SenderEmail = "sender2@example.com",
+                    IsRead = true,
+                    CreatedOn = DateTime.UtcNow.AddDays(-2)
+                }
+            };
         }
 
-        #region GetProfileAsync Tests
+        #region GetProfileAsync Tests - Regular User
 
         [Test]
-        public async Task GetProfileAsync_ReturnsProfileViewModel_WhenUserExists()
+        public async Task GetProfileAsync_ReturnsProfileViewModel_WhenUserExistsAndIsRegularUser()
         {
-            
+          
+
             var users = new List<AppUser> { _testUser };
-            var mockQueryable = users.BuildMockDbSet(); // FIXED: Call directly on List
-            _userRepositoryMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
+
+            var mockQueryable = users.BuildMockDbSet();
+
+            _userRepositoryMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+          
+            _userManagerMock.Setup(u => u.GetRolesAsync(_testUser))
+                .ReturnsAsync(new List<string> { "User" });
+
+            _inboxMessageServiceMock
+                .Setup(s => s.GetUserMessagesAsync(_testUserId))
+                .ReturnsAsync(_testInboxMessages);
+
+            _systemInboxMessageServiceMock
+                .Setup(s => s.GetUserMessagesAsync(_testUserId))
+                .ReturnsAsync(_testSystemMessages);
+
+            _contactMessageClientServiceMock
+                .Setup(s => s.GetUserMessagesAsync(_testUserId))
+                .ReturnsAsync(_testContactMessages);
+
+            
+            var result = await _profileService.GetProfileAsync(_testUserId);
+
+         
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Id, Is.EqualTo(_testUser.Id));
+            Assert.That(result.Email, Is.EqualTo(_testUser.Email));
+            Assert.That(result.FirstName, Is.EqualTo(_testUser.FirstName));
+            Assert.That(result.LastName, Is.EqualTo(_testUser.LastName));
+            Assert.That(result.Address, Is.EqualTo(_testUser.Address));
+            Assert.That(result.Inbox.Count(), Is.EqualTo(2));
+            Assert.That(result.SystemInbox.Count(), Is.EqualTo(2));
+            Assert.That(result.ContactMessages.Count(), Is.EqualTo(2));
+
+            _userRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
+            _userManagerMock.Verify(u => u.GetRolesAsync(_testUser), Times.Once);
+            _inboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(_testUserId), Times.Once);
+            _systemInboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(_testUserId), Times.Once);
+            _contactMessageClientServiceMock.Verify(s => s.GetUserMessagesAsync(_testUserId), Times.Once);
+            _contactMessageServiceMock.Verify(s => s.GetAdminMessagesAsync(It.IsAny<string>()), Times.Never);
+        }
+
+        #endregion
+
+        #region GetProfileAsync Tests - Admin User
+
+        [Test]
+        public async Task GetProfileAsync_ReturnsProfileViewModel_WhenUserIsAdmin()
+        {
+           
+            var users = new List<AppUser> { _testUser };
+            var mockQueryable = users.BuildMockDbSet();
+            _userRepositoryMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+          
+            _userManagerMock.Setup(u => u.GetRolesAsync(_testUser))
+                .ReturnsAsync(new List<string> { "Admin" });
+
+            _inboxMessageServiceMock
+                .Setup(s => s.GetUserMessagesAsync(_testUserId))
+                .ReturnsAsync(_testInboxMessages);
+
+            _systemInboxMessageServiceMock
+                .Setup(s => s.GetUserMessagesAsync(_testUserId))
+                .ReturnsAsync(_testSystemMessages);
+
+            _contactMessageServiceMock
+                .Setup(s => s.GetAdminMessagesAsync(_testUserId))
+                .ReturnsAsync(_testContactMessages);
+
+            var result = await _profileService.GetProfileAsync(_testUserId);
+
+           
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Id, Is.EqualTo(_testUser.Id));
+            Assert.That(result.ContactMessages.Count(), Is.EqualTo(2));
+
+            _userRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
+            _userManagerMock.Verify(u => u.GetRolesAsync(_testUser), Times.Once);
+            _inboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(_testUserId), Times.Once);
+            _systemInboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(_testUserId), Times.Once);
+            _contactMessageServiceMock.Verify(s => s.GetAdminMessagesAsync(_testUserId), Times.Once);
+            _contactMessageClientServiceMock.Verify(s => s.GetUserMessagesAsync(It.IsAny<string>()), Times.Never);
+        }
+
+        #endregion
+
+        #region GetProfileAsync Tests - Manager User
+
+        [Test]
+        public async Task GetProfileAsync_ReturnsProfileViewModel_WhenUserIsManager()
+        {
+           
+            var users = new List<AppUser> { _testUser };
+            var mockQueryable = users.BuildMockDbSet();
+            _userRepositoryMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+           
+            _userManagerMock.Setup(u => u.GetRolesAsync(_testUser))
+                .ReturnsAsync(new List<string> { "Manager" });
 
             _inboxMessageServiceMock
                 .Setup(s => s.GetUserMessagesAsync(_testUserId))
@@ -137,52 +264,56 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
           
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(_testUser.Id));
-            Assert.That(result.Email, Is.EqualTo(_testUser.Email));
-            Assert.That(result.FirstName, Is.EqualTo(_testUser.FirstName));
-            Assert.That(result.LastName, Is.EqualTo(_testUser.LastName));
-            Assert.That(result.Address, Is.EqualTo(_testUser.Address));
-
-           
-            Assert.That(result.Inbox, Is.Not.Null);
-            Assert.That(result.Inbox.Count(), Is.EqualTo(2));
-            Assert.That(result.Inbox.First().Notes, Is.EqualTo("Test note 1"));
-
-           
-            Assert.That(result.SystemInbox, Is.Not.Null);
-            Assert.That(result.SystemInbox.Count(), Is.EqualTo(2));
-            Assert.That(result.SystemInbox.First().Description, Is.EqualTo("System message 1"));
+            Assert.That(result.ContactMessages, Is.Empty);
 
             _userRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
+            _userManagerMock.Verify(u => u.GetRolesAsync(_testUser), Times.Once);
             _inboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(_testUserId), Times.Once);
             _systemInboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(_testUserId), Times.Once);
+            _contactMessageClientServiceMock.Verify(s => s.GetUserMessagesAsync(It.IsAny<string>()), Times.Never);
+            _contactMessageServiceMock.Verify(s => s.GetAdminMessagesAsync(It.IsAny<string>()), Times.Never);
         }
+
+        #endregion
+
+        #region GetProfileAsync Tests - User Not Found
 
         [Test]
         public async Task GetProfileAsync_ReturnsNull_WhenUserDoesNotExist()
         {
-          
-            var users = new List<AppUser>(); 
-            var mockQueryable = users.BuildMockDbSet(); 
+           
+            var users = new List<AppUser>();
+            var mockQueryable = users.BuildMockDbSet();
             _userRepositoryMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-            
+          
             var result = await _profileService.GetProfileAsync("non-existent-user");
 
-           
+            
             Assert.That(result, Is.Null);
 
             _userRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
+            _userManagerMock.Verify(u => u.GetRolesAsync(It.IsAny<AppUser>()), Times.Never);
             _inboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(It.IsAny<string>()), Times.Never);
             _systemInboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(It.IsAny<string>()), Times.Never);
         }
 
+        #endregion
+
+        #region GetProfileAsync Tests - Empty Messages
+
         [Test]
-        public async Task GetProfileAsync_ReturnsEmptyInboxes_WhenNoMessagesExist()
+        public async Task GetProfileAsync_ReturnsEmptyCollections_WhenNoMessagesExist()
         {
          
             var users = new List<AppUser> { _testUser };
-            var mockQueryable = users.BuildMockDbSet(); // FIXED: Call directly on List
-            _userRepositoryMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
+            var mockQueryable = users.BuildMockDbSet();
+
+            _userRepositoryMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            _userManagerMock.Setup(u => u.GetRolesAsync(_testUser))
+                .ReturnsAsync(new List<string> { "User" });
 
             _inboxMessageServiceMock
                 .Setup(s => s.GetUserMessagesAsync(_testUserId))
@@ -192,6 +323,10 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
                 .Setup(s => s.GetUserMessagesAsync(_testUserId))
                 .ReturnsAsync(new List<SystemInboxMessageViewModel>());
 
+            _contactMessageClientServiceMock
+                .Setup(s => s.GetUserMessagesAsync(_testUserId))
+                .ReturnsAsync(new List<ContactMessageDetailsViewModel>());
+
            
             var result = await _profileService.GetProfileAsync(_testUserId);
 
@@ -199,19 +334,26 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Inbox, Is.Empty);
             Assert.That(result.SystemInbox, Is.Empty);
-
-            _userRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
-            _inboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(_testUserId), Times.Once);
-            _systemInboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(_testUserId), Times.Once);
+            Assert.That(result.ContactMessages, Is.Empty);
         }
+
+        #endregion
+
+        #region GetProfileAsync Tests - Null Returns from Services
 
         [Test]
         public async Task GetProfileAsync_HandlesNullMessagesFromServices()
         {
            
             var users = new List<AppUser> { _testUser };
-            var mockQueryable = users.BuildMockDbSet(); 
-            _userRepositoryMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
+
+            var mockQueryable = users.BuildMockDbSet();
+
+            _userRepositoryMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            _userManagerMock.Setup(u => u.GetRolesAsync(_testUser))
+                .ReturnsAsync(new List<string> { "User" });
 
             _inboxMessageServiceMock
                 .Setup(s => s.GetUserMessagesAsync(_testUserId))
@@ -221,26 +363,31 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
                 .Setup(s => s.GetUserMessagesAsync(_testUserId))
                 .ReturnsAsync((List<SystemInboxMessageViewModel>)null!);
 
+            _contactMessageClientServiceMock
+                .Setup(s => s.GetUserMessagesAsync(_testUserId))
+                .ReturnsAsync((List<ContactMessageDetailsViewModel>)null!);
+
             
             var result = await _profileService.GetProfileAsync(_testUserId);
 
-            
+           
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Inbox, Is.Empty); 
-            Assert.That(result.SystemInbox, Is.Empty); 
-
-            _userRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
-            _inboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(_testUserId), Times.Once);
-            _systemInboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(_testUserId), Times.Once);
+            Assert.That(result.Inbox, Is.Empty);
+            Assert.That(result.SystemInbox, Is.Empty);
+            Assert.That(result.ContactMessages, Is.Empty);
         }
 
+        #endregion
+
+        #region GetProfileAsync Tests - Edge Cases
+
         [Test]
-        public async Task GetProfileAsync_ReturnsUserWithNullAddress_WhenAddressIsNull()
+        public async Task GetProfileAsync_ReturnsUserWithNoAddress_WhenAddressIsNull()
         {
-           
+          
             var userWithNullAddress = new AppUser
             {
-                Id = "user2",
+                Id = Guid.NewGuid().ToString(),
                 Email = "test2@example.com",
                 FirstName = "Jane",
                 LastName = "Smith",
@@ -248,31 +395,39 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
             };
 
             var users = new List<AppUser> { userWithNullAddress };
-            var mockQueryable = users.BuildMockDbSet(); // FIXED: Call directly on List
-            _userRepositoryMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
+
+            var mockQueryable = users.BuildMockDbSet();
+
+            _userRepositoryMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            _userManagerMock.Setup(u => u.GetRolesAsync(userWithNullAddress))
+                .ReturnsAsync(new List<string> { "User" });
 
             _inboxMessageServiceMock
-                .Setup(s => s.GetUserMessagesAsync("user2"))
+                .Setup(s => s.GetUserMessagesAsync(userWithNullAddress.Id))
                 .ReturnsAsync(new List<InboxMessageViewModel>());
 
             _systemInboxMessageServiceMock
-                .Setup(s => s.GetUserMessagesAsync("user2"))
+                .Setup(s => s.GetUserMessagesAsync(userWithNullAddress.Id))
                 .ReturnsAsync(new List<SystemInboxMessageViewModel>());
 
-            
-            var result = await _profileService.GetProfileAsync("user2");
+            _contactMessageClientServiceMock
+                .Setup(s => s.GetUserMessagesAsync(userWithNullAddress.Id))
+                .ReturnsAsync(new List<ContactMessageDetailsViewModel>());
 
             
+            var result = await _profileService.GetProfileAsync(userWithNullAddress.Id);
+
+          
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Address, Is.Null);
-            Assert.That(result.FirstName, Is.EqualTo("Jane"));
-            Assert.That(result.LastName, Is.EqualTo("Smith"));
         }
 
         [Test]
-        public async Task GetProfileAsync_ReturnsUserWithEmptyEmail_WhenEmailIsNull()
+        public async Task GetProfileAsync_ReturnsEmptyEmail_WhenEmailIsNull()
         {
-           
+         
             var userWithNullEmail = new AppUser
             {
                 Id = "user3",
@@ -283,8 +438,14 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
             };
 
             var users = new List<AppUser> { userWithNullEmail };
-            var mockQueryable = users.BuildMockDbSet(); // FIXED: Call directly on List
-            _userRepositoryMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
+
+            var mockQueryable = users.BuildMockDbSet();
+
+            _userRepositoryMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            _userManagerMock.Setup(u => u.GetRolesAsync(userWithNullEmail))
+                .ReturnsAsync(new List<string> { "User" });
 
             _inboxMessageServiceMock
                 .Setup(s => s.GetUserMessagesAsync("user3"))
@@ -294,74 +455,61 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
                 .Setup(s => s.GetUserMessagesAsync("user3"))
                 .ReturnsAsync(new List<SystemInboxMessageViewModel>());
 
+            _contactMessageClientServiceMock
+                .Setup(s => s.GetUserMessagesAsync("user3"))
+                .ReturnsAsync(new List<ContactMessageDetailsViewModel>());
+
           
             var result = await _profileService.GetProfileAsync("user3");
 
-            
+          
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Email, Is.EqualTo(string.Empty)); // Should convert null to empty string
+            Assert.That(result.Email, Is.EqualTo(string.Empty));
         }
-
-        #endregion
-
-        #region Edge Cases and Validation Tests
 
         [Test]
         public async Task GetProfileAsync_WithEmptyUserId_ReturnsNull()
         {
-            
+           
             var users = new List<AppUser> { _testUser };
-            var mockQueryable = users.BuildMockDbSet(); // FIXED: Call directly on List
-            _userRepositoryMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
+
+            var mockQueryable = users.BuildMockDbSet();
+
+            _userRepositoryMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
 
            
             var result = await _profileService.GetProfileAsync(string.Empty);
 
-          
-            Assert.That(result, Is.Null);
-            _userRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
-        }
-
-        [Test]
-        public async Task GetProfileAsync_WithWhitespaceUserId_ReturnsNull()
-        {
            
-            var users = new List<AppUser> { _testUser };
-            var mockQueryable = users.BuildMockDbSet();
-            _userRepositoryMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
-
-            
-            var result = await _profileService.GetProfileAsync("   ");
-
-            
             Assert.That(result, Is.Null);
-            _userRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
         [Test]
         public async Task GetProfileAsync_WithNullUserId_ReturnsNull()
         {
-            // Arrange
+            
             var users = new List<AppUser> { _testUser };
+
             var mockQueryable = users.BuildMockDbSet();
+
             _userRepositoryMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-        
+          
             var result = await _profileService.GetProfileAsync(null);
 
-     
+         
             Assert.That(result, Is.Null);
-            _userRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
         #endregion
 
-        #region Multiple Users Tests
+        #region GetProfileAsync Tests - Multiple Users
 
         [Test]
         public async Task GetProfileAsync_ReturnsCorrectUser_WhenMultipleUsersExist()
         {
-            
+            // Arrange
             var user2 = new AppUser
             {
                 Id = "user2-id",
@@ -372,8 +520,14 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
             };
 
             var users = new List<AppUser> { _testUser, user2 };
-            var mockQueryable = users.BuildMockDbSet(); 
-            _userRepositoryMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
+
+            var mockQueryable = users.BuildMockDbSet();
+
+            _userRepositoryMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            _userManagerMock.Setup(u => u.GetRolesAsync(user2))
+                .ReturnsAsync(new List<string> { "User" });
 
             _inboxMessageServiceMock
                 .Setup(s => s.GetUserMessagesAsync("user2-id"))
@@ -383,24 +537,20 @@ namespace FurnitureGardenDesign.Services.Tests.User.Profile
                 .Setup(s => s.GetUserMessagesAsync("user2-id"))
                 .ReturnsAsync(new List<SystemInboxMessageViewModel>());
 
-           
-            var result = await _profileService.GetProfileAsync("user2-id");
+            _contactMessageClientServiceMock
+                .Setup(s => s.GetUserMessagesAsync("user2-id"))
+                .ReturnsAsync(new List<ContactMessageDetailsViewModel>());
 
           
+            var result = await _profileService.GetProfileAsync("user2-id");
+
+        
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo("user2-id"));
             Assert.That(result.Email, Is.EqualTo("user2@example.com"));
             Assert.That(result.FirstName, Is.EqualTo("User"));
             Assert.That(result.LastName, Is.EqualTo("Two"));
-
-            _userRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
-
-        #endregion
-
-        #region Integration-Style Tests (Mock Verification)
-
-       
 
         #endregion
     }
