@@ -8,7 +8,7 @@ using FurnitureGardenDesign.Web.ViewModels;
 using MockQueryable.Moq;
 using Moq;
 
-namespace FurnitureGardenDesign.Services.Tests.Implementations.Interactions
+namespace FurnitureGardenDesign.Services.Tests.Interactions
 {
     [TestFixture]
     public class OrderServiceTests
