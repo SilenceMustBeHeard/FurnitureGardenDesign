@@ -7,15 +7,8 @@ using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Message;
 using FurnitureGardenDesign.Services.Core.Manager.Implementations.Interactions;
 using FurnitureGardenDesign.Web.ViewModels.DesignVariants;
-using Microsoft.EntityFrameworkCore;
 using MockQueryable.Moq;
 using Moq;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
 {
