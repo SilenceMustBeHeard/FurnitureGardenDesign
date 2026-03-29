@@ -36,8 +36,4 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Admin\Account\" />
-  </ItemGroup>
-
 </Project>

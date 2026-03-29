@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FurnitureGardenDesign.Data.Repository.Implementations.Interactions.Account
+namespace FurnitureGardenDesign.Data.Repository.Implementations.Account
 {
     public class RepositoryRegistrationException : Exception
     {

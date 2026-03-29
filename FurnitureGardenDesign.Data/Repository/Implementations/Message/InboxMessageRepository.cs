@@ -1,5 +1,5 @@
 ﻿using FurnitureGardenDesign.Data.Models.Messages;
-using FurnitureGardenDesign.Data.Repository.Implementations.Interactions.Account;
+using FurnitureGardenDesign.Data.Repository.Implementations.Account;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Message;
 using System;
 using System.Collections.Generic;

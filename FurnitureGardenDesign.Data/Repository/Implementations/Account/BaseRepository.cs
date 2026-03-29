@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace FurnitureGardenDesign.Data.Repository.Implementations.Interactions.Account
+namespace FurnitureGardenDesign.Data.Repository.Implementations.Account
 {
   
         public abstract class BaseRepository<TEntity, TKey> :

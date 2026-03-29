@@ -1,5 +1,5 @@
 ﻿using FurnitureGardenDesign.Data.Models.Catalog;
-using FurnitureGardenDesign.Data.Repository.Implementations.Interactions.Account;
+using FurnitureGardenDesign.Data.Repository.Implementations.Account;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
 using Microsoft.EntityFrameworkCore;
 using System;
