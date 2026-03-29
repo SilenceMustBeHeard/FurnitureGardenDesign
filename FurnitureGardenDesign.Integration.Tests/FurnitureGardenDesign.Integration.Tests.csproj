@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\Interactions\" />
     <Folder Include="Repositories\Message\" />
   </ItemGroup>
 
