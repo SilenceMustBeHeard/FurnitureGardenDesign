@@ -28,8 +28,6 @@
     <Folder Include="Admin\Interfaces\Interactions\" />
     <Folder Include="Admin\Interfaces\Message\" />
     <Folder Include="Manager\Implementations\Account\" />
-    <Folder Include="Manager\Implementations\Catalog\" />
-    <Folder Include="Manager\Implementations\Interactions\" />
     <Folder Include="Manager\Implementations\Message\" />
     <Folder Include="Manager\Interfaces\Account\" />
     <Folder Include="Manager\Interfaces\Catalog\" />
