@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="Repositories\Message\" />
+    <Folder Include="TestResults\" />
   </ItemGroup>
 
   <ItemGroup>
