@@ -1,5 +1,5 @@
 ﻿using FurnitureGardenDesign.Data.Repository.Implementations;
-using FurnitureGardenDesign.Data.Repository.Implementations.Interactions.Account;
+using FurnitureGardenDesign.Data.Repository.Implementations.Account;
 using FurnitureGardenDesign.Services.Core;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;

@@ -37,9 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Models\" />
-    <Folder Include="Data\Configurations\" />
-    <Folder Include="Data\Repositories\" />
     <Folder Include="Services\Manager\Account\" />
     <Folder Include="Services\Manager\Message\" />
   </ItemGroup>

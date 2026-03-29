@@ -13,6 +13,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
     <PackageReference Include="NUnit" Version="4.5.1" />
     <PackageReference Include="NUnit.Analyzers" Version="4.12.0">
@@ -24,6 +26,15 @@
 
   <ItemGroup>
     <Using Include="NUnit.Framework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repositories\Interactions\" />
+    <Folder Include="Repositories\Message\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FurnitureGardenDesign.Data\FurnitureGardenDesign.Data.csproj" />
   </ItemGroup>
 
 </Project>

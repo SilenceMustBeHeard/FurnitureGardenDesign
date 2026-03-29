@@ -8,7 +8,7 @@ namespace FurnitureGardenDesign.Data.Models
 {
     public class AppUser : IdentityUser
     {
-        public string FullName => $"{FirstName} {LastName}".Trim();
+        public string FullName => $"{FirstName?.Trim()} {LastName?.Trim()}".Trim();
 
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
