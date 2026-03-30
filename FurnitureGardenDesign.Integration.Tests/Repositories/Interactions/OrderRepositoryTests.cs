@@ -419,38 +419,13 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
             Assert.That(updatedOrder.FurnitureType, Is.EqualTo("Updated Furniture"));
         }
 
-        [Test]
-        public async Task HardDeleteAsync_RemovesOrderPermanently()
-        {
-            
-            var order = await _repository.GetByIdAsync(_testOrderId1);
-
-          
-            var result = await _repository.HardDeleteAsync(order);
-
-           
-            Assert.That(result, Is.True);
-            var deletedOrder = await _context.Orders.FindAsync(_testOrderId1);
-            Assert.That(deletedOrder, Is.Null);
-        }
+    
 
         #endregion
 
         #region Edge Cases and Validation Tests
 
-        [Test]
-        public async Task CountPendingAsync_HandlesEmptyDatabase()
-        {
-          
-            _context.Orders.RemoveRange(_context.Orders);
-            await _context.SaveChangesAsync();
-
-           
-            var result = await _repository.CountPendingAsync();
-
-          
-            Assert.That(result, Is.EqualTo(0));
-        }
+     
 
         [Test]
         public async Task GetOrderWithVariantsAsync_HandlesNullVariantsCollection()

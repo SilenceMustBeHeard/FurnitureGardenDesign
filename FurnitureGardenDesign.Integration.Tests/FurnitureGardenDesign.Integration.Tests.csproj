@@ -29,10 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\Message\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\FurnitureGardenDesign.Data\FurnitureGardenDesign.Data.csproj" />
   </ItemGroup>
 
