@@ -174,6 +174,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         public async Task GetByIdAsync_ReturnsFavorite()
         {
             var favorite = await _context.Favorites.FirstOrDefaultAsync();
+            Assert.That(favorite, Is.Not.Null);
 
             var result = await _repository.GetByIdAsync(favorite.Id);
 
@@ -185,6 +186,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         public async Task HardDeleteAsync_RemovesFavorite()
         {
             var favorite = await _context.Favorites.FirstOrDefaultAsync();
+            Assert.That(favorite, Is.Not.Null);
 
             var result = await _repository.HardDeleteAsync(favorite);
 
