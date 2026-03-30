@@ -18,20 +18,20 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         private readonly UserManager<AppUser> _userManager;
         private readonly IInboxMessageService _inboxMessageService;
         private readonly ISystemInboxMessageService _systemInboxMessageService;
-        private readonly IContactMessageService _contactMessageService;  // Add this
+        private readonly IContactMessageService _contactMessageService;  
 
         public AdminProfileController(
             ISystemInboxMessageService systemInboxMessageService,
             IProfileService profileService,
             UserManager<AppUser> userManager,
             IInboxMessageService inboxMessageService,
-            IContactMessageService contactMessageService)  // Add this parameter
+            IContactMessageService contactMessageService)  
         {
             _systemInboxMessageService = systemInboxMessageService;
             _profileService = profileService;
             _userManager = userManager;
             _inboxMessageService = inboxMessageService;
-            _contactMessageService = contactMessageService;  // Initialize
+            _contactMessageService = contactMessageService;  
         }
 
         [HttpGet]
@@ -51,6 +51,11 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         [HttpPost]
         public async Task<IActionResult> MarkAsRead(Guid id)
         {
+            if(!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid request.";
+                return RedirectToAction(nameof(Index));
+            }
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -87,6 +92,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         [HttpGet]
         public async Task<IActionResult> MessageDetails(Guid id)
         {
+            if(!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid request.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -123,6 +134,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApproveDesign(Guid id)
         {
+            if(!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid request.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -145,6 +162,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         [HttpGet]
         public async Task<IActionResult> SystemMessageDetails(Guid id)
         {
+            if(!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid request.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -183,6 +206,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
             }
 
             var userId = _userManager.GetUserId(User);
+
+            if(userId == null)
+            {
+                TempData["Error"] = "You must be logged in to perform this action.";
+                return RedirectToAction("Login", "Account");
+            }
 
             // Get both types of messages
             var designMessages = await _inboxMessageService.GetAdminMessagesAsync(userId);

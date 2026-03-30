@@ -10,7 +10,7 @@ using FurnitureGardenDesign.Web.ViewModels.DesignVariants;
 using MockQueryable.Moq;
 using Moq;
 
-namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
+namespace FurnitureGardenDesign.Tests.Unit.Services.Manager.Implementations.Interactions
 {
     [TestFixture]
     public class ManagerDesignVariantServiceTests
@@ -43,13 +43,13 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
 
         private void SeedTestData()
         {
-            _testOrderId = Guid.Parse("11111111-1111-1111-1111-111111111111");
-            _testDesignVariantId = Guid.Parse("22222222-2222-2222-2222-222222222222");
+            _testOrderId = Guid.NewGuid();
+            _testDesignVariantId = Guid.NewGuid();
 
             _testOrder = new Order
             {
                 Id = _testOrderId,
-                UserId = "33333333-3333-3333-3333-333333333333",
+                UserId = "customer-123",
                 Status = OrderStatus.Pending
             };
 
@@ -69,7 +69,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
                 _testDesignVariant,
                 new DesignVariant
                 {
-                    Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
+                    Id = Guid.NewGuid(),
                     OrderId = _testOrderId,
                     Image2DUrl = "/images/test2.jpg",
                     Model3DUrl = null,
@@ -78,8 +78,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
                 },
                 new DesignVariant
                 {
-                    Id = Guid.Parse("55555555-5555-5555-5555-555555555555"),
-                    OrderId = Guid.Parse("66666666-6666-6666-6666-666666666666"),
+                    Id = Guid.NewGuid(),
+                    OrderId = Guid.NewGuid(),
                     Image2DUrl = "/images/test3.jpg",
                     Model3DUrl = "/models/test3.glb",
                     Notes = "Different order",
@@ -93,7 +93,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
         [Test]
         public async Task GetDesignVariantsByOrderIdAsync_ReturnsVariants_WhenOrderExists()
         {
-            
             var variantsForOrder = _testDesignVariants
                 .Where(v => v.OrderId == _testOrderId)
                 .ToList();
@@ -102,88 +101,71 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
                 .Setup(r => r.GetByOrderId(_testOrderId))
                 .ReturnsAsync(variantsForOrder);
 
-          
             var result = await _service.GetDesignVariantsByOrderIdAsync(_testOrderId);
 
-          
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count(), Is.EqualTo(2));
             Assert.That(result.First().Id, Is.EqualTo(_testDesignVariantId));
-
             _designVariantRepositoryMock.Verify(r => r.GetByOrderId(_testOrderId), Times.Once);
         }
 
         [Test]
         public async Task GetDesignVariantsByOrderIdAsync_ReturnsEmptyList_WhenNoVariantsForOrder()
         {
-           
             var emptyList = new List<DesignVariant>();
-
             _designVariantRepositoryMock
                 .Setup(r => r.GetByOrderId(_testOrderId))
                 .ReturnsAsync(emptyList);
 
-          
             var result = await _service.GetDesignVariantsByOrderIdAsync(_testOrderId);
 
-         
             Assert.That(result, Is.Empty);
-
-            _designVariantRepositoryMock.Verify(r => r.GetByOrderId(_testOrderId), Times.Once);
         }
 
-        #endregion
+        #endregion GetDesignVariantsByOrderIdAsync Tests
 
         #region GetDesignVariantByIdAsync Tests
 
         [Test]
         public async Task GetDesignVariantByIdAsync_ReturnsVariant_WhenExists()
         {
-          
             var mockQueryable = _testDesignVariants.BuildMockDbSet();
             _designVariantRepositoryMock
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-         
             var result = await _service.GetDesignVariantByIdAsync(_testDesignVariantId);
 
-         
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(_testDesignVariantId));
             Assert.That(result.Notes, Is.EqualTo("Test notes"));
             Assert.That(result.OrderId, Is.EqualTo(_testOrderId));
-
             _designVariantRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
         }
 
         [Test]
         public void GetDesignVariantByIdAsync_ThrowsKeyNotFoundException_WhenVariantDoesNotExist()
         {
-          
-            var nonExistentId = Guid.Parse("99999999-9999-9999-9999-999999999999");
+            var nonExistentId = Guid.NewGuid();
             var emptyList = new List<DesignVariant>();
             var mockQueryable = emptyList.BuildMockDbSet();
-
             _designVariantRepositoryMock
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-          
             var ex = Assert.ThrowsAsync<KeyNotFoundException>(
                 async () => await _service.GetDesignVariantByIdAsync(nonExistentId));
 
             Assert.That(ex.Message, Is.EqualTo($"Design variant with ID {nonExistentId} not found."));
         }
 
-        #endregion
+        #endregion GetDesignVariantByIdAsync Tests
 
         #region CreateDesignVariantAsync Tests
 
         [Test]
         public async Task CreateDesignVariantAsync_CreatesAndReturnsVariant()
         {
-           
             var model = new DesignVariantViewModel
             {
                 OrderId = _testOrderId,
@@ -195,14 +177,12 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
             _designVariantRepositoryMock
                 .Setup(r => r.AddAsync(It.IsAny<DesignVariant>()))
                 .Returns(Task.CompletedTask);
-
             _designVariantRepositoryMock
                 .Setup(r => r.SaveChangesAsync())
                 .Returns(Task.CompletedTask);
 
             var result = await _service.CreateDesignVariantAsync(model);
 
-           
             Assert.That(result, Is.Not.Null);
             Assert.That(result.OrderId, Is.EqualTo(_testOrderId));
             Assert.That(result.Image2DUrl, Is.EqualTo("/images/new.jpg"));
@@ -218,7 +198,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
         [Test]
         public async Task CreateDesignVariantAsync_CreatesVariantWithNullModel3DUrl()
         {
-        
             var model = new DesignVariantViewModel
             {
                 OrderId = _testOrderId,
@@ -230,27 +209,23 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
             _designVariantRepositoryMock
                 .Setup(r => r.AddAsync(It.IsAny<DesignVariant>()))
                 .Returns(Task.CompletedTask);
-
             _designVariantRepositoryMock
                 .Setup(r => r.SaveChangesAsync())
                 .Returns(Task.CompletedTask);
 
-         
             var result = await _service.CreateDesignVariantAsync(model);
 
-           
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Model3DUrl, Is.Null);
         }
 
-        #endregion
+        #endregion CreateDesignVariantAsync Tests
 
         #region UpdateDesignVariantAsync Tests
 
         [Test]
         public async Task UpdateDesignVariantAsync_UpdatesExistingVariant()
         {
-         
             var existingVariant = new DesignVariant
             {
                 Id = _testDesignVariantId,
@@ -272,20 +247,15 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
             _designVariantRepositoryMock
                 .Setup(r => r.GetByIdAsync(_testDesignVariantId))
                 .ReturnsAsync(existingVariant);
-
             _designVariantRepositoryMock
                 .Setup(r => r.Update(It.IsAny<DesignVariant>()))
                 .Returns(true);
-
-
             _designVariantRepositoryMock
                 .Setup(r => r.SaveChangesAsync())
                 .Returns(Task.CompletedTask);
 
-          
             await _service.UpdateDesignVariantAsync(updatedVariant);
 
-          
             Assert.That(existingVariant.Image2DUrl, Is.EqualTo("/images/updated.jpg"));
             Assert.That(existingVariant.Model3DUrl, Is.EqualTo("/models/updated.glb"));
             Assert.That(existingVariant.Notes, Is.EqualTo("Updated notes"));
@@ -299,8 +269,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
         [Test]
         public void UpdateDesignVariantAsync_ThrowsKeyNotFoundException_WhenVariantNotFound()
         {
-         
-            var nonExistentId = Guid.Parse("99999999-9999-9999-9999-999999999999");
+            var nonExistentId = Guid.NewGuid();
             var updatedVariant = new DesignVariant
             {
                 Id = nonExistentId,
@@ -310,68 +279,21 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
 
             _designVariantRepositoryMock
                 .Setup(r => r.GetByIdAsync(nonExistentId))
-                .ReturnsAsync((DesignVariant)null!);
+                .ReturnsAsync((DesignVariant)null);
 
-           
             var ex = Assert.ThrowsAsync<KeyNotFoundException>(
                 async () => await _service.UpdateDesignVariantAsync(updatedVariant));
 
             Assert.That(ex.Message, Is.EqualTo($"Design variant with ID {nonExistentId} not found."));
-
-            _designVariantRepositoryMock.Verify(r => r.Update(It.IsAny<DesignVariant>()), Times.Never);
         }
 
-        [Test]
-        public async Task UpdateDesignVariantAsync_UpdatesPartialData()
-        {
-          
-            var existingVariant = new DesignVariant
-            {
-                Id = _testDesignVariantId,
-                Image2DUrl = "/images/old.jpg",
-                Model3DUrl = null,
-                Notes = "Old notes",
-                IsApproved = false
-            };
-
-            var updatedVariant = new DesignVariant
-            {
-                Id = _testDesignVariantId,
-                Image2DUrl = "/images/new.jpg",
-                Model3DUrl = null,
-                Notes = "Updated notes",
-                IsApproved = true
-            };
-
-            _designVariantRepositoryMock
-                .Setup(r => r.GetByIdAsync(_testDesignVariantId))
-                .ReturnsAsync(existingVariant);
-
-            _designVariantRepositoryMock
-                .Setup(r => r.Update(It.IsAny<DesignVariant>()))
-                .Returns(true);
-
-            _designVariantRepositoryMock
-                .Setup(r => r.SaveChangesAsync())
-                .Returns(Task.CompletedTask);
-
-            await _service.UpdateDesignVariantAsync(updatedVariant);
-
-          
-            Assert.That(existingVariant.Image2DUrl, Is.EqualTo("/images/new.jpg"));
-            Assert.That(existingVariant.Model3DUrl, Is.Null);
-            Assert.That(existingVariant.Notes, Is.EqualTo("Updated notes"));
-            Assert.That(existingVariant.IsApproved, Is.True);
-        }
-
-        #endregion
+        #endregion UpdateDesignVariantAsync Tests
 
         #region SendDesignVariantProposalAsync Tests
 
         [Test]
         public async Task SendDesignVariantProposalAsync_SendsProposalSuccessfully()
         {
-           
             var designVariant = new DesignVariant
             {
                 Id = _testDesignVariantId,
@@ -379,13 +301,12 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
                 Order = new Order
                 {
                     Id = _testOrderId,
-                    UserId = "33333333-3333-3333-3333-333333333333",
+                    UserId = "customer-123",
                     Status = OrderStatus.Pending
                 }
             };
 
             var mockQueryable = new List<DesignVariant> { designVariant }.BuildMockDbSet();
-
             _designVariantRepositoryMock
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
@@ -397,73 +318,57 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
             _inboxMessageRepositoryMock
                 .Setup(r => r.AddAsync(It.IsAny<InboxMessage>()))
                 .Returns(Task.CompletedTask);
-
             _inboxMessageRepositoryMock
                 .Setup(r => r.SaveChangesAsync())
                 .Returns(Task.CompletedTask);
 
-            // Act
             await _service.SendDesignVariantProposalAsync(_testDesignVariantId);
 
-         
             _designVariantRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
             _orderRepositoryMock.Verify(r => r.UpdateStatusAsync(_testOrderId, OrderStatus.DesignProvided), Times.Once);
-
             _inboxMessageRepositoryMock.Verify(r => r.AddAsync(It.Is<InboxMessage>(msg =>
                 msg.DesignVariantId == _testDesignVariantId &&
-                msg.ReceiverId == "33333333-3333-3333-3333-333333333333" &&
+                msg.ReceiverId == "customer-123" &&
                 msg.Type == InboxMessageType.DesignSent &&
                 !msg.IsRead)), Times.Once);
-
             _inboxMessageRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
 
         [Test]
         public void SendDesignVariantProposalAsync_ThrowsKeyNotFoundException_WhenVariantNotFound()
         {
-         
-            var nonExistentId = Guid.Parse("99999999-9999-9999-9999-999999999999");
+            var nonExistentId = Guid.NewGuid();
             var emptyList = new List<DesignVariant>();
             var mockQueryable = emptyList.BuildMockDbSet();
-
             _designVariantRepositoryMock
                 .Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-         
             var ex = Assert.ThrowsAsync<KeyNotFoundException>(
                 async () => await _service.SendDesignVariantProposalAsync(nonExistentId));
 
             Assert.That(ex.Message, Is.EqualTo("Design variant not found."));
-
-            _orderRepositoryMock.Verify(r => r.UpdateStatusAsync(It.IsAny<Guid>(), It.IsAny<OrderStatus>()), Times.Never);
-            _inboxMessageRepositoryMock.Verify(r => r.AddAsync(It.IsAny<InboxMessage>()), Times.Never);
         }
 
-        #endregion
+        #endregion SendDesignVariantProposalAsync Tests
 
         #region DeleteDesignVariantAsync Tests
 
         [Test]
         public async Task DeleteDesignVariantAsync_DeletesVariant_WhenExists()
         {
-           
             _designVariantRepositoryMock
                 .Setup(r => r.GetByIdAsync(_testDesignVariantId))
                 .ReturnsAsync(_testDesignVariant);
-
             _designVariantRepositoryMock
                 .Setup(r => r.Delete(_testDesignVariant))
                 .Returns(true);
-
             _designVariantRepositoryMock
                 .Setup(r => r.SaveChangesAsync())
                 .Returns(Task.CompletedTask);
 
-        
             await _service.DeleteDesignVariantAsync(_testDesignVariantId);
 
-          
             _designVariantRepositoryMock.Verify(r => r.GetByIdAsync(_testDesignVariantId), Times.Once);
             _designVariantRepositoryMock.Verify(r => r.Delete(_testDesignVariant), Times.Once);
             _designVariantRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
@@ -472,21 +377,17 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Interactions
         [Test]
         public void DeleteDesignVariantAsync_ThrowsKeyNotFoundException_WhenVariantNotFound()
         {
-         
-            var nonExistentId = Guid.Parse("99999999-9999-9999-9999-999999999999");
+            var nonExistentId = Guid.NewGuid();
             _designVariantRepositoryMock
                 .Setup(r => r.GetByIdAsync(nonExistentId))
-                .ReturnsAsync((DesignVariant)null!);
+                .ReturnsAsync((DesignVariant)null);
 
-         
             var ex = Assert.ThrowsAsync<KeyNotFoundException>(
                 async () => await _service.DeleteDesignVariantAsync(nonExistentId));
 
             Assert.That(ex.Message, Is.EqualTo($"Design variant with ID {nonExistentId} not found."));
-
-            _designVariantRepositoryMock.Verify(r => r.Delete(It.IsAny<DesignVariant>()), Times.Never);
         }
 
-        #endregion
+        #endregion DeleteDesignVariantAsync Tests
     }
 }

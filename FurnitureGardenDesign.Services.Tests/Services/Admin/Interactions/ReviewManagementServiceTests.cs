@@ -4,17 +4,9 @@ using FurnitureGardenDesign.Data.Models.Interactions;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Catalog;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
 using FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions;
-using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Review;
-using Microsoft.EntityFrameworkCore;
 using MockQueryable.Moq;
 using Moq;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Interactions
 {
@@ -227,9 +219,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Interactions
             Assert.That(result.Price, Is.EqualTo(99.99m));
         }
 
-
-      
-
         #endregion GetWriteReviewModelAsync Tests
 
         #region CreateReviewAsync Tests
@@ -352,8 +341,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Interactions
             Assert.That(result.Comment, Is.EqualTo("Excellent design!"));
         }
 
-      
-
         #endregion GetByIdAsync Tests
 
         #region GetTotalActiveReviewsAsync Tests
@@ -394,12 +381,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Interactions
             _reviewRepoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
 
-    
         #endregion ToggleReviewAsync Tests
-
-
-     
-    
 
         #region GetReviewCountForDesignAsync Tests
 
@@ -417,5 +399,297 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Interactions
         }
 
         #endregion GetReviewCountForDesignAsync Tests
+
+        #region Additional GetWriteReviewModelAsync Tests
+
+        [Test]
+        public async Task GetWriteReviewModelAsync_ReturnsModelWithAverageRating_WhenReviewsExist()
+        {
+            var designWithReviews = new CatalogDesign
+            {
+                Id = _testCatalogDesignId,
+                Title = "Design With Reviews",
+                Description = "Description",
+                Image2DUrl = "/images/test.jpg",
+                Price = 199.99m,
+                Reviews = new List<Review>
+        {
+            new Review { Rating = 5 },
+            new Review { Rating = 4 },
+            new Review { Rating = 3 }
+        }
+            };
+
+            _reviewRepoMock.Setup(r => r.HasUserReviewedAsync(_testUserId, _testCatalogDesignId))
+                .ReturnsAsync(false);
+            _catalogRepoMock.Setup(r => r.GetByIdWithReviewsAsync(_testCatalogDesignId))
+                .ReturnsAsync(designWithReviews);
+
+            var result = await _service.GetWriteReviewModelAsync(_testUserId, _testCatalogDesignId);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.AverageRating, Is.EqualTo(4.0));
+            Assert.That(result.ReviewCount, Is.EqualTo(3));
+        }
+
+        [Test]
+        public async Task GetWriteReviewModelAsync_ReturnsModelWithZeroRating_WhenNoReviews()
+        {
+            var designWithoutReviews = new CatalogDesign
+            {
+                Id = _testCatalogDesignId,
+                Title = "Design Without Reviews",
+                Reviews = new List<Review>()
+            };
+
+            _reviewRepoMock.Setup(r => r.HasUserReviewedAsync(_testUserId, _testCatalogDesignId))
+                .ReturnsAsync(false);
+            _catalogRepoMock.Setup(r => r.GetByIdWithReviewsAsync(_testCatalogDesignId))
+                .ReturnsAsync(designWithoutReviews);
+
+            var result = await _service.GetWriteReviewModelAsync(_testUserId, _testCatalogDesignId);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.AverageRating, Is.EqualTo(0));
+            Assert.That(result.ReviewCount, Is.EqualTo(0));
+        }
+
+        #endregion Additional GetWriteReviewModelAsync Tests
+
+        #region Additional GetAllActiveAsync Tests
+
+        [Test]
+        public async Task GetAllActiveAsync_HandlesNullUserAndDesign()
+        {
+            var reviewsWithNulls = new List<Review>
+    {
+        new Review
+        {
+            Id = Guid.NewGuid(),
+            CatalogDesignId = _testCatalogDesignId,
+            UserId = "user-1",
+            Rating = 5,
+            Comment = "Great!",
+            CreatedOn = DateTime.UtcNow,
+            IsDeleted = false,
+            User = null,
+            CatalogDesign = null
+        }
+    };
+
+            var mockQueryable = reviewsWithNulls.BuildMockDbSet();
+            _reviewRepoMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            var result = await _service.GetAllActiveAsync();
+
+            Assert.That(result, Is.Not.Null);
+            var review = result.First();
+            Assert.That(review.UserName, Is.EqualTo("Unknown"));
+            Assert.That(review.UserEmail, Is.EqualTo("Unknown"));
+            Assert.That(review.CatalogDesignTitle, Is.EqualTo("Unknown"));
+        }
+
+        [Test]
+        public async Task GetAllActiveAsync_HandlesNullComment()
+        {
+            var reviewsWithNullComment = new List<Review>
+    {
+        new Review
+        {
+            Id = Guid.NewGuid(),
+            CatalogDesignId = _testCatalogDesignId,
+            UserId = "user-1",
+            Rating = 5,
+            Comment = null,
+            CreatedOn = DateTime.UtcNow,
+            IsDeleted = false,
+            User = new AppUser { UserName = "TestUser", Email = "test@test.com" },
+            CatalogDesign = new CatalogDesign { Title = "Test Design" }
+        }
+    };
+
+            var mockQueryable = reviewsWithNullComment.BuildMockDbSet();
+            _reviewRepoMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            var result = await _service.GetAllActiveAsync();
+
+            Assert.That(result, Is.Not.Null);
+            var review = result.First();
+            Assert.That(review.Comment, Is.EqualTo(string.Empty));
+        }
+
+        #endregion Additional GetAllActiveAsync Tests
+
+        #region Additional GetByIdAsync Tests
+
+        [Test]
+        public async Task GetByIdAsync_ReturnsNull_WhenReviewNotFound()
+        {
+            var emptyList = new List<Review>();
+            var mockQueryable = emptyList.BuildMockDbSet();
+            _reviewRepoMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            var result = await _service.GetByIdAsync(Guid.NewGuid());
+
+            Assert.That(result, Is.Null);
+        }
+
+        #endregion Additional GetByIdAsync Tests
+
+        #region Additional ToggleReviewAsync Tests
+
+        [Test]
+        public void ToggleReviewAsync_ThrowsException_WhenReviewNotFound()
+        {
+            var nonExistentId = Guid.NewGuid();
+            _reviewRepoMock.Setup(r => r.GetByIdIncludingDeletedAsync(nonExistentId))
+                .ReturnsAsync((Review)null);
+
+            var ex = Assert.ThrowsAsync<Exception>(
+                async () => await _service.ToggleReviewAsync(nonExistentId));
+
+            Assert.That(ex.Message, Is.EqualTo($"Review with ID {nonExistentId} not found"));
+        }
+
+        #endregion Additional ToggleReviewAsync Tests
+
+        #region Additional GetReviewsByUserIdAsync Tests
+
+        [Test]
+        public async Task GetReviewsByUserIdAsync_HandlesNullUser()
+        {
+            var reviews = new List<Review>
+    {
+        new Review
+        {
+            Id = Guid.NewGuid(),
+            CatalogDesignId = _testCatalogDesignId,
+            UserId = _testUserId,
+            Rating = 5,
+            Comment = "Great!",
+            CreatedOn = DateTime.UtcNow,
+            IsDeleted = false,
+            User = null,
+            CatalogDesign = new CatalogDesign { Title = "Test Design" }
+        }
+    };
+
+            var mockQueryable = reviews.BuildMockDbSet();
+            _reviewRepoMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            var result = await _service.GetReviewsByUserIdAsync(_testUserId);
+
+            Assert.That(result, Is.Not.Null);
+            var review = result.First();
+            Assert.That(review.UserName, Is.EqualTo("Unknown"));
+            Assert.That(review.UserEmail, Is.EqualTo("Unknown"));
+        }
+
+        #endregion Additional GetReviewsByUserIdAsync Tests
+
+        #region Additional GetDetailedReviewsByDesignIdAsync Tests
+
+        [Test]
+        public async Task GetDetailedReviewsByDesignIdAsync_OrdersByRatingThenDate()
+        {
+            var reviews = new List<Review>
+    {
+        new Review
+        {
+            Id = Guid.NewGuid(),
+            CatalogDesignId = _testCatalogDesignId,
+            Rating = 4,
+            CreatedOn = DateTime.UtcNow.AddDays(-1),
+            IsDeleted = false,
+            User = new AppUser { UserName = "User1", Email = "user1@test.com" },
+            CatalogDesign = new CatalogDesign { Title = "Design" }
+        },
+        new Review
+        {
+            Id = Guid.NewGuid(),
+            CatalogDesignId = _testCatalogDesignId,
+            Rating = 5,
+            CreatedOn = DateTime.UtcNow,
+            IsDeleted = false,
+            User = new AppUser { UserName = "User2", Email = "user2@test.com" },
+            CatalogDesign = new CatalogDesign { Title = "Design" }
+        },
+        new Review
+        {
+            Id = Guid.NewGuid(),
+            CatalogDesignId = _testCatalogDesignId,
+            Rating = 5,
+            CreatedOn = DateTime.UtcNow.AddDays(-2),
+            IsDeleted = false,
+            User = new AppUser { UserName = "User3", Email = "user3@test.com" },
+            CatalogDesign = new CatalogDesign { Title = "Design" }
+        }
+    };
+
+            var mockQueryable = reviews.BuildMockDbSet();
+            _reviewRepoMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            var result = await _service.GetDetailedReviewsByDesignIdAsync(_testCatalogDesignId);
+            var resultList = result.ToList();
+
+            Assert.That(resultList[0].Rating, Is.EqualTo(5));
+            Assert.That(resultList[1].Rating, Is.EqualTo(5));
+            Assert.That(resultList[2].Rating, Is.EqualTo(4));
+            Assert.That(resultList[0].CreatedAt, Is.GreaterThan(resultList[1].CreatedAt));
+        }
+
+        [Test]
+        public async Task GetDetailedReviewsByDesignIdAsync_ReturnsEmptyList_WhenNoReviews()
+        {
+            var emptyList = new List<Review>();
+            var mockQueryable = emptyList.BuildMockDbSet();
+            _reviewRepoMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            var result = await _service.GetDetailedReviewsByDesignIdAsync(_testCatalogDesignId);
+
+            Assert.That(result, Is.Empty);
+        }
+
+        #endregion Additional GetDetailedReviewsByDesignIdAsync Tests
+
+        #region Additional GetAverageRatingForDesignAsync Tests
+
+        [Test]
+        public async Task GetAverageRatingForDesignAsync_ReturnsZero_WhenNoReviews()
+        {
+            var emptyList = new List<Review>();
+            var mockQueryable = emptyList.BuildMockDbSet();
+            _reviewRepoMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            var result = await _service.GetAverageRatingForDesignAsync(_testCatalogDesignId);
+
+            Assert.That(result, Is.EqualTo(0));
+        }
+
+        #endregion Additional GetAverageRatingForDesignAsync Tests
+
+        #region Additional GetReviewCountForDesignAsync Tests
+
+        [Test]
+        public async Task GetReviewCountForDesignAsync_ReturnsZero_WhenNoReviews()
+        {
+            var emptyList = new List<Review>();
+            var mockQueryable = emptyList.BuildMockDbSet();
+            _reviewRepoMock.Setup(r => r.GetAllAttached())
+                .Returns(mockQueryable.Object);
+
+            var result = await _service.GetReviewCountForDesignAsync(_testCatalogDesignId);
+
+            Assert.That(result, Is.EqualTo(0));
+        }
+
+        #endregion Additional GetReviewCountForDesignAsync Tests
     }
 }

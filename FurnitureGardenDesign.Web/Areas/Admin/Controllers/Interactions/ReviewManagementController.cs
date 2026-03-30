@@ -35,6 +35,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
         [HttpGet]
         public async Task<IActionResult> Write(Guid id)
         {
+            if(!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid request.";
+                return RedirectToAction("AdminIndex", "CatalogManagement");
+            }
+
             var userId = GetUserId();
             if (string.IsNullOrEmpty(userId.ToString()))
                 return Unauthorized();
@@ -57,6 +63,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Post(AddReviewViewModel model)
         {
+            if(!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid request.";
+                return RedirectToAction("AdminIndex", "CatalogManagement");
+            }
+
             var userId = GetUserId();
             if(string.IsNullOrEmpty(userId.ToString()))
                 return Unauthorized();
@@ -79,6 +91,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
         [HttpGet]
         public async Task<IActionResult> Reviews(Guid id)
         {
+            if(!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid request.";
+                return RedirectToAction("AdminIndex", "CatalogManagement");
+            }
+
             var reviews = await _reviewService.GetReviewsByDesignIdAsync(id);
 
             return View(new ReviewListViewModel
@@ -92,6 +110,11 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditList(bool includeDeleted = true)
         {
+            if(!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid request.";
+                return RedirectToAction("AdminIndex", "CatalogManagement");
+            }
             IEnumerable<ReviewViewModelList> reviews;
 
             if (includeDeleted)

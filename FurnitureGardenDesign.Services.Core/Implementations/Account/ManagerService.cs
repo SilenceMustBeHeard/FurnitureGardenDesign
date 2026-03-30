@@ -18,7 +18,17 @@ namespace FurnitureGardenDesign.Services.Core
         public async Task<bool> IsUserManagerAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            return user != null && await _userManager.IsInRoleAsync(user, "Manager");
+
+            if (user == null)
+            {
+                return false;
+            }
+            if(string.IsNullOrEmpty(userId))
+            {
+                return false;
+            }
+                
+            return await _userManager.IsInRoleAsync(user, "Manager");
         }
     }
 }

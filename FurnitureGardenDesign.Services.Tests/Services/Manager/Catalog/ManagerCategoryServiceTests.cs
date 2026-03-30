@@ -10,7 +10,7 @@ using System.Text;
 namespace FurnitureGardenDesign.Unit.Tests.Services.Manager.Catalog
 {
     [TestFixture]
-    public class CategoryServiceTests
+    public class ManagerCategoryServiceTests
     {
         private Mock<ICategoryRepository> _categoryRepositoryMock;
         private CategoryServiceClient _categoryServiceClient;

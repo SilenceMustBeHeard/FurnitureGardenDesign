@@ -7,12 +7,7 @@ using FurnitureGardenDesign.Web.ViewModels.Messages;
 using Microsoft.AspNetCore.Identity;
 using MockQueryable.Moq;
 using Moq;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Unit.Tests.Services.User.Messages
 {
@@ -160,7 +155,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Messages
         [Test]
         public async Task SendContactMessageAsync_ValidMessage_CreatesContactMessage()
         {
-            
             var model = new ContactMessageCreateViewModel
             {
                 Subject = "New Test Subject",
@@ -175,17 +169,14 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Messages
             _messageRepositoryMock.Setup(x => x.GetAllAttached())
                 .Returns(mockDbSet.Object);
 
-            
             _messageRepositoryMock.Setup(x => x.AddAsync(It.IsAny<ContactMessage>()))
                 .Returns(Task.CompletedTask);
 
             _messageRepositoryMock.Setup(x => x.SaveChangesAsync())
                 .Returns(Task.FromResult(1));
 
-         
             await _contactMessageClientService.SendContactMessageAsync(model, userPrincipal);
 
-         
             _messageRepositoryMock.Verify(x => x.AddAsync(It.Is<ContactMessage>(cm =>
                 cm.SenderId == _testUserId &&
                 cm.ReceiverId == _testAdminId &&
@@ -201,7 +192,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Messages
         [Test]
         public async Task SendContactMessageAsync_DuplicateMessage_DoesNotCreateDuplicate()
         {
-           
             var model = new ContactMessageCreateViewModel
             {
                 Subject = _testMessage.Subject,
@@ -215,7 +205,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Messages
             _messageRepositoryMock.Setup(x => x.GetAllAttached())
                 .Returns(mockDbSet.Object);
 
-           
             await _contactMessageClientService.SendContactMessageAsync(model, userPrincipal);
 
             _messageRepositoryMock.Verify(x => x.AddAsync(It.IsAny<ContactMessage>()), Times.Never);
@@ -225,7 +214,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Messages
         [Test]
         public void SendContactMessageAsync_UserNotLoggedIn_ThrowsArgumentException()
         {
-            
             var model = new ContactMessageCreateViewModel
             {
                 Subject = "Test Subject",
@@ -244,7 +232,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Messages
         [Test]
         public void SendContactMessageAsync_NoAdminFound_ThrowsInvalidOperationException()
         {
-          
             var model = new ContactMessageCreateViewModel
             {
                 Subject = "Test Subject",
@@ -254,108 +241,85 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Messages
 
             SetupUserManagerForSendMessage(_testUserId, hasAdmin: false);
 
-           
             var ex = Assert.ThrowsAsync<InvalidOperationException>(
                 () => _contactMessageClientService.SendContactMessageAsync(model, userPrincipal));
             Assert.That(ex.Message, Is.EqualTo("No admin user found in the system."));
         }
 
-        #endregion
+        #endregion SendContactMessageAsync Tests
 
         #region GetUserMessagesAsync Tests
 
-
-
-      
         [Test]
         public async Task GetUserMessagesAsync_ReturnsEmptyList_WhenUserHasNoMessages()
         {
-           
             var emptyList = new List<ContactMessage>();
             var mockDbSet = emptyList.BuildMockDbSet();
             _messageRepositoryMock.Setup(x => x.GetAllAttached())
                 .Returns(mockDbSet.Object);
 
-          
             var result = await _contactMessageClientService.GetUserMessagesAsync(_testUserId);
 
-          
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.Empty);
         }
 
-     
-
-        #endregion
+        #endregion GetUserMessagesAsync Tests
 
         #region GetMessageDetailsAsync Tests
-
-     
-     
-
-      
 
         [Test]
         public async Task GetMessageDetailsAsync_MessageNotFound_ReturnsNull()
         {
-           
             var emptyList = new List<ContactMessage>();
             var mockDbSet = emptyList.BuildMockDbSet();
             _messageRepositoryMock.Setup(x => x.GetAllAttached())
                 .Returns(mockDbSet.Object);
 
-          
             var result = await _contactMessageClientService.GetMessageDetailsAsync(Guid.NewGuid(), _testUserId);
 
-         
             Assert.That(result, Is.Null);
         }
 
         [Test]
         public async Task GetMessageDetailsAsync_UserNotSender_ReturnsNull()
         {
-         
             var mockDbSet = _testMessages.BuildMockDbSet();
             _messageRepositoryMock.Setup(x => x.GetAllAttached())
                 .Returns(mockDbSet.Object);
 
             var result = await _contactMessageClientService.GetMessageDetailsAsync(_testMessageWithResponse.Id, _testOtherUserId);
 
-        
             Assert.That(result, Is.Null);
         }
 
-        #endregion
+        #endregion GetMessageDetailsAsync Tests
 
         #region GetUserUnreadResponsesCountAsync Tests
 
         [Test]
         public async Task GetUserUnreadResponsesCountAsync_ReturnsCorrectCount()
         {
-           
             var mockDbSet = _testMessages.BuildMockDbSet();
             _messageRepositoryMock.Setup(x => x.GetAllAttached())
                 .Returns(mockDbSet.Object);
 
-          
             var result = await _contactMessageClientService.GetUserUnreadResponsesCountAsync(_testUserId);
 
-           
-            Assert.That(result, Is.EqualTo(1)); // Only _testMessageWithResponse is unread with response
+            Assert.That(result, Is.EqualTo(1));
         }
 
         [Test]
         public async Task GetUserUnreadResponsesCountAsync_ReturnsZero_WhenNoUnreadResponses()
         {
-           
             var messages = new List<ContactMessage>
             {
-                _testMessageRead, 
+                _testMessageRead,
                 new ContactMessage
                 {
                     Id = Guid.NewGuid(),
                     SenderId = _testUserId,
-                    Response = null, 
+                    Response = null,
                     IsRead = false
                 }
             };
@@ -363,60 +327,159 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Messages
             _messageRepositoryMock.Setup(x => x.GetAllAttached())
                 .Returns(mockDbSet.Object);
 
-          
             var result = await _contactMessageClientService.GetUserUnreadResponsesCountAsync(_testUserId);
 
-          
             Assert.That(result, Is.EqualTo(0));
         }
 
         [Test]
         public async Task GetUserUnreadResponsesCountAsync_ReturnsZero_WhenUserHasNoMessages()
         {
-           
             var emptyList = new List<ContactMessage>();
             var mockDbSet = emptyList.BuildMockDbSet();
             _messageRepositoryMock.Setup(x => x.GetAllAttached())
                 .Returns(mockDbSet.Object);
 
-         
             var result = await _contactMessageClientService.GetUserUnreadResponsesCountAsync(_testUserId);
 
-         
             Assert.That(result, Is.EqualTo(0));
         }
 
         [Test]
         public async Task GetUserUnreadResponsesCountAsync_OnlyCountsCurrentUserMessages()
         {
-          
             var mockDbSet = _testMessages.BuildMockDbSet();
             _messageRepositoryMock.Setup(x => x.GetAllAttached())
                 .Returns(mockDbSet.Object);
 
-          
             var result = await _contactMessageClientService.GetUserUnreadResponsesCountAsync(_testUserId);
 
-           
-            Assert.That(result, Is.EqualTo(1)); 
+            Assert.That(result, Is.EqualTo(1));
         }
 
-        #endregion
+        #endregion GetUserUnreadResponsesCountAsync Tests
 
         #region Constructor Tests
 
         [Test]
         public void Constructor_WithValidDependencies_CreatesInstance()
         {
-            
             var service = new ContactMessageClientService(
                 _messageRepositoryMock.Object,
                 _userManagerMock.Object);
 
-           
             Assert.That(service, Is.Not.Null);
         }
 
-        #endregion
+        #endregion Constructor Tests
+
+
+
+        #region Additional GetMessageDetailsAsync Tests
+
+        [Test]
+        public async Task GetMessageDetailsAsync_MarksAsRead_WhenHasResponseAndNotRead()
+        {
+            var message = new ContactMessage
+            {
+                Id = Guid.NewGuid(),
+                SenderId = _testUserId,
+                Response = "Test Response",
+                IsRead = false,
+                Subject = "Test",
+                Message = "Content",
+                CreatedOn = DateTime.UtcNow,
+                Sender = _testUsers.First(u => u.Id == _testUserId),
+                Receiver = _testUsers.First(u => u.Id == _testAdminId),
+                RespondedBy = _testUsers.First(u => u.Id == _testAdminId)
+            };
+
+            var messages = new List<ContactMessage> { message };
+            var mockDbSet = messages.BuildMockDbSet();
+            _messageRepositoryMock.Setup(x => x.GetAllAttached())
+                .Returns(mockDbSet.Object);
+            _messageRepositoryMock.Setup(x => x.UpdateAsync(message))
+                .ReturnsAsync(true);
+
+            var result = await _contactMessageClientService.GetMessageDetailsAsync(message.Id, _testUserId);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(message.IsRead, Is.True);
+            _messageRepositoryMock.Verify(x => x.UpdateAsync(message), Times.Once);
+        }
+
+        [Test]
+        public async Task GetMessageDetailsAsync_DoesNotMarkAsRead_WhenNoResponse()
+        {
+            var message = new ContactMessage
+            {
+                Id = Guid.NewGuid(),
+                SenderId = _testUserId,
+                Response = null,
+                IsRead = false,
+                Subject = "Test",
+                Message = "Content",
+                CreatedOn = DateTime.UtcNow,
+                Sender = _testUsers.First(u => u.Id == _testUserId)
+            };
+
+            var messages = new List<ContactMessage> { message };
+            var mockDbSet = messages.BuildMockDbSet();
+            _messageRepositoryMock.Setup(x => x.GetAllAttached())
+                .Returns(mockDbSet.Object);
+
+            var result = await _contactMessageClientService.GetMessageDetailsAsync(message.Id, _testUserId);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(message.IsRead, Is.False);
+            _messageRepositoryMock.Verify(x => x.UpdateAsync(It.IsAny<ContactMessage>()), Times.Never);
+        }
+
+        [Test]
+        public async Task GetMessageDetailsAsync_ReturnsMessage_WhenResponseExistsAndAlreadyRead()
+        {
+            var message = new ContactMessage
+            {
+                Id = Guid.NewGuid(),
+                SenderId = _testUserId,
+                Response = "Test Response",
+                IsRead = true,
+                Subject = "Test",
+                Message = "Content",
+                CreatedOn = DateTime.UtcNow,
+                Sender = _testUsers.First(u => u.Id == _testUserId),
+                Receiver = _testUsers.First(u => u.Id == _testAdminId),
+                RespondedBy = _testUsers.First(u => u.Id == _testAdminId)
+            };
+
+            var messages = new List<ContactMessage> { message };
+            var mockDbSet = messages.BuildMockDbSet();
+            _messageRepositoryMock.Setup(x => x.GetAllAttached())
+                .Returns(mockDbSet.Object);
+
+            var result = await _contactMessageClientService.GetMessageDetailsAsync(message.Id, _testUserId);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(message.IsRead, Is.True); _messageRepositoryMock.Verify(x => x.UpdateAsync(It.IsAny<ContactMessage>()), Times.Never);
+        }
+
+        #endregion Additional GetMessageDetailsAsync Tests
+
+        #region Additional GetUserUnreadResponsesCountAsync Tests
+
+        [Test]
+        public async Task GetUserUnreadResponsesCountAsync_ReturnsZero_WhenNoMessagesAtAll()
+        {
+            var emptyList = new List<ContactMessage>();
+            var mockDbSet = emptyList.BuildMockDbSet();
+            _messageRepositoryMock.Setup(x => x.GetAllAttached())
+                .Returns(mockDbSet.Object);
+
+            var result = await _contactMessageClientService.GetUserUnreadResponsesCountAsync(_testUserId);
+
+            Assert.That(result, Is.EqualTo(0));
+        }
+
+        #endregion Additional GetUserUnreadResponsesCountAsync Tests
     }
 }
