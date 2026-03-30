@@ -150,6 +150,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
         [Test]
         public async Task ChangeUserRoleAsync_ChangesRoleSuccessfully()
         {
+           
             var model = new ChangeUserRoleViewModel
             {
                 UserId = Guid.Parse(_testUserId1),
@@ -157,9 +158,9 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
             };
 
             var user = _testUsers.First(u => u.Id == _testUserId1);
-            var mockQueryable = _testUsers.BuildMockDbSet();
 
-            _userManagerMock.Setup(u => u.Users).Returns(mockQueryable.Object);
+            _userManagerMock.Setup(u => u.FindByIdAsync(_testUserId1))
+                .ReturnsAsync(user);
 
             _userManagerMock.Setup(u => u.GetRolesAsync(user))
                 .ReturnsAsync(new List<string> { "User" });
@@ -170,35 +171,52 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
             _userManagerMock.Setup(u => u.AddToRoleAsync(user, "Manager"))
                 .ReturnsAsync(IdentityResult.Success);
 
+            _userManagerMock.Setup(u => u.UpdateSecurityStampAsync(user))
+                .ReturnsAsync(IdentityResult.Success);
+
+            
             var result = await _userService.ChangeUserRoleAsync(model, Guid.Parse(_adminId));
 
+           
             Assert.That(result.Failed, Is.False);
             Assert.That(result.ErrorMessage, Is.Empty);
+
+            _userManagerMock.Verify(u => u.FindByIdAsync(_testUserId1), Times.Once);
             _userManagerMock.Verify(u => u.RemoveFromRolesAsync(user, It.IsAny<IEnumerable<string>>()), Times.Once);
             _userManagerMock.Verify(u => u.AddToRoleAsync(user, "Manager"), Times.Once);
+            _userManagerMock.Verify(u => u.UpdateSecurityStampAsync(user), Times.Once);
         }
 
         [Test]
         public async Task ChangeUserRoleAsync_ReturnsError_WhenUserNotFound()
         {
+        
             var model = new ChangeUserRoleViewModel
             {
                 UserId = Guid.NewGuid(),
+                NewRole = "Manager"
             };
 
-            var emptyList = new List<AppUser>();
-            var mockQueryable = emptyList.BuildMockDbSet();
-            _userManagerMock.Setup(u => u.Users).Returns(mockQueryable.Object);
+            _userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync((AppUser)null!);
 
+            
             var result = await _userService.ChangeUserRoleAsync(model, Guid.Parse(_adminId));
 
+           
             Assert.That(result.Failed, Is.True);
             Assert.That(result.ErrorMessage, Is.EqualTo("User not found."));
+
+            _userManagerMock.Verify(u => u.FindByIdAsync(It.IsAny<string>()), Times.Once);
+            _userManagerMock.Verify(u => u.RemoveFromRolesAsync(It.IsAny<AppUser>(), It.IsAny<IEnumerable<string>>()), Times.Never);
+            _userManagerMock.Verify(u => u.AddToRoleAsync(It.IsAny<AppUser>(), It.IsAny<string>()), Times.Never);
+            _userManagerMock.Verify(u => u.UpdateSecurityStampAsync(It.IsAny<AppUser>()), Times.Never);
         }
 
         [Test]
         public async Task ChangeUserRoleAsync_ReturnsError_WhenRemoveRolesFails()
         {
+           
             var model = new ChangeUserRoleViewModel
             {
                 UserId = Guid.Parse(_testUserId1),
@@ -206,9 +224,9 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
             };
 
             var user = _testUsers.First(u => u.Id == _testUserId1);
-            var mockQueryable = _testUsers.BuildMockDbSet();
 
-            _userManagerMock.Setup(u => u.Users).Returns(mockQueryable.Object);
+            _userManagerMock.Setup(u => u.FindByIdAsync(_testUserId1))
+                .ReturnsAsync(user);
 
             _userManagerMock.Setup(u => u.GetRolesAsync(user))
                 .ReturnsAsync(new List<string> { "User" });
@@ -216,19 +234,21 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
             _userManagerMock.Setup(u => u.RemoveFromRolesAsync(user, It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Remove failed" }));
 
+            
             var result = await _userService.ChangeUserRoleAsync(model, Guid.Parse(_adminId));
 
             Assert.That(result.Failed, Is.True);
             Assert.That(result.ErrorMessage, Is.EqualTo("Failed to remove existing roles."));
-
-            _userManagerMock.Verify(u => u.AddToRoleAsync(It.
-                IsAny<AppUser>(), It.IsAny<string>()), Times.Never);
+            _userManagerMock.Verify(u => u.FindByIdAsync(_testUserId1), Times.Once);
+            _userManagerMock.Verify(u => u.RemoveFromRolesAsync(user, It.IsAny<IEnumerable<string>>()), Times.Once);
+            _userManagerMock.Verify(u => u.AddToRoleAsync(It.IsAny<AppUser>(), It.IsAny<string>()), Times.Never);
+            _userManagerMock.Verify(u => u.UpdateSecurityStampAsync(It.IsAny<AppUser>()), Times.Never);
         }
 
         [Test]
         public async Task ChangeUserRoleAsync_ReturnsError_WhenAddRoleFails()
         {
-            // Arrange
+           
             var model = new ChangeUserRoleViewModel
             {
                 UserId = Guid.Parse(_testUserId1),
@@ -236,23 +256,101 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
             };
 
             var user = _testUsers.First(u => u.Id == _testUserId1);
-            var mockQueryable = _testUsers.BuildMockDbSet();
-            _userManagerMock.Setup(u => u.Users).Returns(mockQueryable.Object);
+
+            _userManagerMock.Setup(u => u.FindByIdAsync(_testUserId1))
+                .ReturnsAsync(user);
 
             _userManagerMock.Setup(u => u.GetRolesAsync(user))
                 .ReturnsAsync(new List<string> { "User" });
 
-            _userManagerMock.Setup(u => u.RemoveFromRolesAsync(user,
-                It.IsAny<IEnumerable<string>>()))
+            _userManagerMock.Setup(u => u.RemoveFromRolesAsync(user, It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(IdentityResult.Success);
 
             _userManagerMock.Setup(u => u.AddToRoleAsync(user, "Manager"))
                 .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Add failed" }));
 
+           
             var result = await _userService.ChangeUserRoleAsync(model, Guid.Parse(_adminId));
 
+           
             Assert.That(result.Failed, Is.True);
             Assert.That(result.ErrorMessage, Is.EqualTo("Failed to assign new role."));
+
+            _userManagerMock.Verify(u => u.FindByIdAsync(_testUserId1), Times.Once);
+            _userManagerMock.Verify(u => u.RemoveFromRolesAsync(user, It.IsAny<IEnumerable<string>>()), Times.Once);
+            _userManagerMock.Verify(u => u.AddToRoleAsync(user, "Manager"), Times.Once);
+            _userManagerMock.Verify(u => u.UpdateSecurityStampAsync(It.IsAny<AppUser>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ChangeUserRoleAsync_UpdatesSecurityStamp_EvenWhenRolesDontChange()
+        {
+          
+            var model = new ChangeUserRoleViewModel
+            {
+                UserId = Guid.Parse(_testUserId1),
+                NewRole = "User" 
+            };
+
+            var user = _testUsers.First(u => u.Id == _testUserId1);
+
+            _userManagerMock.Setup(u => u.FindByIdAsync(_testUserId1))
+                .ReturnsAsync(user);
+
+            _userManagerMock.Setup(u => u.GetRolesAsync(user))
+                .ReturnsAsync(new List<string> { "User" });
+
+            _userManagerMock.Setup(u => u.RemoveFromRolesAsync(user, It.IsAny<IEnumerable<string>>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            _userManagerMock.Setup(u => u.AddToRoleAsync(user, "User"))
+                .ReturnsAsync(IdentityResult.Success);
+
+            _userManagerMock.Setup(u => u.UpdateSecurityStampAsync(user))
+                .ReturnsAsync(IdentityResult.Success);
+
+           
+            var result = await _userService.ChangeUserRoleAsync(model, Guid.Parse(_adminId));
+
+            
+            Assert.That(result.Failed, Is.False);
+            _userManagerMock.Verify(u => u.UpdateSecurityStampAsync(user), Times.Once);
+        }
+
+        [Test]
+        public async Task ChangeUserRoleAsync_ReturnsError_WhenUpdateSecurityStampFails()
+        {
+          
+            var model = new ChangeUserRoleViewModel
+            {
+                UserId = Guid.Parse(_testUserId1),
+                NewRole = "Manager"
+            };
+
+            var user = _testUsers.First(u => u.Id == _testUserId1);
+
+            _userManagerMock.Setup(u => u.FindByIdAsync(_testUserId1))
+                .ReturnsAsync(user);
+
+            _userManagerMock.Setup(u => u.GetRolesAsync(user))
+                .ReturnsAsync(new List<string> { "User" });
+
+            _userManagerMock.Setup(u => u.RemoveFromRolesAsync(user, It.IsAny<IEnumerable<string>>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            _userManagerMock.Setup(u => u.AddToRoleAsync(user, "Manager"))
+                .ReturnsAsync(IdentityResult.Success);
+
+            _userManagerMock.Setup(u => u.UpdateSecurityStampAsync(user))
+                .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Security stamp update failed" }));
+
+            
+            var result = await _userService.ChangeUserRoleAsync(model, Guid.Parse(_adminId));
+
+            
+            Assert.That(result.Failed, Is.True);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Failed to update security stamp.")); 
+            _userManagerMock.Verify(u => u.UpdateSecurityStampAsync(user), Times.Once);
         }
 
         #endregion ChangeUserRoleAsync Tests

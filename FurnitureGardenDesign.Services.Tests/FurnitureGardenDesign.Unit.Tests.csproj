@@ -39,7 +39,6 @@
   <ItemGroup>
     <Folder Include="Services\Manager\Account\" />
     <Folder Include="Services\Manager\Message\" />
-    <Folder Include="Services\TestResults\" />
   </ItemGroup>
 
 </Project>
