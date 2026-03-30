@@ -51,17 +51,15 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Account
 
         // Change user role (starts from "User")
         public async Task<(bool Failed, string ErrorMessage)> ChangeUserRoleAsync(
-     ChangeUserRoleViewModel model,
-     Guid adminId)
+            ChangeUserRoleViewModel model,
+            Guid adminId)
         {
-            // find user by Guid
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == model.UserId.ToString());
+            // find user by Guid - user.Id is already a string, so just use it directly
+            var user = await _userManager.FindByIdAsync(model.UserId.ToString());
             if (user == null)
                 return (true, "User not found.");
 
             var roles = await _userManager.GetRolesAsync(user);
-
-
 
             // remove existing roles
             var removeResult = await _userManager.RemoveFromRolesAsync(user, roles);
@@ -72,6 +70,11 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Account
             var addResult = await _userManager.AddToRoleAsync(user, model.NewRole);
             if (!addResult.Succeeded)
                 return (true, "Failed to assign new role.");
+
+            // Update security stamp to invalidate existing cookies
+            // this forces the user to log in again to get the new role claims,
+            // ensuring that the role change takes effect immediately
+            await _userManager.UpdateSecurityStampAsync(user);
 
             return (false, string.Empty);
         }
