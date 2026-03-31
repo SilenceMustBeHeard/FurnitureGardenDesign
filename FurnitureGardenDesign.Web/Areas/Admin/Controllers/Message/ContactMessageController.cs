@@ -38,6 +38,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
                 TempData["Error"] = "Invalid message ID.";
                 return BadRequest();
             }
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid message ID.";
+                return BadRequest();
+            }
+
             var adminId = _userManager.GetUserId(User);
             if (adminId == null)
             {
@@ -58,11 +64,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
         [HttpGet]
         public async Task<IActionResult> Respond(Guid id)
         {
-            if (id == Guid.Empty)
+            if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Invalid message ID.";
                 return BadRequest();
             }
+         
             var adminId = _userManager.GetUserId(User);
             if (adminId == null)
             {
@@ -78,6 +85,11 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
             }
 
             if (!string.IsNullOrEmpty(message.Response))
+            {
+                TempData["Error"] = "This message has already been responded to.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+            if(message.Response != null)
             {
                 TempData["Error"] = "This message has already been responded to.";
                 return RedirectToAction(nameof(Details), new { id });

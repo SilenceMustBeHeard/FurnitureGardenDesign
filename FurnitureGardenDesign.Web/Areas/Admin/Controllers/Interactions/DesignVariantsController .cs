@@ -29,6 +29,11 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
                 OrderId = orderId
             };
 
+            if(!ModelState.IsValid) {
+                TempData["Error"] = "There was an error preparing the form for creating a design variant.";
+                return RedirectToAction("Details", "Orders", new { id = orderId });
+            }
+
             return View(model);
         }
 
@@ -58,6 +63,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
         [HttpPost]
         public async Task<IActionResult> Send(Guid designVariantId)
         {
+
+            if(!ModelState.IsValid) {
+                TempData["Error"] = "There was an error sending the design variant proposal.";
+                return RedirectToAction("Details", new { id = designVariantId });
+            }
+
             try
             {
                 await _designVariantService.SendDesignVariantProposalAsync(designVariantId);
@@ -88,7 +99,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
         // Get the content type based on the file extension
         // currently supports common image formats, but can be extended as needed
 
-        private string GetContentType(string url)
+        private static string GetContentType(string url)
         {
             var ext = Path.GetExtension(url).ToLowerInvariant();
             return ext switch
@@ -108,12 +119,17 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
+            if(id == Guid.Empty)
+            {
+                TempData["Error"] = "Invalid design variant ID.";
+                return RedirectToAction("Index", "Home");
+            }
             var variant = await _designVariantService.GetDesignVariantByIdAsync(id);
 
             if(variant == null)
             {
                 TempData["Error"] = "Design variant not found.";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Details", new { id = id });
             }
 
             var model = new DesignVariantViewModel
@@ -129,6 +145,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
                 OrderDimensions = variant.Order.Dimensions,
                 ReferenceImageUrl = variant.Order.ReferenceImageUrl
             };
+
+            if(!ModelState.IsValid) {
+                TempData["Error"] = "There was an error loading the design variant details.";
+                return RedirectToAction("Details", new { id = id });
+            }
+
 
             return View(model);
         }

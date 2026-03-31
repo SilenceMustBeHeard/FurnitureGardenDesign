@@ -36,8 +36,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\Admin\Catalog\" />
-    <Folder Include="Controllers\Admin\Interactions\" />
-    <Folder Include="Controllers\Admin\Message\" />
     <Folder Include="Controllers\User\Account\" />
     <Folder Include="Controllers\User\Catalog\" />
     <Folder Include="Controllers\User\Interactions\" />
