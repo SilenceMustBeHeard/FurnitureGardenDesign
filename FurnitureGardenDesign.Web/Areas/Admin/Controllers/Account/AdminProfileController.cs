@@ -45,6 +45,11 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
             }
 
             var model = await _profileService.GetProfileAsync(user.Id);
+            if (model == null)
+            {
+                TempData["Error"] = "Unable to load profile. Please try again later.";
+                return RedirectToAction("Index", "Home");
+            }
             return View(model);
         }
 
@@ -64,6 +69,11 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
             }
 
             await _inboxMessageService.MarkMessageAsReadAsync(id, user.Id);
+           if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Unable to mark message as read. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -76,7 +86,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
             return File(bytes, contentType);
         }
 
-        private string GetContentType(string url)
+        private static string GetContentType(string url)
         {
             var ext = Path.GetExtension(url).ToLowerInvariant();
             return ext switch
@@ -127,6 +137,13 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
             }
 
             var messages = await _systemInboxMessageService.GetAdminMessagesAsync(user.Id);
+            
+            if (messages == null)
+            {
+                TempData["Error"] = "Unable to load system inbox messages. Please try again later.";
+                return RedirectToAction("Index", "Home");
+            }
+
             return View(messages);
         }
 

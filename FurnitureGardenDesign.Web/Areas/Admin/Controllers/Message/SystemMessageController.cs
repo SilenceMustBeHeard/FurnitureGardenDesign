@@ -56,7 +56,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
                     })
                     .ToListAsync()
             };
+            
 
+            if(!ModelState.IsValid)
+            {
+                return View(model);
+            }
             if (!string.IsNullOrEmpty(userId))
             {
                 var selectedUser = model.AvailableUsers.FirstOrDefault(u => u.Id == userId);

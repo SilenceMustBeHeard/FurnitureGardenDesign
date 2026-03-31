@@ -33,7 +33,17 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                TempData["Error"] = "Invalid message ID.";
+                return BadRequest();
+            }
             var adminId = _userManager.GetUserId(User);
+            if (adminId == null)
+            {
+                TempData["Error"] = "User not found.";
+                return NotFound();
+            }
             var message = await _contactMessageService.GetMessageDetailsAsync(id, adminId);
 
             if (message == null)
@@ -48,7 +58,17 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
         [HttpGet]
         public async Task<IActionResult> Respond(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                TempData["Error"] = "Invalid message ID.";
+                return BadRequest();
+            }
             var adminId = _userManager.GetUserId(User);
+            if (adminId == null)
+            {
+                TempData["Error"] = "User not found.";
+                return NotFound();
+            }
             var message = await _contactMessageService.GetMessageDetailsAsync(id, adminId);
 
             if (message == null)
@@ -86,6 +106,11 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
             }
 
             var adminId = _userManager.GetUserId(User);
+            if (adminId == null)
+            {
+                TempData["Error"] = "User not found.";
+                return NotFound();
+            }
 
             try
             {
