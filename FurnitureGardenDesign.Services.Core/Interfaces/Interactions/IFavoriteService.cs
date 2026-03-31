@@ -11,6 +11,6 @@ namespace FurnitureGardenDesign.Services.Core.Interfaces
 
 
         Task<bool> ToggleFavoriteAsync(string userId, Guid designId);
-
+        Task<bool> IsFavoriteAsync(string userId, Guid designId);
     }
 }

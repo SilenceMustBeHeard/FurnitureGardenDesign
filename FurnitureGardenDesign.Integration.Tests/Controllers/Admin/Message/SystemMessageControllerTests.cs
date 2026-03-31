@@ -186,7 +186,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Controllers.Admin.Message
         //    Assert.That(redirect.ActionName, Is.EqualTo("Index"));
         //}
 
-        // TO DO : Test better, since avalidations happen inside the model itself, we need to test that the model state is invalid when the description is missing, and that the view is returned with the same model, and that the available users are populated again in the view model.
+        // TO DO : Test fail, since avalidations happen inside the model itself, we need to test that the model state is invalid when the description is missing, and that the view is returned with the same model, and that the available users are populated again in the view model.
 
         //[Test]
         //public async Task Create_Post_WithInvalidModel_ReturnsView()

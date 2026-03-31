@@ -58,8 +58,14 @@ namespace FurnitureGardenDesign.Web.Controllers.Catalog
         public virtual async Task<IActionResult> Details(Guid id)
         {   // if user is not authenticated
             // userId will be null, and service will handle it accordingly
-            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            if(!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid design ID.";
+                return NotFound();
+            }
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+           
             
             var model = await _catalogService.GetDetailsAsync(id, userId);
 
@@ -117,6 +123,12 @@ namespace FurnitureGardenDesign.Web.Controllers.Catalog
             if (rating < 1 || rating > 5)
                {
                 TempData["Error"] = "Rating must be between 1 and 5.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            if(!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid review data.";
                 return RedirectToAction(nameof(Details), new { id });
             }
 
