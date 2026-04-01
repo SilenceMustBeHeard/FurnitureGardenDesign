@@ -1,5 +1,4 @@
-﻿using FurnitureGardenDesign.Data.Common.Enums;
-using FurnitureGardenDesign.Data.Models;
+﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Models.Messages;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Account;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
 {
@@ -18,7 +16,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
     public class SystemMessageController : Controller
     {
         private readonly ISystemInboxMessageService _systemMessageService;
-        private readonly IAppUserRepository _userRepository; 
+        private readonly IAppUserRepository _userRepository;
         private readonly UserManager<AppUser> _userManager;
 
         public SystemMessageController(
@@ -42,7 +40,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
         [HttpGet]
         public async Task<IActionResult> Create(string userId)
         {
-       
             var model = new SystemInboxMessageCreateViewModel
             {
                 ReceiverId = userId,
@@ -66,13 +63,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
                 }
             }
 
-
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-         
-
             return View(model);
         }
 
@@ -85,7 +75,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
                 TempData["Error"] = "Please correct the errors in the form.";
                 return View(model);
             }
-           
+
             model.AvailableUsers = await _userRepository
                 .GetAllAttached()
                 .Select(u => new UserSelectViewModel
@@ -96,7 +86,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
                 })
                 .ToListAsync();
 
-      
             if (!string.IsNullOrEmpty(model.ReceiverId))
             {
                 var selectedUser = model.AvailableUsers.FirstOrDefault(u => u.Id == model.ReceiverId);
@@ -106,14 +95,9 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
                 }
             }
 
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             var adminId = _userManager.GetUserId(User);
 
-            if(adminId == null)
+            if (adminId == null)
             {
                 TempData["Error"] = "You are not authorized to send messages.";
                 return BadRequest();
@@ -123,16 +107,13 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
                 Id = Guid.NewGuid(),
                 Description = model.Description,
                 ReceiverId = model.ReceiverId!,
-           
+
                 SenderId = adminId,
                 Type = model.Type,
                 IsRead = false,
                 CreatedOn = DateTime.UtcNow
             };
-            if (!ModelState.IsValid)
-            {
-                return View(message);
-            }
+
             await _systemMessageService.CreateMessageAsync(message);
 
             TempData["Success"] = "Message sent successfully!";
@@ -142,20 +123,14 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = "Invalid message ID.";
-                return BadRequest();
-            }
             var adminId = _userManager.GetUserId(User);
 
-            if(adminId == null)
+            if (adminId == null)
             {
                 TempData["Error"] = "You are not authorized to view this message.";
                 return BadRequest();
             }
             var message = await _systemMessageService.GetMessageDetailsAsync(id, adminId);
-
 
             if (message == null)
             {
@@ -163,14 +138,11 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Message
                 return NotFound();
             }
 
-            
             var sender = await _userManager.FindByIdAsync(message.SenderId ?? "");
             var receiver = await _userManager.FindByIdAsync(message.ReceiverId!);
 
             message.SenderName = sender != null ? $"{sender.FullName}" : "System";
             message.ReceiverName = receiver != null ? $"{receiver.FullName}" : "Unknown";
-
-            
 
             return View(message);
         }

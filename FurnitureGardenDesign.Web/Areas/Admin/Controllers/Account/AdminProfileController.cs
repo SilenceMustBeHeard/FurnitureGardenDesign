@@ -179,11 +179,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         [HttpGet]
         public async Task<IActionResult> SystemMessageDetails(Guid id)
         {
-            if(!ModelState.IsValid)
-            {
-                TempData["Error"] = "Invalid request.";
-                return RedirectToAction(nameof(Index));
-            }
+          
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)

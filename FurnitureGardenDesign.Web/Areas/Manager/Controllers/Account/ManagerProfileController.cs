@@ -154,6 +154,11 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Account
                 TempData["Error"] = "Unable to approve design. Message not found or you don't have permission.";
                 return NotFound();
             }
+            if(!ModelState.IsValid)
+            {
+                TempData["Error"] = "Invalid data. Please try again.";
+                return RedirectToAction(nameof(MessageDetails), new { id });
+            }
 
             TempData["Success"] = "Design approved successfully!";
             return RedirectToAction(nameof(MessageDetails), new { id });

@@ -150,6 +150,12 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Catalog
                 comment
             );
 
+           if(!ModelState.IsValid)
+            {
+                TempData["Error"] = "Failed to add review. Please try again.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
             TempData["Success"] = "You added a review!";
             return RedirectToAction(nameof(AdminIndex));
         }

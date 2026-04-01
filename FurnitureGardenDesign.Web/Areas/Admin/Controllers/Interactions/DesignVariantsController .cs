@@ -29,10 +29,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
                 OrderId = orderId
             };
 
-            if(!ModelState.IsValid) {
-                TempData["Error"] = "There was an error preparing the form for creating a design variant.";
-                return RedirectToAction("Details", "Orders", new { id = orderId });
-            }
+       
 
             return View(model);
         }
@@ -146,10 +143,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
                 ReferenceImageUrl = variant.Order.ReferenceImageUrl
             };
 
-            if(!ModelState.IsValid) {
-                TempData["Error"] = "There was an error loading the design variant details.";
-                return RedirectToAction("Details", new { id = id });
-            }
+           
 
 
             return View(model);

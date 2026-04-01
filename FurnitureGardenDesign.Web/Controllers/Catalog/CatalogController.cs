@@ -59,11 +59,7 @@ namespace FurnitureGardenDesign.Web.Controllers.Catalog
         {   // if user is not authenticated
             // userId will be null, and service will handle it accordingly
 
-            if(!ModelState.IsValid)
-            {
-                TempData["Error"] = "Invalid design ID.";
-                return NotFound();
-            }
+          
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
            
             
