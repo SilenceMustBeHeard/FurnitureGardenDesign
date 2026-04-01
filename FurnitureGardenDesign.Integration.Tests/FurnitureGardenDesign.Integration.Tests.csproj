@@ -34,11 +34,4 @@
     <ProjectReference Include="..\FurnitureGardenDesign.Web\FurnitureGardenDesign.Web.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\Admin\Catalog\" />
-    <Folder Include="Controllers\User\Account\" />
-    <Folder Include="Controllers\User\Interactions\" />
-    <Folder Include="Controllers\User\Message\" />
-  </ItemGroup>
-
 </Project>
