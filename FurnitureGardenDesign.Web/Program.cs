@@ -21,6 +21,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+
+
+// Add HttpClient factory for services that need to make HTTP requests (like IPreviewService)
+builder.Services.AddHttpClient();
+
 // Add Identity 
 builder.Services.AddDefaultIdentity<AppUser>(options =>
 {

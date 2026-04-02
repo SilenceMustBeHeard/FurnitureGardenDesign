@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FurnitureGardenDesign.Web.Controllers.Interactions
 {
 
-    // To do : Implement this controller in every view that needs to fetch preview image for a link (eg: order form, profile, design proposal etc)
+   
   
     [Authorize]
     public class PreviewController : Controller
