@@ -2,14 +2,15 @@
 
 @{
     ViewData["Title"] = "Message Details";
+    var hasActionBeenTaken = Model.IsApproved;
 }
 
 <div class="container py-5">
     <div class="card glass-card p-5 text-light shadow-lg border-0 rounded-4">
 
         <a asp-controller="Profile"
-           asp-action="Index"
-           class="btn btn-outline-glass mb-4">
+               asp-action="Index"
+               class="btn btn-outline-glass mb-4">
             ← Back to Inbox
         </a>
 
@@ -36,14 +37,22 @@
 
                     if (isDirectImage)
                     {
-                        @* Direct image - use proxy *@
+                        @* Direct image with copy button *@
                         <div class="text-center mb-3">
-                            <img src="@Url.Action("ProxyImage", "Profile", new { url = Model.DesignImage2DUrl })"
-                                 class="img-fluid rounded shadow-lg details-img"
-                                 style="max-height:600px; object-fit:contain;"
-                                 alt="Design Preview"
-                                 onerror="handleImageError(this)" />
-
+                            <div class="position-relative d-inline-block">
+                                <img src="@Url.Action("ProxyImage", "Profile", new { url = Model.DesignImage2DUrl })"
+                                     class="img-fluid rounded shadow-lg details-img"
+                                     style="max-height:600px; object-fit:contain;"
+                                     alt="Design Preview"
+                                     onerror="handleImageError(this)" />
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-glass position-absolute top-0 end-0 m-2"
+                                        onclick="copyToClipboard('@Model.DesignImage2DUrl')"
+                                        title="Copy image URL"
+                                        style="z-index: 10;">
+                                    <i class="bi bi-copy"></i>
+                                </button>
+                            </div>
                             <div class="mt-2 small text-muted">
                                 <a href="@Model.DesignImage2DUrl" target="_blank">Original Image Link</a>
                             </div>
@@ -60,8 +69,8 @@
 
                                 <div class="d-flex gap-2 justify-content-center mt-3">
                                     <a href="@Model.DesignImage2DUrl"
-                                       target="_blank"
-                                       class="btn btn-primary-glass">
+                                           target="_blank"
+                                           class="btn btn-primary-glass">
                                         <i class="bi bi-box-arrow-up-right"></i> View Page
                                     </a>
 
@@ -87,7 +96,7 @@
                 }
             </div>
 
-            @* Right - Message details and actions *@ 
+            @* Right - Message details and actions *@
             <div class="col-lg-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h2 class="fw-bold mb-0 display-6">Design Proposal</h2>
@@ -141,9 +150,9 @@
                     @if (!string.IsNullOrEmpty(Model.Model3DUrl))
                     {
                         <a href="@Model.Model3DUrl"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           class="btn btn-outline-glass w-100">
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="btn btn-outline-glass w-100">
                             <i class="bi bi-box-arrow-up-right me-2"></i>View 3D Model
                         </a>
                     }
@@ -154,39 +163,47 @@
                         </button>
                     }
 
-                    @* Approve Button - Only show if not already approved *@
-                    @if (!Model.IsApproved)
+                    @* Instructions - Show until action is taken *@
+                    @if (!hasActionBeenTaken)
                     {
-                        <form asp-action="ApproveDesign"
-                              asp-route-id="@Model.Id"
-                              method="post"
-                              class="mt-2">
-                            @Html.AntiForgeryToken()
-                            <button type="submit"
-                                    class="btn btn-success w-100"
-                                    onclick="return confirm('Are you sure you want to approve this design? This action cannot be undone.');">
-                                <i class="bi bi-check-circle me-2"></i>Approve Design
-                            </button>
-                        </form>
+                        <div class="alert alert-info text-center mt-3" role="alert">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            <strong>📋 Instructions:</strong><br />
+                            <strong>Approve Design</strong> - If you're satisfied with the design.<br />
+                            <strong>Request Improvements</strong> - If you want additional .<br />
+                            <small class="d-block mt-2">💡 Tip: Click the <i class="bi bi-copy"></i> button on the image to copy the reference URL for your new order.</small>
+                        </div>
 
+                        <div class="d-flex gap-3 mt-2">
+                            @* Approve Button *@
+                            <form asp-action="ApproveDesign"
+                                  asp-route-id="@Model.Id"
+                                  method="post"
+                                  class="flex-grow-1">
+                                @Html.AntiForgeryToken()
+                                <button type="submit"
+                                        class="btn btn-success w-100"
+                                        onclick="return confirm('Are you sure you want to approve this design?');">
+                                    <i class="bi bi-check-circle me-2"></i>Approve Design
+                                </button>
+                            </form>
 
-                        <a class="btn btn-outline-glass btn-lg"
-                               asp-controller="Error"
-                               asp-action="NotImplemented">
-                            Request Improvements
-                        </a>
+                            @* Request Improvements Button *@
+                            <a asp-controller="Orders"
+                                   asp-action="Create"
+                                   asp-route-approveFirst="@Model.Id"
+                                   class="btn btn-warning flex-grow-1" style="background-color: #fd7e14; border-color: #fd7e14; color: white;">
+                                <i class="bi bi-chat-dots me-2"></i>Request Improvements
+                            </a>
+                        </div>
                     }
                     else
                     {
                         <div class="alert alert-success text-center mt-2" role="alert">
                             <i class="bi bi-check-circle-fill me-2"></i>
-                            You approved this design
+                            Thank you! Your feedback has been submitted.
                         </div>
                     }
-
-
-                    
-                  
                 </div>
             </div>
         </div>
@@ -194,7 +211,50 @@
 </div>
 
 @section Scripts {
+    <style>
+        .btn-warning:hover {
+            background-color: #e66a00 !important;
+            border-color: #e66a00 !important;
+            transform: translateY(-2px);
+            transition: all 0.2s ease;
+        }
+        
+        .copy-btn {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+            .copy-btn:hover {
+                background-color: rgba(255, 255, 255, 0.2);
+                transform: scale(1.05);
+            }
+    </style>
+
     <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                const btn = event.target.closest('button');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="bi bi-check"></i>';
+                btn.classList.add('btn-success');
+                btn.classList.remove('btn-outline-glass');
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-outline-glass');
+                }, 1500);
+            }).catch(function() {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Image URL copied to clipboard!');
+            });
+        }
+
         function handleImageError(img) {
             console.log('Image failed to load:', img.src);
             img.style.display = 'none';
@@ -219,7 +279,6 @@
             container.style.display = 'block';
             img.src = '';
 
-            // show loading spinner
             const spinner = document.createElement('div');
             spinner.className = 'spinner-border text-warning';
             spinner.id = 'loadingSpinner';
@@ -252,7 +311,7 @@
 
         // Auto-hide temp data messages
         setTimeout(() => {
-            const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
+            const alerts = document.querySelectorAll('.alert-dismissible');
             alerts.forEach(alert => {
                 alert.style.transition = 'opacity 0.5s';
                 alert.style.opacity = '0';

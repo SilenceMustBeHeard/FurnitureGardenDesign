@@ -1,12 +1,13 @@
-﻿using FurnitureGardenDesign.Services.Core.Interfaces;
+﻿using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Services.Core.Interfaces;
+using FurnitureGardenDesign.Services.Core.Interfaces.Catalog;
+using FurnitureGardenDesign.Services.Core.Interfaces.Message;
 using FurnitureGardenDesign.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
-using System.Linq;
-using System.Threading.Tasks;
-using FurnitureGardenDesign.Services.Core.Interfaces.Catalog;
 
 namespace FurnitureGardenDesign.Web.Controllers.Interactions
 {
@@ -16,13 +17,21 @@ namespace FurnitureGardenDesign.Web.Controllers.Interactions
         private readonly IOrderService _orderService;
         private readonly ICategoryServiceClient _categoryServiceClient;
         private readonly IPreviewService _previewService;
+        private readonly IInboxMessageService _inboxMessageService;
+        private readonly UserManager<AppUser> _userManager;
+
         public OrdersController(
+
             IOrderService orderService,
+            UserManager<AppUser> userManager,
+             IInboxMessageService inboxMessageService,
             ICategoryServiceClient categoryServiceClient,
             IPreviewService previewService)
         {
+            _userManager = userManager;
             _orderService = orderService;
             _categoryServiceClient = categoryServiceClient;
+            _inboxMessageService = inboxMessageService;
             _previewService = previewService;
             _categoryServiceClient = categoryServiceClient;
         }
@@ -33,8 +42,18 @@ namespace FurnitureGardenDesign.Web.Controllers.Interactions
 
         // show order form for submission
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(Guid? approveFirst = null)
         {
+            if (approveFirst.HasValue)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    await _inboxMessageService.ApproveDesignAsync(approveFirst.Value, user.Id);
+                    TempData["Success"] = "Design approved! You can now create a new order for improvements.";
+                }
+            }
+
             await LoadCategoriesAsync();
             return View(new OrderFormViewModel());
         }

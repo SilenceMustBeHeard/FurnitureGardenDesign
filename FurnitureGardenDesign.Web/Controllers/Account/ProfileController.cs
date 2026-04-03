@@ -127,7 +127,7 @@ namespace FurnitureGardenDesign.Web.Controllers.Account
                 return NotFound();
             }
 
-            TempData["Success"] = "Design approved successfully!";
+            TempData["Success"] = "Thank you!";
             return RedirectToAction(nameof(MessageDetails), new { id });
         }
 
