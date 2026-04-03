@@ -2,60 +2,182 @@
 @model OrderFormViewModel
 @{
     ViewData["Title"] = "Make an Order";
+    var fromApproved = ViewBag.FromApproved == true;
+    var referenceImageUrl = ViewBag.ReferenceImageUrl as string;
 }
 
 <div class="container my-5">
     <div class="row justify-content-center">
-        <div class="col-lg-7 col-md-9 col-12">
+        <div class="col-lg-8 col-md-10 col-12">
 
-            <div class="glass p-4 p-md-5 rounded-4 shadow-lg">
+            <div class="glass-card p-4 p-md-5 rounded-4 shadow-lg border-0">
 
+                @* Header with icon *@
+                <div class="text-center mb-4">
+                    <div class="glass-icon-circle mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 70px; height: 70px; background: rgba(192, 154, 108, 0.2); border: 1px solid rgba(192, 154, 108, 0.3);">
+                        <i class="bi bi-pencil-square fs-1" style="color: #c09a6c;"></i>
+                    </div>
+                    <h2 class="fw-bold mb-2" style="background: linear-gradient(135deg, #fff 0%, #c09a6c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                        @(fromApproved ? "Request Improvements" : "Tell Us About Your Idea")
+                    </h2>
+                    <p class="text-muted small">
+                        @(fromApproved ? "Please describe the changes you'd like to see" : "Share your vision and we'll bring it to life")
+                    </p>
+                </div>
 
-                <h2 class="text-center mb-4 hero-title">Make an Order</h2>
+                @* Info banner for approved designs *@
+                @if (fromApproved && !string.IsNullOrEmpty(referenceImageUrl))
+                {
+                    <div class="alert alert-info mb-4 d-flex align-items-center gap-3" style="background: rgba(13, 110, 253, 0.15); border: 1px solid rgba(13, 110, 253, 0.3);">
+                        <i class="bi bi-image-fill fs-3"></i>
+                        <div class="flex-grow-1">
+                            <strong>Reference Image Available</strong><br />
+                            <small>Use this URL as reference for your improvements:</small>
+                            <div class="input-group mt-2">
+                                <input type="text" class="form-control form-control-sm glass-input" value="@referenceImageUrl" readonly id="refImageUrl" />
+                                <button class="btn btn-outline-glass btn-sm" type="button" onclick="copyToClipboard()">
+                                    <i class="bi bi-copy"></i> Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
                 <form asp-action="Create" method="post">
-                    <div class="mb-3">
-                        <label asp-for="FurnitureType" class="form-label"></label>
-                        <input asp-for="FurnitureType" class="form-control glass-input" placeholder="e.g., Chair" />
-                        <span asp-validation-for="FurnitureType" class="text-danger"></span>
+                    @Html.AntiForgeryToken()
+
+                    <div class="row g-3">
+                        @* Category Dropdown - Full width *@
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label asp-for="CategoryId" class="form-label fw-semibold">
+                                    <i class="bi bi-tag me-1" style="color: #c09a6c;"></i> Category
+                                </label>
+                                <select asp-for="CategoryId" class="form-select glass-input" asp-items="ViewBag.Categories">
+                                    <option value="">-- Select a category --</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        @* Furniture Type and Dimensions - Two columns *@
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="FurnitureType" class="form-label fw-semibold">
+                                    <i class="bi bi-grid-3x3-gap-fill me-1" style="color: #c09a6c;"></i> Furniture Type
+                                </label>
+                                <input asp-for="FurnitureType" class="form-control glass-input" placeholder="e.g., Modern Chair, Executive Desk" />
+                                <span asp-validation-for="FurnitureType" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Dimensions" class="form-label fw-semibold">
+                                    <i class="bi bi-arrows-angle-expand me-1" style="color: #c09a6c;"></i> Dimensions
+                                </label>
+                                <input asp-for="Dimensions" class="form-control glass-input" placeholder="e.g., 200x80x75 cm" />
+                                <span asp-validation-for="Dimensions" class="text-danger small"></span>
+                                <small class="text-muted">Length x Width x Height</small>
+                            </div>
+                        </div>
+
+                        @* Description - Full width *@
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label fw-semibold">
+                                    <i class="bi bi-chat-text me-1" style="color: #c09a6c;"></i> Description
+                                </label>
+                                <textarea asp-for="Description" class="form-control glass-input" rows="5"
+                                          placeholder="Describe your idea in detail: style preferences, colors, materials, special features, and whether you'd like a 3D model included..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                                <small class="text-muted">Be as specific as possible to help us understand your vision</small>
+                            </div>
+                        </div>
+
+                        @* Reference Image URL *@
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label asp-for="ReferenceImageUrl" class="form-label fw-semibold">
+                                    <i class="bi bi-image me-1" style="color: #c09a6c;"></i> Reference Image URL
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text glass-input-prepend">
+                                        <i class="bi bi-link-45deg"></i>
+                                    </span>
+                                    <input asp-for="ReferenceImageUrl" class="form-control glass-input" placeholder="https://example.com/reference-image.jpg" />
+                                </div>
+                                <span asp-validation-for="ReferenceImageUrl" class="text-danger small"></span>
+                                <small class="text-muted">Optional - Provide a link to a reference image for inspiration. 
+                                    You can also right-click on image and select "Copy image address" to get the URL.
+
+
+                                </small>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Dimensions" class="form-label"></label>
-                        <input asp-for="Dimensions" class="form-control glass-input" placeholder="e.g., 200x80x75 cm" />
-                        <span asp-validation-for="Dimensions" class="text-danger"></span>
+                    @* Preview Section *@
+                    <div id="imagePreview" class="mt-3 mb-4 text-center" style="display: none;">
+                        <div class="glass-card p-3">
+                            <img id="previewImg" class="img-fluid rounded" style="max-height: 200px;" />
+                            <p class="small text-muted mt-2">Reference Image Preview</p>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Description" class="form-label"></label>
-                        <textarea asp-for="Description" class="form-control glass-input" placeholder="Describe your idea and let us know if you like 3D model included"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="ReferenceImageUrl" class="form-label"></label>
-                        <input asp-for="ReferenceImageUrl" class="form-control glass-input" placeholder="Optional URL for reference image" />
-                        <span asp-validation-for="ReferenceImageUrl" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="CategoryId" class="form-label">Category</label>
-                        <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories">
-                            <option value="">-- Select a category --</option>
-                        </select>
-                        <span asp-validation-for="CategoryId" class="text-danger"></span>
-                    </div>
-
-
-                    <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-primary-glass btn-lg">Make an Order!</button>
+                    @* Action Buttons *@
+                    <div class="d-flex gap-3 justify-content-center mt-4">
+                        <button type="submit" class="btn btn-primary-glass px-5 py-2">
+                            <i class="bi bi-send me-2"></i> @(fromApproved ? "Submit Improvements" : "Submit Order")
+                        </button>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-glass px-4 py-2">
+                            <i class="bi bi-x-circle me-2"></i> Cancel
+                        </a>
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        // Live image preview
+        const urlInput = document.getElementById('ReferenceImageUrl');
+        const previewDiv = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+
+        urlInput.addEventListener('input', function() {
+            const url = this.value.trim();
+            if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+                previewImg.src = url;
+                previewDiv.style.display = 'block';
+                previewImg.onerror = function() {
+                    previewImg.src = '';
+                    previewDiv.style.display = 'none';
+                };
+            } else {
+                previewDiv.style.display = 'none';
+            }
+        });
+
+        // Copy to clipboard function
+        function copyToClipboard() {
+            const input = document.getElementById('refImageUrl');
+            if (input) {
+                input.select();
+                document.execCommand('copy');
+                const btn = event.target.closest('button');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="bi bi-check"></i> Copied!';
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                }, 2000);
+            }
+        }
+    </script>
+
+   
 }
