@@ -16,11 +16,13 @@ bin/
 obj/
 **/bin/
 **/obj/
+
 # ==============================
 # Test & Coverage
 # ==============================
 TestResults/
 coverage-report/
+
 # ==============================
 # Rider / JetBrains
 # ==============================
@@ -66,3 +68,21 @@ node_modules/
 *.userprefs
 *.dll
 *.exe
+
+# ==============================
+# User Secrets (Sensitive Data)
+# ==============================
+secrets.json
+**/secrets.json
+*secrets.json
+**/Properties/serviceConfig.json
+**/Properties/serviceConfig.dev.json
+
+
+# ==============================
+# Environment specific configs
+# ==============================
+appsettings.Development.json
+appsettings.Production.json
+*.Development.json
+*.Production.json

@@ -1,9 +1,9 @@
 ﻿using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Services.Core.Interfaces.Account;
 using FurnitureGardenDesign.Web.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
 {
@@ -11,17 +11,13 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
     [Authorize(Roles = "Admin")]
     public class AccountController : Controller
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
+        private readonly IAccountService _accountService;
 
-        public AccountController(UserManager<AppUser> userManager,
-                                 SignInManager<AppUser> signInManager)
+        public AccountController(IAccountService accountService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _accountService = accountService;
         }
 
-        //  REGISTER 
         [HttpGet]
         public IActionResult Register() => View();
 
@@ -32,31 +28,17 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = new AppUser { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _accountService.RegisterAsync(model);
 
-            if (result.Succeeded)
-            {
-                // assign user role automatically
-                if (!await _userManager.IsInRoleAsync(user, "User"))
-                {
-                    await _userManager.AddToRoleAsync(user, "User");
-                }
-
-                // sign the user in
-                await _signInManager.SignInAsync(user, isPersistent: false);
-
+            if (result.Success)
                 return RedirectToAction("Index", "Home");
-            }
 
             foreach (var error in result.Errors)
-                ModelState.AddModelError("", error.Description);
+                ModelState.AddModelError("", error);
 
             return View(model);
         }
 
-
-        //  LOGIN 
         [HttpGet]
         public IActionResult Login() => View();
 
@@ -65,47 +47,100 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
-                return View(model);
-
-            var result = await _signInManager.PasswordSignInAsync(
-                model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-
-            if (result.Succeeded)
             {
-                // Get the user to check their role
-                var user = await _userManager.FindByEmailAsync(model.Email);
+                TempData["Error"] = "Invalid login attempt.";
+                return View(model);
+            }
 
-                if (user != null)
-                {
-                    // Check if user is admin
-                    if (await _userManager.IsInRoleAsync(user, "Admin"))
-                    {
-                        // Redirect admin to Admin area
-                        return RedirectToAction("Index", "Home", new { area = "Admin" });
-                    }
+            var success = await _accountService.LoginAsync(model);
 
-                    // Regular user - check returnUrl or go to main home
-                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                    {
-                        return Redirect(returnUrl);
-                    }
-
-                    return RedirectToAction("Index", "Home", new { area = "" });
-                }
+            if (success)
+            {
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
             return View(model);
         }
 
-
-        //  LOGOUT 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            await _accountService.LogoutAsync();
             return RedirectToAction("Index", "Home", new { area = "" });
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var resetLink = Url.Action("ResetPassword", "Account", null, Request.Scheme);
+            var success = await _accountService.ForgotPasswordAsync(model.Email, resetLink);
+
+            TempData["Success"] = "If an account exists with this email, you will receive a password reset link.";
+            return RedirectToAction(nameof(ForgotPasswordConfirmation));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+            {
+                TempData["Error"] = "Invalid password reset token.";
+                return RedirectToAction(nameof(ForgotPassword));
+            }
+
+            var model = new ResetPasswordViewModel { Token = token, Email = email };
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var result = await _accountService.ResetPasswordAsync(model);
+
+            if (result.Success)
+            {
+                TempData["Success"] = "Your password has been reset successfully!";
+                return RedirectToAction(nameof(ResetPasswordConfirmation));
+            }
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(string.Empty, error);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
         }
     }
 }
