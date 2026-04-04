@@ -83,7 +83,7 @@ namespace FurnitureGardenDesign.Web.Controllers.Account
                 return View(model);
 
             var resetLink = Url.Action("ResetPassword", "Account", null, Request.Scheme);
-            var success = await _accountService.ForgotPasswordAsync(model.Email, resetLink);
+            await _accountService.ForgotPasswordAsync(model.Email, resetLink);
 
             TempData["Success"] = "If an account exists with this email, you will receive a password reset link.";
             return RedirectToAction(nameof(ForgotPasswordConfirmation));

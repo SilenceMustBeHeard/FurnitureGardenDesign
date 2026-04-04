@@ -19,8 +19,7 @@
             </div>
 
             @* Login Form *@
-            <form asp-area="Admin"
-                asp-action="Login" method="post">
+            <form asp-action="Login" method="post">
                 @Html.AntiForgeryToken()
 
                 @* Email *@
@@ -59,11 +58,11 @@
                     Create Account
                 </a>
 
-                 <a asp-controller="Error"
-                   asp-action="NotImplemented"
-                   class="glass-link text-decoration-none">
-                    Forgot password?
-                  </a>
+                <div class="text-center mt-3">
+                    <a asp-action="ForgotPassword" class="text-decoration-none" style="color: #c09a6c;">
+                        Forgot your password?
+                    </a>
+                </div>
 
                 
             </form>
