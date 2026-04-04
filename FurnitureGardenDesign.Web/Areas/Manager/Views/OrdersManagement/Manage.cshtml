@@ -6,96 +6,105 @@
 }
 
 <div class="container mt-5">
-    <div class="card shadow-lg border-0 rounded-4 glass">
+    <div class="glass-card p-4 rounded-4 shadow-lg">
 
-        <div class="card-header btn-outline-glass text-white rounded-top-4">
-            <h4 class="mb-0">
-                <i class="bi bi-box-seam me-2"></i> Manage Orders
-            </h4>
+        <div class="d-flex align-items-center gap-3 mb-4 pb-2 border-bottom border-light border-opacity-10">
+            <div class="glass-icon-circle">
+                <i class="bi bi-box-seam fs-3" style="color: #c09a6c;"></i>
+            </div>
+            <div>
+                <h4 class="fw-bold mb-0">Manage Orders</h4>
+                <p class="text-muted small mb-0">View and manage all pending orders</p>
+            </div>
         </div>
 
-        <div class="card-body p-4">
-            <h5 class="mb-4">Pending Orders</h5>
-
-            @if (!Model.Any())
-            {
-                <div class="alert alert-info glass text-center">
-                    <i class="bi bi-info-circle me-2"></i>
-                    No pending orders at the moment.
-                </div>
-            }
-            else
-            {
-                <div class="glass-card p-3">
-                    <table class="table glass-card align-middle">
-                        <thead class="glass-table">
-                            <tr>
-                                <th>OrderId</th>
-                                <th>User</th>
-                                <th>Category</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                <th>Created On</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var order in Model)
-                            {
-                                <tr>
-                                    <td>@order.Id</td>
-                                    <td>@order.UserEmail</td>
-                                    <td>@order.CategoryName</td>
-                                    <td>@order.Description</td>
-                                    <td>
-                                        <span class="badge bg-warning text-dark">
-                                            @order.Status
-                                        </span>
-                                    </td>
-                                    <td>@order.CreatedOn.ToString("dd.MM.yyyy HH:mm")</td>
-                                    <td>
-                                        @*dropdown for actions*@ 
-                                        <div class="dropdown">
-                                            <button class="btn btn-outline-glass btn-sm dropdown-toggle"
-                                                    type="button"
-                                                    data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
-                                                Actions
-                                            </button>
-                                            <ul class="dropdown-menu glass-card p-2" style="min-width: 120px;">
-                                                <li>
-                                                   @*View order details*@ 
-                                                    <a asp-area="Manager"
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-inbox fs-1 text-muted"></i>
+                <h5 class="text-muted mt-3">No pending orders</h5>
+                <p class="text-muted small">All orders have been processed</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table align-middle text-light">
+                    <thead class="text-muted small text-uppercase">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Created On</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td>
+                                    <code class="text-warning">@order.Id.ToString().Substring(0, 8)</code>
+                                </td>
+                                <td>@order.UserEmail</td>
+                                <td>
+                                    <span class="badge bg-info">@order.CategoryName</span>
+                                </td>
+                                <td>
+                                    <div style="max-width: 250px; white-space: normal; word-break: break-word;">
+                                        @order.Description
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-warning text-dark px-3 py-2">
+                                        @order.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    <div>@order.CreatedOn.ToString("dd.MM.yyyy")</div>
+                                    <small class="text-muted">@order.CreatedOn.ToString("HH:mm")</small>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-glass btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                                            Actions
+                                        </button>
+                                        <ul class="dropdown-menu" style="background: #2c221c; border: 1px solid #c09a6c40;">
+                                            <li>
+                                                <a asp-area="Admin"
                                                        asp-controller="OrdersManagement"
                                                        asp-action="Details"
                                                        asp-route-id="@order.Id"
-                                                       class="dropdown-item btn btn-outline-glass w-100 text-start">
-                                                        <i class="bi bi-eye me-2"></i> View
-                                                    </a>
-                                                </li>
-                                                <li><hr class="dropdown-divider"></li>
-                                                <li>
-                                                    @*Rejects order*@
-                                                    <form asp-area="Manager"
-                                                          asp-controller="OrdersManagement"
-                                                          asp-action="Reject"
-                                                          asp-route-id="@order.Id"
-                                                          method="post">
-                                                        <button type="submit" class="dropdown-item btn btn-outline-glass w-100 text-start"
-                                                                onclick="return confirm('Are you sure you want to reject this order?')">
-                                                            <i class="bi bi-x-circle me-2"></i> Reject
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
-        </div>
+                                                       class="dropdown-item text-light"
+                                                       style="background: transparent;">
+                                                    <i class="bi bi-eye me-2"></i> View
+                                                </a>
+                                            </li>
+                                            <li><hr class="dropdown-divider" style="border-color: #c09a6c40;"></li>
+                                            <li>
+                                                <form asp-area="Admin"
+                                                      asp-controller="OrdersManagement"
+                                                      asp-action="Reject"
+                                                      asp-route-id="@order.Id"
+                                                      method="post">
+                                                    <button type="submit"
+                                                            class="dropdown-item text-danger"
+                                                            style="background: transparent;"
+                                                            onclick="return confirm('Reject this order?')">
+                                                        <i class="bi bi-x-circle me-2"></i> Reject
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 </div>
