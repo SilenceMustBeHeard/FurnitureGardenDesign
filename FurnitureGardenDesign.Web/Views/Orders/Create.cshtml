@@ -1,4 +1,4 @@
-﻿﻿@using FurnitureGardenDesign.Web.ViewModels
+﻿@using FurnitureGardenDesign.Web.ViewModels
 @model OrderFormViewModel
 @{
     ViewData["Title"] = "Make an Order";
@@ -108,19 +108,23 @@
                                     <input asp-for="ReferenceImageUrl" class="form-control glass-input" placeholder="https://example.com/reference-image.jpg" />
                                 </div>
                                 <span asp-validation-for="ReferenceImageUrl" class="text-danger small"></span>
-                                <small class="text-muted">Optional - Provide a link to a reference image for inspiration. 
+                                <small class="text-muted">
+                                    Optional - Provide a link to a reference image for inspiration.
                                     You can also right-click on image and select "Copy image address" to get the URL.
-
-
                                 </small>
                             </div>
                         </div>
                     </div>
 
-                    @* Preview Section *@
+                    @* Preview Section - Fixed version *@
                     <div id="imagePreview" class="mt-3 mb-4 text-center" style="display: none;">
                         <div class="glass-card p-3">
-                            <img id="previewImg" class="img-fluid rounded" style="max-height: 200px;" />
+                            <img id="previewImg" class="img-fluid rounded" style="max-height: 200px; max-width: 100%;"
+                                 onerror="handleImagePreviewError(this)" />
+                            <div id="previewError" class="alert alert-warning small mt-2 mb-0" style="display: none;">
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                Image preview not available. The URL may be blocked or invalid.
+                            </div>
                             <p class="small text-muted mt-2">Reference Image Preview</p>
                         </div>
                     </div>
@@ -144,24 +148,97 @@
     <partial name="_ValidationScriptsPartial" />
     
     <script>
-        // Live image preview
+
+        // get references to DOM elements
         const urlInput = document.getElementById('ReferenceImageUrl');
         const previewDiv = document.getElementById('imagePreview');
         const previewImg = document.getElementById('previewImg');
+        const previewError = document.getElementById('previewError');
 
-        urlInput.addEventListener('input', function() {
-            const url = this.value.trim();
-            if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
-                previewImg.src = url;
-                previewDiv.style.display = 'block';
-                previewImg.onerror = function() {
-                    previewImg.src = '';
-                    previewDiv.style.display = 'none';
-                };
-            } else {
-                previewDiv.style.display = 'none';
+
+        // Handle image preview errors
+        // hides broken image and shows error message
+
+        function handleImagePreviewError(img) {
+            img.style.display = 'none';
+            if (previewError) {
+                previewError.style.display = 'block';
             }
+        }
+
+
+        // handle the image preview logic
+        // checks if URL is valid, shows loading state
+        //  and handles success/error of image loading
+
+        function showImagePreview(url) {
+            if (!url || (!url.startsWith('http://') && !url.startsWith('https://'))) {
+                previewDiv.style.display = 'none';
+                return;
+            }
+            
+            // Reset error and show loading state
+            if (previewError) {
+                previewError.style.display = 'none';
+            }
+            previewImg.style.display = 'block';
+            previewDiv.style.display = 'block';
+            
+            // Set a timeout to hide loading if image takes too long - 5 sec
+
+            const timeout = setTimeout(() => {
+                if (previewImg.complete === false) {
+                    previewImg.style.display = 'none';
+                    if (previewError) {
+                        previewError.style.display = 'block';
+                    }
+                }
+            }, 5000);
+            
+
+            // if image loads successfully, clear timeout and show image
+
+            previewImg.onload = function() {
+                clearTimeout(timeout);
+                previewImg.style.display = 'block';
+                if (previewError) {
+                    previewError.style.display = 'none';
+                }
+            };
+            
+
+            // if image fails to load, clear timeout, hide image and show error message
+
+            previewImg.onerror = function() {
+                clearTimeout(timeout);
+                previewImg.style.display = 'none';
+                if (previewError) {
+                    previewError.style.display = 'block';
+                }
+            };
+
+            // this one actually sets the image source
+            // which triggers the loading process and the associated events
+            previewImg.src = url;
+        }
+
+        // Debounced input handler
+        // to prevent excessive loading while user is typing
+        // waits for 500ms of inactivity before trying to load the image preview
+
+        let debounceTimer;
+        urlInput.addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            const url = this.value.trim();
+            debounceTimer = setTimeout(() => {
+                showImagePreview(url);
+            }, 500);
         });
+
+        // Check if there's already a value on page load
+        if (urlInput && urlInput.value.trim()) {
+            showImagePreview(urlInput.value.trim());
+        }
 
         // Copy to clipboard function
         function copyToClipboard() {
@@ -178,6 +255,6 @@
             }
         }
     </script>
+    }
 
    
-}

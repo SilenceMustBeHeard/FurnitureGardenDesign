@@ -1291,3 +1291,49 @@ header {
 .progress-bar {
     transition: width 0.6s ease;
 }
+
+
+
+
+/* ==== Order form styling ==== */
+
+.glass-input:focus {
+    border-color: #c09a6c;
+    box-shadow: 0 0 0 0.2rem rgba(192, 154, 108, 0.25);
+}
+
+.glass-card {
+    background: rgba(33, 37, 41, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-select.glass-input {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+    .form-select.glass-input option {
+        background-color: #212529;
+    }
+
+.input-group-text.glass-input-prepend {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-right: none;
+    color: #c09a6c;
+}
+
+.glass-icon-circle {
+    transition: all 0.3s ease;
+}
+
+    .glass-icon-circle:hover {
+        transform: scale(1.05);
+        background: rgba(192, 154, 108, 0.3);
+    }
+
+#imagePreview .glass-card {
+    background: rgba(0, 0, 0, 0.3);
+}
