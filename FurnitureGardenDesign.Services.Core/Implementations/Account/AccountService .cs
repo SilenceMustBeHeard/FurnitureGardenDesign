@@ -30,6 +30,9 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Account
             _logger = logger;
         }
 
+
+        // Returns a tuple indicating success and any error messages
+        // registers a new user, assigns them the "User" ( by default) role, and signs them in
         public async Task<(bool Success, string[] Errors)> RegisterAsync(RegisterViewModel model)
         {
             var user = new AppUser
@@ -52,6 +55,8 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Account
             return (false, result.Errors.Select(e => e.Description).ToArray());
         }
 
+
+        // Attempts to sign in a user with the provided credentials and returns whether the login was successful
         public async Task<bool> LoginAsync(LoginViewModel model)
         {
             var result = await _signInManager.PasswordSignInAsync(
@@ -65,6 +70,10 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Account
             await _signInManager.SignOutAsync();
         }
 
+
+        // Handles the forgot password process by generating a reset token
+        // creating a reset link, rendering an email template, and sending the email to the user
+        // 
         public async Task<bool> ForgotPasswordAsync(string email, string resetLink)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -81,6 +90,11 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Account
 
             return await _emailService.SendEmailAsync(email, "Password Reset Request", emailBody);
         }
+
+
+        // Resets the user's password using the provided token and new password,
+        // returning success status and any error messages
+        // If the user is not found, it returns an error message indicating that the user was not found
 
         public async Task<(bool Success, string[] Errors)> ResetPasswordAsync(ResetPasswordViewModel model)
         {
