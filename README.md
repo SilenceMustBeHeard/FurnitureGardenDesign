@@ -1,280 +1,328 @@
-### Furniture\&GardenDesign (F\&GD)
+# 🌿 Furniture & Garden Design (F&GD)
+
+[![ASP.NET](https://img.shields.io/badge/ASP.NET-10.0-512BD4?logo=.net)](https://dotnet.microsoft.com/)
+[![Entity Framework](https://img.shields.io/badge/Entity_Framework-10.0-512BD4?logo=.net)](https://learn.microsoft.com/en-us/ef/)
+[![SQL Server](https://img.shields.io/badge/SQL_Server-2022-CC2927?logo=microsoft-sql-server)](https://www.microsoft.com/en-us/sql-server)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap)](https://getbootstrap.com/)
+[![AI Generated](https://img.shields.io/badge/AI-Powered-FF6B6B?logo=openai)](https://leonardo.ai/)
+[![3D Models](https://img.shields.io/badge/3D-Meshy.ai-4A90E2?logo=three.js)](https://meshy.ai/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+## 📖 Overview
+
+**Furniture & Garden Design (F&GD)** is a full-stack ASP.NET Core MVC e-commerce platform that enables customers to order personalized furniture and garden designs. The platform leverages **AI-powered design generation**, **interactive 3D visualizations**, and a role-based approval workflow.
+
+### Key Features
+
+| Feature | Description |
+|---------|-------------|
+| 🤖 **AI-Powered Design Generation** | Generate unique furniture designs from text descriptions |
+| 🎨 **AI Image Generation** | Create realistic product previews using multiple AI engines |
+| 🧊 **Interactive 3D Models** | View and interact with designs in 3D space |
+| 👥 **Role-Based Access** | Admin, Manager, and Customer roles with granular permissions |
+| 📦 **Catalog Management** | Curated collection of approved designs for inspiration |
+| 💬 **Messaging System** | In-app messaging between customers and admins |
+| ⭐ **Reviews & Ratings** | Customer feedback system for catalog items |
+| 🔐 **Secure Authentication** | ASP.NET Core Identity with email confirmation & password reset |
+| 📸 **Reference Image Support** | Upload reference images for AI to work from |
+| 🔄 **Iterative Refinement** | Request changes and AI will regenerate designs |
+
+## 🎯 Workflow
+Customer Order → Admin/Manager Review → AI Design Generation → Customer Approval → Catalog Publication
+↓
+Optional 3D Render Request
+↓
+Customer Feedback / Refinement
+↓
+AI Regenerates Design
+
+## 👥 User Roles & Permissions
+
+| Permission | 👑 Admin | 📋 Manager | 👤 Customer |
+|------------|----------|------------|-------------|
+| Create orders | ✅ | ✅ | ✅ |
+| Track orders | ✅ | ✅ | ✅ |
+| Approve/refine designs | ✅ | ✅ | ✅ |
+| Request AI generation | ✅ | ✅ | ✅ |
+| Request 3D rendering | ✅ | ✅ | ✅ |
+| Manage all orders | ✅ | ✅ | ❌ |
+| Manage users | ✅ | ❌ | ❌ |
+| Manage categories | ✅ | ❌ | ❌ |
+| Manage catalog | ✅ | ❌ | ❌ |
+| Manage reviews | ✅ | ❌ | ✅ (own only) |
+| Send system messages | ✅ | ❌ | ❌ |
+| Contact support | ✅ | ✅ | ✅ |
+
+## 🛠️ Technology Stack
+
+### Backend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **ASP.NET Core** | 10.0 | Web framework |
+| **Entity Framework Core** | 10.0 | ORM & data access |
+| **SQL Server** | 2022 | Relational database |
+| **ASP.NET Core Identity** | 10.0 | Authentication & authorization |
+| **SendGrid** | Latest | Email service (password reset) |
+
+### AI & 3D Services
+| Service | Purpose |
+|---------|---------|
+| **Meshy.ai** | 3D model generation from text/images |
+| **Luma AI** | 3D model generation from text/references |
+| **Tripo AI** | Fast 3D model generation |
+| **Masterpiece Studio** | AI-powered 3D modeling |
+| **Kaedim** | 2D to 3D model conversion |
+| **Sloyd** | AI-generated game-ready 3D assets |
+| **CSM (Common Sense Machines)** | 3D generation from images/video |
+| **Leonardo.ai** | AI image generation |
+| **Segmind.ai** | AI image generation & editing |
+| **Playground AI** | AI design variations |
+| **Stable Diffusion** | Open-source AI image generation |
+| **Midjourney** | AI art generation |
+| **DALL-E** | AI image generation |
+| **Remini** | AI image enhancement |
+| **Krikey.ai** | AI video & animation |
 
-### Custom ASP.NET Online Store for AI-Powered Furniture \& Garden Designs
+### Frontend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **Razor Views** | 10.0 | Server-side rendering |
+| **Bootstrap** | 5.3 | Responsive UI framework |
+| **Bootstrap Icons** | 1.11 | Icon library |
+| **CSS Glassmorphism** | Custom | Modern UI effects |
+| **Three.js** | Latest | 3D model viewer |
 
-### 
+### External Services
+| Service | Purpose |
+|---------|---------|
+| **Meshy.ai** | 3D model generation |
+| **Luma AI** | 3D model generation |
+| **Tripo AI** | Fast 3D model generation |
+| **Masterpiece Studio** | AI 3D modeling |
+| **Kaedim** | 2D to 3D conversion |
+| **Sloyd** | AI game-ready 3D assets |
+| **CSM** | 3D from images/video |
+| **Leonardo.ai** | AI image generation |
+| **Segmind.ai** | AI image generation |
+| **Playground AI** | AI design variations |
+| **Stable Diffusion** | Open-source AI image |
+| **Midjourney** | AI art generation |
+| **DALL-E** | AI image generation |
+| **Remini** | AI image enhancement |
+| **Krikey.ai** | AI video & animation |
+| **SendGrid** | Transactional emails |
 
-### Furniture\&GardenDesign (F\&GD) is a web platform that allows customers to order personalized furniture or garden layouts, review AI-generated design proposals, approve them, and optionally request interactive 3D renders.
 
-### 
 
-### The system includes role-based access for Admins, Managers, and Customers to ensure structured workflow and secure management.
 
-### 
+## 🚀 Getting Started
 
-### 🌟 Features
+### Prerequisites
 
-### 👤 Customer
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (or SQL Server Express)
+- [Git](https://git-scm.com/)
+- [Visual Studio 2022 - 2026](https://visualstudio.microsoft.com/) (v17.14 or later) or VS Code
+- (Optional) [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-### 
+### Installation
 
-### Create custom orders
+#### 1. Clone the Repository
 
-### 
 
-### Track order status
+git clone https://github.com/SilenceMustBeHeard/FurnitureGardenDesign.git
+cd FurnitureGardenDesign
 
-### 
 
-### Approve or request AI design refinements
 
-### 
+2. Configure Database Connection
+Update appsettings.json in the FurnitureGardenDesign.Web project:
 
-### Browse approved catalog designs
 
-### 
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=FurnitureGardenDesign;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true"
+  }
 
-### 🛠 Admin
+Apply Database Migrations ( if not presented). If you have any problems - clear the previous migration folder and start anew.
 
-### 
 
-### Manage orders
+. Seed Initial Data
+The application automatically seeds:
 
-### 
+Admin user: admin@example.com / Admin123!
 
-### Manage categories
+Manager user: manager@example.com / Manager123!
 
-### 
+Sample categories and catalog items
 
-### Manage users
+System messages
 
-### 
+6. Configure SendGrid (for Password Reset)
 
-### Manage catalog entries
+   dotnet user-secrets set "SendGrid:ApiKey" "YOUR_SENDGRID_API_KEY"
+dotnet user-secrets set "SendGrid:FromEmail" "your-verified-email@example.com"
 
-### 
 
-### Manage reviews
 
+7. Run the Application
 
 
-### 📋 Manager
 
-### 
 
-### Manage and process orders only
+Docker Deployment 
 
-### 
+# Build the image
+docker build -t furniture-garden-app .
 
-### 🤖 AI Integration
+# Run the container
+docker run -d -p 8080:80 --name furniture-garden furniture-garden-app
 
-### 
+🧪 Testing
+Run Unit Tests
+bash
+dotnet test FurnitureGardenDesign.Services.Tests/FurnitureGardenDesign.Services.Tests.csproj
+Run Integration Tests
+bash
+dotnet test FurnitureGardenDesign.Integration.Tests/FurnitureGardenDesign.Integration.Tests.csproj
+Test Coverage
+bash
+dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+reportgenerator -reports:TestResults/**/coverage.opencover.xml -targetdir:CoverageReport
 
-### Generates design images based on:
 
-### 
 
-### Text description
+📸 Screenshots
+🏠 Home Page (Admin View)
+<img width="1920" height="911" alt="Admin Home" src="https://github.com/user-attachments/assets/1201b8ab-0623-4d35-94bf-d4f4bfb82e27" />
 
-### 
 
-### Reference images
+🔐 Login Page
+<img width="1920" height="916" alt="Login" src="https://github.com/user-attachments/assets/d17865a9-8920-4ca6-92a9-0c62e48f53a6" />
 
-### 
 
-### Supports iterative refinement until customer approval
+📝 Create Order
+<img width="1920" height="921" alt="Create Order" src="https://github.com/user-attachments/assets/af4daf72-3ddd-4be5-80b1-f4f13e2d7714" />
 
-### 
 
-### 🧊 Optional 3D Render
+🛠 Admin Panel
+<img width="1920" height="926" alt="Admin Panel" src="https://github.com/user-attachments/assets/4c58eaa5-1aeb-41bf-96f3-0aeea587f5b6" />
 
-### 
 
-### Interactive 3D visualization available upon request
 
-### 
+🔧 Environment Variables
+Variable	Description	Required
+ASPNETCORE_ENVIRONMENT	Runtime environment (Development/Production)	✅
+Leonardo:ApiKey	Leonardo.ai API key for image generation	❌
+Meshy:ApiKey	Meshy.ai API key for 3D generation	❌
+SendGrid:ApiKey	SendGrid API key for email	❌
+SendGrid:FromEmail	Verified sender email	❌
+📚 API Endpoints
+Public Endpoints
+Method	Endpoint	Description
+GET	/Catalog/CatalogIndex	View catalog
+GET	/Catalog/Details/{id}	Design details
+POST	/Catalog/ToggleFavorite/{id}	Favorite/unfavorite design
+POST	/Catalog/AddReview	Submit review
+GET	/Profile/ProxyImage	Fetch external images (CORS proxy)
+Admin Endpoints
+Method	Endpoint	Description
+GET	/Admin/CatalogManagement/EditList	Manage catalog
+GET	/Admin/UserManagement/Index	Manage users
+GET	/Admin/OrdersManagement/Manage	Manage orders
+GET	/Admin/ReviewManagement/EditList	Moderate reviews
+POST	/Admin/DesignVariants/Create	Create design variant
+POST	/Admin/DesignVariants/Send	Send proposal to customer
+AI Generation Endpoints
+Method	Endpoint	Description
+POST	/Api/GenerateImage	Generate AI image from prompt
+POST	/Api/Generate3D	Generate 3D model from prompt/image
+GET	/Api/GenerationStatus/{id}	Check generation status
 
-### 📚 Catalog
 
-### 
 
-### Displays approved designs
+🤝 Contributing
+Fork the repository
 
-### 
+Create a feature branch (git checkout -b feature/amazing-feature)
 
-### Available to all customers for inspiration
+Commit your changes (git commit -m 'Add amazing feature')
 
-### 
+Push to the branch (git push origin feature/amazing-feature)
 
-### ⚙️ Technologies
+Open a Pull Request
 
-### 
+Coding Standards
+Follow C# coding conventions
 
-### Backend: ASP.NET MVC (Individual Accounts)
+Write unit tests for new features
 
-### 
+Update documentation accordingly
 
-### Database: Entity Framework Core
+Use meaningful variable names
 
-### 
+Target .NET 10.0 compatibility
 
-### Frontend: Razor Views + Bootstrap
 
-### 
 
-### AI: Image generation from prompts \& references
+🙏 Acknowledgments
+3D Model Generation
+Meshy.ai - AI-powered 3D model generation from text and images
 
-### 
+Luma AI - 3D model generation from text and reference images
 
-### 3D Rendering: Interactive previews (optional feature)
+Tripo AI - Fast AI-powered 3D model generation
 
-### 
+Masterpiece Studio - AI-powered 3D modeling and editing
 
-### 📝 Order Workflow
+Kaedim - Convert 2D images to 3D models
 
-### 
+Sloyd - AI-generated game-ready 3D assets
 
-### Customer submits order (description, dimensions, reference images, category).
+CSM (Common Sense Machines) - 3D generation from images and video
 
-### 
+AI Image Generation
+Leonardo.ai - AI image generation for design concepts
 
-### Admin or Manager reviews the order.
+Segmind.ai - AI image generation and editing
 
-### 
+Playground AI - AI design generation and variations
 
-### AI generates design proposals.
+Stable Diffusion - Open-source AI image generation
 
-### 
+Midjourney - High-quality AI art generation
 
-### Customer:
+DALL-E - OpenAI's image generation
 
-### 
+Remini - AI image enhancement and upscaling
 
-### Approves → Order proceeds to execution (optional catalog inclusion)
+Krikey.ai - AI video and animation generation
 
-### 
+Infrastructure
+SendGrid - Email service
 
-### Requests changes → AI refines design
+Bootstrap - UI framework
 
-### 
+Three.js - 3D model rendering
 
-### Optional 3D render upon request.
+📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-### 
+📞 Support
+For issues, questions, or contributions:
 
-### 
+Open an issue
 
-### 
+Email: support@furnituregarden.com
 
-### | Role         | Permissions                                                 |
+<div align="center"> Made with ❤️ by the Furniture & Garden Design Team <br/> <sub>Built with .NET 10.0 | Powered by AI & 3D Generation</sub> </div> ```
 
-### | ------------ | ----------------------------------------------------------- |
 
-### | \*\*Admin\*\*    | Manage orders, categories, users, catalog, reviews        |
 
-### | \*\*Manager\*\*  | Manage orders only                                          |
 
-### | \*\*Customer\*\* | Create/track orders, approve/refine designs, browse catalog |
 
-### 
 
-### 
 
-### 🚀 Local Setup
+  
 
-### 1️⃣ Clean Migrations (if needed)
-
-### 
-
-### If there are existing migrations:
-
-### 
-
-### Delete the Migrations folder.
-
-### 
-
-### 2️⃣ Create New Database
-
-### 
-
-### Open Package Manager Console and run:
-
-### 
-
-### 
-
-### Add-Migration InitialCreate
-
-### Update-Database
-
-### 
-
-### 
-
-### 3️⃣ Run Application
-
-### 
-
-### Then open in browser
-
-
-
-### 
-
-### 
-
-### Register an account and start creating orders.
-
-### 
-
-### 📈 Future Enhancements
-
-### 
-
-### Multiple AI design variations per order
-
-### 
-
-### Default interactive 3D previews
-
-### 
-
-### Real-time collaboration between customer and manager
-
-### 
-
-### AI-based material \& dimension suggestions
-
-
-
-
-
-#### \## 📸 Screenshots
-
-## 📸 Screenshots
-
-### 🏠 Home
-
-
-<img width="1920" height="956" alt="Home" src="https://github.com/user-attachments/assets/3194bb6a-17b9-4a0c-bde4-649c65759080" />
-
-### 🔐 Login
-
-<img width="1920" height="957" alt="Login" src="https://github.com/user-attachments/assets/b82e27ee-b6c1-4b40-be95-9a1c2fd02880" />
-
-
-### 📝 Make An Order
-<img width="1920" height="960" alt="MakeAnOrder" src="https://github.com/user-attachments/assets/0d48c145-0b95-4520-9e30-3f524a9735cf" />
-
-### 🛠 Admin Panel
-
-
-
-<img width="1920" height="961" alt="AdminPanel" src="https://github.com/user-attachments/assets/751323b8-1200-44ef-bed9-43c77d7078bf" />
-
-
-### 
-
-### 
 
