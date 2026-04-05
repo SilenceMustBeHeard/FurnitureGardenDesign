@@ -2,6 +2,8 @@
 using FurnitureGardenDesign.Services.Core.Interfaces.Account;
 using FurnitureGardenDesign.Web.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 
 namespace FurnitureGardenDesign.Services.Core.Implementations.Account
@@ -11,17 +13,20 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Account
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailService _emailService;
+        private readonly IViewRenderService _viewRenderService;
         private readonly ILogger<AccountService> _logger;
 
         public AccountService(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IEmailService emailService,
+            IViewRenderService viewRenderService,
             ILogger<AccountService> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = emailService;
+            _viewRenderService = viewRenderService;
             _logger = logger;
         }
 
@@ -68,7 +73,11 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Account
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var fullResetLink = $"{resetLink}?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(email)}";
 
-            var emailBody = GeneratePasswordResetEmailBody(user, fullResetLink);
+           
+            var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary());
+            viewData["ResetLink"] = fullResetLink;
+
+            var emailBody = await _viewRenderService.RenderToStringAsync("Emails/PasswordReset", user, viewData);
 
             return await _emailService.SendEmailAsync(email, "Password Reset Request", emailBody);
         }
@@ -89,45 +98,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Account
             }
 
             return (false, result.Errors.Select(e => e.Description).ToArray());
-        }
-
-        private string GeneratePasswordResetEmailBody(AppUser user, string resetLink)
-        {
-            return $@"
-                <html>
-                <head>
-                    <style>
-                        body {{ font-family: Arial, sans-serif; }}
-                        .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
-                        .header {{ background: #c09a6c; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }}
-                        .content {{ padding: 30px; background: #f9f9f9; color: #333; }}
-                        .button {{ display: inline-block; padding: 12px 24px; background: #c09a6c; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
-                        .footer {{ text-align: center; padding: 20px; font-size: 12px; color: #666; }}
-                    </style>
-                </head>
-                <body>
-                    <div class='container'>
-                        <div class='header'>
-                            <h2 style='color: white; margin: 0;'>Furniture Garden Design</h2>
-                        </div>
-                        <div class='content'>
-                            <h3>Password Reset Request</h3>
-                            <p>Hello {user.FirstName} {user.LastName},</p>
-                            <p>We received a request to reset your password. Click the button below to create a new password:</p>
-                            <div style='text-align: center;'>
-                                <a href='{resetLink}' class='button' style='color: white;'>Reset Password</a>
-                            </div>
-                            <p>If the button doesn't work, copy and paste this link into your browser:</p>
-                            <p><a href='{resetLink}'>{resetLink}</a></p>
-                            <p>This link will expire in 24 hours.</p>
-                            <p>If you didn't request this, please ignore this email.</p>
-                        </div>
-                        <div class='footer'>
-                            <p>&copy; 2024 Furniture Garden Design. All rights reserved.</p>
-                        </div>
-                    </div>
-                </body>
-                </html>";
         }
     }
 }
