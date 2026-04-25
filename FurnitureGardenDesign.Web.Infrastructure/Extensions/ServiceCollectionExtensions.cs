@@ -1,15 +1,6 @@
-﻿using FurnitureGardenDesign.Data.Repository.Implementations;
-using FurnitureGardenDesign.Data.Repository.Implementations.Account;
-using FurnitureGardenDesign.Services.Core;
-using FurnitureGardenDesign.Services.Core.Interfaces;
+﻿using FurnitureGardenDesign.Data.Repository.Implementations.Account;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using static FurnitureGardenDesign.Common.ExceptionMessages;
 namespace FurnitureGardenDesign.Web.Infrastructure.Extensions
 {

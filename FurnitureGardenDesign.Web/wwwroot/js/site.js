@@ -1,25 +1,5 @@
-﻿(function () {
-    const storedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-    const theme = storedTheme || (prefersDark ? "dark" : "light");
-    document.documentElement.setAttribute("data-bs-theme", theme);
-
-    const toggle = document.getElementById("themeToggle");
-    if (!toggle) return;
-
-    toggle.textContent = theme === "dark" ? "☀️" : "🌙";
-
-    toggle.addEventListener("click", () => {
-        const current = document.documentElement.getAttribute("data-bs-theme");
-        const next = current === "dark" ? "light" : "dark";
-
-        document.documentElement.setAttribute("data-bs-theme", next);
-        localStorage.setItem("theme", next);
-
-        toggle.textContent = next === "dark" ? "☀️" : "🌙";
-    });
-})();
+﻿
+// STAR RATING FUNCTIONALITY
 
 document.querySelectorAll(".star-rating").forEach(rating => {
     const designId = rating.dataset.designId;
@@ -38,3 +18,25 @@ document.querySelectorAll(".star-rating").forEach(rating => {
     });
 });
 
+
+// SMOOTH SCROLL FOR ANCHOR LINKS
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href && href !== '#') {
+            const target = document.querySelector(href);
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+});
+
+
+// TOOLTIP INITIALIZATION
+
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+tooltipTriggerList.map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+console.log('✨ Site.js initialized - Luxury Smart Home Theme ✨');

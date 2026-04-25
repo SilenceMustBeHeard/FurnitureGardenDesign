@@ -10,6 +10,7 @@ namespace FurnitureGardenDesign.Web.ViewModels.Admin
         public string NewRole { get; set; } = string.Empty;
 
 
-        public IEnumerable<string> AvailableRoles { get; set; } = new List<string>();
+        public IEnumerable<string> AvailableRoles { get; set; } 
+            = new List<string>();
     }
 }
