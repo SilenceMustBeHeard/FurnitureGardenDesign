@@ -3,109 +3,148 @@
 <div class="container py-5">
     <div class="card glass-card p-5 text-light shadow-lg border-0 rounded-4">
 
-        <a asp-action="Index" class="btn btn-outline-glass mb-4">
-            ← Back
+        <a asp-action="CatalogIndex" class="btn btn-outline-glass mb-4" style="width: auto; display: inline-block;">
+            ← Back to Catalog
         </a>
 
-        <div class="row align-items-start g-5">
-
-            @* left - image*@
-            <div class="col-lg-8 text-center">
+        <div class="row g-5">
+            @* left - image *@
+            <div class="col-lg-7 text-center">
                 <img src="@Model.Image2DUrl"
                      class="img-fluid rounded-4 shadow-lg details-img"
-                     alt="@Model.Title" />
+                     alt="@Model.Title"
+                     style="max-height: 500px; width: auto; object-fit: contain;" />
+                
+                @if (!string.IsNullOrEmpty(Model.Model3DUrl))
+                {
+                    <div class="mt-3">
+                        <span class="badge bg-success">
+                            <i class="bi bi-cube me-1"></i> 3D Model Available
+                        </span>
+                    </div>
+                }
             </div>
 
-            @* right - details*@
-            <div class="col-lg-4">
+            @* right - details *@
+            <div class="col-lg-5">
+                <h2 class="fw-bold mb-3">@Model.Title</h2>
 
-                <h2 class="fw-bold mb-3 display-6">@Model.Title</h2>
-
-                <p class="glass-text-muted mb-4">
-                    @Model.Description
-                </p>
-
-                <p class="glass-text-muted mb-4">
-                    @Model.Materials
-                </p>
-
+                @* Category *@
                 <div class="mb-3">
-                    <small class="text-secondary">Category</small><br />
-                    <span class="fw-semibold">@Model.CategoryName</span>
-                </div>
-
-                <div class="mb-3">
-                    <small class="text-secondary">Price</small><br />
-                    <span class="text-success fs-4 fw-bold">
-                        @Model.Price.ToString("C")
+                    <span class="badge bg-glass">
+                        <i class="bi bi-tag me-1"></i> @Model.CategoryName
                     </span>
                 </div>
 
+                @* Rating *@
+                <div class="mb-3">
+                    <div class="stars d-inline-block me-2">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= Math.Floor(Model.AverageRating))
+                            {
+                                <i class="bi bi-star-fill text-warning"></i>
+                            }
+                            else if (i - 0.5 <= Model.AverageRating)
+                            {
+                                <i class="bi bi-star-half text-warning"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-star text-muted"></i>
+                            }
+                        }
+                    </div>
+                    <span class="fw-semibold">@Model.AverageRating.ToString("0.0")</span>
+                    <span class="text-muted ms-1">(@Model.ReviewCount reviews)</span>
+                </div>
+
+                @* Price *@
                 <div class="mb-4">
-                    <small class="text-secondary">Rating</small><br />
-                    <span class="text-warning fs-5 fw-semibold">
-                        @Model.AverageRating.ToString("0.0") ★
-                    </span>
-                    <span class="small text-muted">
-                        (@Model.ReviewCount reviews)
-                    </span>
+                    <span class="text-success fs-3 fw-bold">@Model.Price.ToString("C")</span>
+                </div>
+
+                @* Description Section *@
+                <div class="mb-3">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-file-text" style="color: #c09a6c;"></i>
+                        <strong>Description</strong>
+                    </div>
+                    <p class="text-muted mb-0" style="line-height: 1.6;">@Model.Description</p>
+                </div>
+
+                @* Materials Section *@
+                <div class="mb-4">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-brush" style="color: #c09a6c;"></i>
+                        <strong>Materials Used</strong>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var material in Model.Materials.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <span class="badge bg-secondary bg-opacity-25 px-3 py-2 rounded-pill">
+                                @material.Trim()
+                            </span>
+                        }
+                    </div>
                 </div>
 
                 <hr class="border-light opacity-25" />
 
-                @*action buttons*@
+                @* Action Buttons *@
                 <div class="d-grid gap-2 mt-4">
-
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <form asp-controller="Catalog"
-                              asp-action="ToggleFavorite"
-                              method="post">
+                        <form asp-controller="Catalog" asp-action="ToggleFavorite" method="post">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@Model.Id" />
                             <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
 
-                            <button type="submit"
-                                    class="btn btn-glass-fav @(Model.IsFavorited ? "active" : "")">
-                                @(Model.IsFavorited ? "❤️ Remove from Favorites" : "🤍 Add to Favorites")
+                            <button type="submit" class="btn @(Model.IsFavorited ? "btn-danger" : "btn-outline-glass") w-100">
+                                <i class="bi @(Model.IsFavorited ? "bi-heart-fill" : "bi-heart") me-2"></i>
+                                @(Model.IsFavorited ? "Remove from Favorites" : "Add to Favorites")
                             </button>
                         </form>
 
-                        <a asp-controller="Review"
-                           asp-action="Write"
-                           asp-route-id="@Model.Id"
-                           class="btn btn-primary-glass w-100">
-                            Write Review
+                        <a asp-controller="Review" asp-action="Write" asp-route-id="@Model.Id" class="btn btn-primary-glass w-100">
+                            <i class="bi bi-pencil-square me-2"></i>Write Review
                         </a>
 
-                        <a asp-controller="Review"
-                           asp-action="Reviews"
-                           asp-route-id="@Model.Id"
-                           class="btn btn-outline-glass w-100">
-                            View Reviews
-                        </a>
-                    }
-
-                    @* FIX ! : added only external link for 3dmodel *@
-                    @if (!string.IsNullOrEmpty(Model.Model3DUrl))
-                    {
-                        <a href="@Model.Model3DUrl"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           class="btn btn-outline-glass w-100">
-                            <i class="bi bi-box-arrow-up-right me-2"></i>View 3D Model
+                        <a asp-controller="Review" asp-action="Reviews" asp-route-id="@Model.Id" class="btn btn-outline-glass w-100">
+                            <i class="bi bi-chat-dots me-2"></i>Read Reviews
                         </a>
                     }
                     else
                     {
-                        <button class="btn btn-outline-glass w-100" disabled>
+                        <div class="text-center p-3 rounded" style="background: rgba(192, 154, 108, 0.1);">
+                            <i class="bi bi-stars fs-4" style="color: #c09a6c;"></i>
+                            <p class="mt-2 mb-3">Sign in to save favorites and write reviews</p>
+                            <div class="d-flex gap-2">
+                                <a asp-controller="Account" asp-action="Login" class="btn btn-primary-glass flex-grow-1">Sign In</a>
+                                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-glass flex-grow-1">Register</a>
+                            </div>
+                        </div>
+                    }
+
+                    @* 3D Model Button *@
+                    @if (!string.IsNullOrEmpty(Model.Model3DUrl))
+                    {
+                        <a href="@Model.Model3DUrl"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="btn btn-outline-glass w-100 mt-2">
+                            <i class="bi bi-cube me-2"></i>View 3D Model
+                            <i class="bi bi-box-arrow-up-right ms-2 small"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-glass w-100 mt-2" disabled>
                             <i class="bi bi-cube me-2"></i>3D Not Available
                         </button>
                     }
-
                 </div>
             </div>
         </div>
     </div>
 </div>
-
