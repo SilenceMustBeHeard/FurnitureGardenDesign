@@ -18,6 +18,13 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Account
 
         protected bool IsUserManager() => User.IsInRole("Manager");
 
+
+        protected void SetToastMessage(string message, string type = "success")
+        {
+            Response.Headers.Add("X-Toast-Message", message);
+            Response.Headers.Add("X-Toast-Type", type);
+        }
+
         protected bool IsUserAuthenticated() => User.Identity?.IsAuthenticated ?? false;
 
 

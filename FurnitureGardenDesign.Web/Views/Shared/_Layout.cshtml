@@ -59,23 +59,8 @@
             </div>
         </nav>
 
-        @* Temp Data alerts *@
-        <div class="container mt-3">
-            @if (TempData["Success"] != null)
-            {
-                <div id="tempSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
-                    @TempData["Success"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            }
-
-            @if (TempData["Error"] != null)
-            {
-                <div id="tempError" class="alert alert-danger alert-dismissible fade show" role="alert">
-                    @TempData["Error"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            }
+        <!-- Toast Container for notifications -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
         </div>
     </header>
 
@@ -92,11 +77,19 @@
     <footer class="glass-footer text-center text-muted border-top">
         <div class="container">&copy; 2025 - Furniture &amp; Garden Design | Luxury Smart Living</div>
     </footer>
+    <!--hidden fields for TempData -->
+    <input type="hidden" id="tempDataSuccess" value="@TempData["Success"]" />
+    <input type="hidden" id="tempDataError" value="@TempData["Error"]" />
+    <input type="hidden" id="tempDataWarning" value="@TempData["Warning"]" />
+    <input type="hidden" id="tempDataInfo" value="@TempData["Info"]" />
+
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/glass.js" asp-append-version="true"></script>
+    <script src="~/js/toast-notifications.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
     

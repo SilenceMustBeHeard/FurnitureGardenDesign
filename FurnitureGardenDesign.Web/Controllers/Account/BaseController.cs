@@ -19,7 +19,11 @@ namespace FurnitureGardenDesign.Web.Controllers.Account
         // Checks if the user is authenticated
         protected bool IsUserAuthenticated() => User.Identity?.IsAuthenticated ?? false;
 
-
+        protected void SetToastMessage(string message, string type = "success")
+        {
+            Response.Headers.Add("X-Toast-Message", message);
+            Response.Headers.Add("X-Toast-Type", type);
+        }
 
         private readonly UserManager<AppUser> _userManager;
 
