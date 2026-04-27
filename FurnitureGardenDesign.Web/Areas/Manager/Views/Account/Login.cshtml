@@ -20,21 +20,7 @@
                 <p class="text-muted small">Sign in to continue</p>
             </div>
 
-            @* Success/Error Messages *@
-            @if (TempData["Success"] != null)
-            {
-                <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
-                    <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
-                </div>
-            }
-            @if (TempData["Error"] != null)
-            {
-                <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
-                </div>
-            }
+          
 
             <form asp-action="Login" method="post">
                 @Html.AntiForgeryToken()
