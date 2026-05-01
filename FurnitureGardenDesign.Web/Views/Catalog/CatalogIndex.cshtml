@@ -12,7 +12,7 @@
     bool isGuest = ViewData["IsGuest"] as bool? ?? !User.Identity!.IsAuthenticated;
 }
 
-<div class="card glass-card p-4 ">
+<div class="card glass-card p-4">
     <div class="container my-4">
 
         @* Header *@
@@ -68,8 +68,6 @@
                             </div>
                         </div>
                     }
-
-                   
                 </div>
             </div>
         </div>
@@ -81,7 +79,6 @@
                     @if (isGuest)
                     {
                         <span>Showing <strong>@Model.Count()</strong> preview @(Model.Count() == 1 ? "design" : "designs")</span>
-                       
                     }
                     else
                     {
@@ -91,7 +88,7 @@
             </div>
         </div>
 
-        @* Catalog grid *@
+        @* Catalog grid - FIXED WITH h-100 *@
         <div class="row g-4" id="catalogGrid">
             @if (!Model.Any())
             {
@@ -105,19 +102,23 @@
             {
                 @foreach (var item in Model)
                 {
-                    <div class="col-lg-4 col-md-6 catalog-item">
-                        <div class="card glass-card user-catalog-card">
-                            @* Image container *@
-                            <div class="catalog-img-container">
-                                <img src="@item.Image2DUrl" class="user-catalog-img" alt="@item.Title"
-                                     onerror="this.src='/images/placeholder.jpg'">
+                    <div class="col-xl-4 col-lg-6 col-md-6 catalog-item">
+                        <div class="card glass-card user-catalog-card h-100">
+                            
+                            @* Image container - FIXED HEIGHT *@
+                            <div class="position-relative">
+                                <img src="@item.Image2DUrl"
+                                     class="user-catalog-img w-100"
+                                     alt="@item.Title"
+                                     onerror="this.src='/images/placeholder.jpg'"
+                                     style="height: 220px; object-fit: cover;">
 
                                 @* Popular badge *@
                                 @if (item.AverageRating >= 4.5)
                                 {
-                                    <div class="position-absolute top-0 start-0 m-2">
-                                        <span class="badge bg-popular text-dark">
-                                            <i class="bi bi-star-fill me-1"></i>Popular
+                                    <div class="position-absolute top-0 start-0 p-2">
+                                        <span class="badge bg-warning text-dark shadow-sm">
+                                            <i class="bi bi-star-fill me-1"></i>POPULAR
                                         </span>
                                     </div>
                                 }
@@ -125,88 +126,87 @@
                                 @* 3d badge *@
                                 @if (!string.IsNullOrEmpty(item.Model3DUrl))
                                 {
-                                    <div class="position-absolute top-0 end-0 m-2">
-                                        <span class="badge bg-success text-bg-dark">
+                                    <div class="position-absolute bottom-0 end-0 p-2">
+                                        <span class="badge bg-info shadow-sm">
                                             <i class="bi bi-cube me-1"></i>3D
                                         </span>
                                     </div>
                                 }
-
-                              
                             </div>
 
-                            @* Card body *@
-                            <div class="card-body">
+                            @* Card body - FIXED WITH FLEX COLUMN *@
+                            <div class="card-body d-flex flex-column">
                                 @* Title *@
-
                                 <h5 class="glass-title fw-bold mb-2">@item.Title</h5>
 
-                                @* Description *@
-                                <p class="glass-text-muted small mb-3 user-description">@item.Description</p>
+                                @* Description - FIXED HEIGHT *@
+                                <p class="glass-text-muted small mb-2" style="min-height: 48px; max-height: 48px; overflow: hidden;">
+                                    @item.Description
+                                </p>
 
-                                @* Materials *@
-                                <p class="glass-text-muted small mb-3 user-materials">@item.Materials</p>
+                                @* Materials - FIXED HEIGHT *@
+                                <p class="glass-text-muted small mb-3" style="min-height: 48px; max-height: 48px; overflow: hidden;">
+                                    @item.Materials
+                                </p>
 
                                 @* Price and rating *@
-                                <div class="row g-2 mb-3">
-                                    <div class="col-6">
-                                        <div class="bg-dark bg-opacity-25 p-2 rounded text-center">
-                                            <small class="text-muted d-block">Price</small>
-                                            <span class="text-success fw-bold">@item.Price.ToString("C")</span>
-                                        </div>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <small class="text-muted d-block">Price</small>
+                                        <span class="text-success fw-bold fs-5">@item.Price.ToString("C")</span>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="bg-dark bg-opacity-25 p-2 rounded text-center">
-                                            <small class="text-muted d-block">Rating</small>
-                                            <span class="text-warning">
-                                                @item.AverageRating.ToString("0.0") ★
-                                                <small class="text-muted">(@item.ReviewCount)</small>
-                                            </span>
-                                        </div>
+                                    <div class="text-end">
+                                        <small class="text-muted d-block">Rating</small>
+                                        <span class="text-warning">
+                                            <i class="bi bi-star-fill me-1"></i>@item.AverageRating.ToString("0.0")
+                                            <small class="text-muted">(@item.ReviewCount)</small>
+                                        </span>
                                     </div>
                                 </div>
 
-                                @* Action buttons *@
-                                <div class="d-flex flex-wrap gap-2 mt-auto">
+                                @* Action buttons - FIXED WITH mt-auto *@
+                                <div class="d-grid gap-2 mt-auto">
                                     @if (!isGuest)
                                     {
-                                        <form asp-controller="Catalog"
-                                              asp-action="ToggleFavorite"
-                                              method="post"
-                                              class="d-inline">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="id" value="@item.Id" />
-                                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                                            <button type="submit"
-                                                    class="btn btn-glass-fav @(item.IsFavorited ? "active" : "")"
-                                                    title="@(item.IsFavorited ? "Remove from favorites" : "Add to favorites")">
-                                                <i class="bi @(item.IsFavorited ? "bi-heart-fill" : "bi-heart") me-1"></i>
-                                                @(item.IsFavorited ? "Favorited" : "Favorite")
-                                            </button>
-                                        </form>
-
-                                        <a asp-controller="Review"
-                                           asp-action="Write"
-                                           asp-route-id="@item.Id"
-                                           class="btn btn-outline-glass btn-sm flex-grow-1">
-                                            <i class="bi bi-star me-1"></i>Review
-                                        </a>
+                                        <div class="btn-group">
+                                            <form asp-controller="Catalog"
+                                                  asp-action="ToggleFavorite"
+                                                  method="post"
+                                                  class="d-inline w-100">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                                <button type="submit"
+                                                        class="btn @(item.IsFavorited ? "btn-danger" : "btn-outline-danger") w-100">
+                                                    <i class="bi @(item.IsFavorited ? "bi-heart-fill" : "bi-heart") me-1"></i>
+                                                    @(item.IsFavorited ? "Favorited" : "Favorite")
+                                                </button>
+                                            </form>
+                                        </div>
+                                        
+                                        <div class="btn-group">
+                                            <a asp-controller="Review"
+                                                   asp-action="Write"
+                                                   asp-route-id="@item.Id"
+                                                   class="btn btn-outline-glass">
+                                                <i class="bi bi-star me-1"></i>Review
+                                            </a>
+                                            <a asp-action="Details"
+                                                   asp-route-id="@item.Id"
+                                                   asp-route-returnUrl="@Context.Request.Path"
+                                                   class="btn btn-outline-glass">
+                                                <i class="bi bi-eye me-1"></i>Details
+                                            </a>
+                                        </div>
                                     }
                                     else
                                     {
                                         <a asp-controller="Account"
-                                           asp-action="Login"
-                                           class="btn btn-outline-glass btn-sm flex-grow-1">
+                                               asp-action="Login"
+                                               class="btn btn-outline-glass w-100">
                                             <i class="bi bi-box-arrow-in-right me-1"></i>Sign in to interact
                                         </a>
                                     }
-
-                                    <a asp-action="Details"
-                                       asp-route-id="@item.Id"
-                                       asp-route-returnUrl="@Context.Request.Path"
-                                       class="btn btn-outline-glass btn-sm flex-grow-1">
-                                        <i class="bi bi-eye me-1"></i>Details
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -215,20 +215,18 @@
             }
         </div>
 
-        @* Pagination - Only show for authenticated users AND if there's more than one page *@
+        @* Pagination *@
         @if (!isGuest && totalPages > 1 && Model.Any())
         {
             <div class="row mt-5">
                 <div class="col-12">
                     <nav aria-label="Catalog pagination">
                         <ul class="pagination justify-content-center">
-                          
-
                             <li class="page-item @(currentPage == 1 ? "disabled" : "")">
                                 <a class="page-link glass-pagination"
-                                   asp-action="CatalogIndex"
-                                   asp-route-page="@(currentPage - 1)"
-                                   asp-route-pageSize="@pageSize">
+                                       asp-action="CatalogIndex"
+                                       asp-route-page="@(currentPage - 1)"
+                                       asp-route-pageSize="@pageSize">
                                     <i class="bi bi-chevron-left"></i>
                                 </a>
                             </li>
@@ -278,9 +276,9 @@
 
                             <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
                                 <a class="page-link glass-pagination"
-                                   asp-action="CatalogIndex"
-                                   asp-route-page="@(currentPage + 1)"
-                                   asp-route-pageSize="@pageSize">
+                                       asp-action="CatalogIndex"
+                                       asp-route-page="@(currentPage + 1)"
+                                       asp-route-pageSize="@pageSize">
                                     <i class="bi bi-chevron-right"></i>
                                 </a>
                             </li>
@@ -289,13 +287,10 @@
                 </div>
             </div>
         }
-
-      
     </div>
 </div>
 
 @functions {
-    // Helper function to get total designs count
     public async Task<int> GetTotalDesignsCount()
     {
         var service = Context.RequestServices.GetService<ICatalogService>();
@@ -307,8 +302,6 @@
     @if (!isGuest)
     {
         <script>
-            // Only include the filtering JavaScript for authenticated users
-            // (keep your existing filterCatalog function here)
             function filterCatalog() {
                 const searchTerm = document.getElementById('searchInput').value.toLowerCase();
                 const items = document.querySelectorAll('.catalog-item');
@@ -316,9 +309,10 @@
 
                 items.forEach(item => {
                     const title = item.querySelector('.glass-title').textContent.toLowerCase();
-                    const description = item.querySelector('.glass-text-muted').textContent.toLowerCase();
+                               const description = item.querySelectorAll('.glass-text-muted')[0]?.textContent.toLowerCase() ?? '';
+            const materials = item.querySelectorAll('.glass-text-muted')[1]?.textContent.toLowerCase() ?? '';
 
-                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+            if (title.includes(searchTerm) || description.includes(searchTerm) || materials.includes(searchTerm)) {
                         item.style.display = '';
                         visibleCount++;
                     } else {
@@ -326,19 +320,16 @@
                     }
                 });
 
-                // Update results count
                 const countElement = document.getElementById('visibleCount');
                 if (countElement) {
                     countElement.textContent = visibleCount;
                 }
 
-                // Update the results text
                 const resultsText = document.getElementById('resultsCount').querySelector('strong');
                 if (resultsText) {
                     resultsText.textContent = visibleCount;
                 }
 
-                // Show "no results" message if needed
                 const grid = document.getElementById('catalogGrid');
                 let noResultsMsg = document.getElementById('noResultsMessage');
 
@@ -359,7 +350,6 @@
                 }
             }
 
-            // Add live search with debounce
             let searchTimeout;
             const searchInput = document.getElementById('searchInput');
 
@@ -372,12 +362,10 @@
                 });
             }
 
-            // Auto-hide alerts
             setTimeout(() => {
                 document.querySelectorAll(".alert").forEach(alert => alert.style.display = "none");
             }, 3000);
 
-            // Initial filter in case there's a pre-filled search term
             document.addEventListener('DOMContentLoaded', function() {
                 const urlParams = new URLSearchParams(window.location.search);
                 const searchParam = urlParams.get('searchTerm');
