@@ -192,21 +192,26 @@ reportgenerator -reports:TestResults/**/coverage.opencover.xml -targetdir:Covera
 
 
 
-📸 Screenshots
-🏠 Home Page (Admin View)
-<img width="1920" height="911" alt="Admin Home" src="https://github.com/user-attachments/assets/1201b8ab-0623-4d35-94bf-d4f4bfb82e27" />
 
 
 🔐 Login Page
-<img width="1920" height="916" alt="Login" src="https://github.com/user-attachments/assets/d17865a9-8920-4ca6-92a9-0c62e48f53a6" />
+<img width="1904" height="912" alt="login" src="https://github.com/user-attachments/assets/68e348e6-9fac-4412-b724-3a9c992945a5" />
 
 
-📝 Create Order
-<img width="1920" height="921" alt="Create Order" src="https://github.com/user-attachments/assets/af4daf72-3ddd-4be5-80b1-f4f13e2d7714" />
+
+📝 Contact MEssage 
+<img width="1882" height="910" alt="contact message" src="https://github.com/user-attachments/assets/8911eb4f-6945-49d2-836a-7676363c02fd" />
+
+
 
 
 🛠 Admin Panel
-<img width="1920" height="926" alt="Admin Panel" src="https://github.com/user-attachments/assets/4c58eaa5-1aeb-41bf-96f3-0aeea587f5b6" />
+<img width="1892" height="906" alt="admin view" src="https://github.com/user-attachments/assets/e24ab638-64fd-4847-8f2e-00c885a63f9b" />
+
+📝 Create Order
+<img width="1886" height="906" alt="create order" src="https://github.com/user-attachments/assets/2e97b8e7-2b41-4d7a-9e33-c503231ab889" />
+
+
 
 
 
