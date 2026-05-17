@@ -48,7 +48,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Account
             return Ok(model);
         }
 
-        [HttpPost("mark-as-read")]
+        [HttpPost("mark-as-read/{id}")]
         public async Task<IActionResult> MarkAsRead(Guid id)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -65,7 +65,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Account
 
     
 
-        [HttpGet("message-details")]
+        [HttpGet("message-details/{id}")]
         public async Task<IActionResult> MessageDetails(Guid id)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -87,7 +87,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Account
             return Ok(viewModel);
         }
 
-        [HttpPost("approve-design")]
+        [HttpPost("approve-design/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApproveDesign(Guid id)
         {
@@ -107,7 +107,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Account
             return Ok(new { success = "Design approved successfully!" });
         }
 
-        [HttpGet("system-message-details")]
+        [HttpGet("system-message-details/{id}")]
         public async Task<IActionResult> SystemMessageDetails(Guid id)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -126,7 +126,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Account
             return Ok(viewModel);
         }
 
-        [HttpGet("contact-message-details")]
+        [HttpGet("contact-message-details/{id}")]
         public async Task<IActionResult> ContactMessageDetails(Guid id)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -160,7 +160,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Account
 
             if (!isAdmin && !isManager)
             {
-                return Forbid();
+                return Unauthorized(new { error = "You must be an administrator or manager to perform this action." });
             }
 
             var messages = await _inboxMessageService.GetAdminMessagesAsync(user.Id);

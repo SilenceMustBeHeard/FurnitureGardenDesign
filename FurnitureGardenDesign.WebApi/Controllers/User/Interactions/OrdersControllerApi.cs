@@ -21,18 +21,18 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Interactions
             _categoryServiceClient = categoryServiceClient;
         }
 
-        [HttpGet("create")]
-        public async Task<IActionResult> Create()
+        [HttpGet("get-order-form")]
+        public async Task<IActionResult> GetOrderForm()
         {
             return Ok(new OrderFormViewModel());
         }
 
-        [HttpPost("create")]
-        public async Task<IActionResult> Create(OrderFormViewModel model)
+        [HttpPost("create-order")]
+        public async Task<IActionResult> CreateOrder([FromBody] OrderFormViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new { error = "Invalid order data."});
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;

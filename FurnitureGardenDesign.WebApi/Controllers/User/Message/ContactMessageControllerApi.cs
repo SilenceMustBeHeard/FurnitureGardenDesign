@@ -23,8 +23,8 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Message
         }
 
         [HttpPost("index")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(ContactMessageCreateViewModel model)
+ 
+        public async Task<IActionResult> Index([FromBody] ContactMessageCreateViewModel model)
         {
             if (!ModelState.IsValid)
             {

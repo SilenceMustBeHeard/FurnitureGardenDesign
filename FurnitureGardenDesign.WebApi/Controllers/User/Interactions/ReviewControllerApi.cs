@@ -18,7 +18,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Interactions
             _reviewService = reviewService;
         }
 
-        [HttpGet("write")]
+        [HttpGet("{id}/write")]
         public async Task<IActionResult> Write(Guid id)
         {
             var userId = GetUserId();
@@ -37,14 +37,14 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Interactions
 
         private string? GetUserId() => User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
 
-        [HttpPost("post")]
+        [HttpPost("{id}/post")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Post(AddReviewViewModel model)
+        public async Task<IActionResult> Post(Guid id, [FromBody] AddReviewViewModel model)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
             if (string.IsNullOrEmpty(userId))
             {
-                return Unauthorized();
+                return Unauthorized(new { error = "You must be logged in to add a review." });
             }
 
             var result = await _reviewService.CreateReviewAsync(userId, model);
@@ -57,8 +57,8 @@ namespace FurnitureGardenDesign.WebApi.Controllers.User.Interactions
             return Ok(new { message = "Review added successfully." });
         }
 
-        [HttpGet("reviews")]
-        public async Task<IActionResult> Reviews(Guid id)
+        [HttpGet("{id}/get-reviews")]
+        public async Task<IActionResult> GetReviews(Guid id)
         {
             var reviews = await _reviewService.GetReviewsByDesignIdAsync(id);
 
