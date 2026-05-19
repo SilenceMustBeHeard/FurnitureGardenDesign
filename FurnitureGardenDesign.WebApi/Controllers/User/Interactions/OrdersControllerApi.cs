@@ -1,49 +1,44 @@
 ﻿using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces.Catalog;
 using FurnitureGardenDesign.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.User.Interactions
+namespace FurnitureGardenDesign.WebApi.Controllers.User.Interactions;
+
+[Route("api/[controller]")]
+[ApiController]
+[Authorize]
+public class OrdersControllerApi : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class OrdersControllerApi : ControllerBase
+    private readonly IOrderService _orderService;
+    private readonly ICategoryServiceClient _categoryServiceClient;
+
+    public OrdersControllerApi(IOrderService orderService, ICategoryServiceClient categoryServiceClient)
     {
-        private readonly IOrderService _orderService;
-        private readonly ICategoryServiceClient _categoryServiceClient;
+        _orderService = orderService;
+        _categoryServiceClient = categoryServiceClient;
+    }
 
-        public OrdersControllerApi(
-            IOrderService orderService,
-            ICategoryServiceClient categoryServiceClient)
+ 
+    [HttpPost]
+    public async Task<IActionResult> CreateOrder([FromBody] OrderFormViewModel model)
+    {
+        if (!ModelState.IsValid)
         {
-            _orderService = orderService;
-            _categoryServiceClient = categoryServiceClient;
+            return BadRequest(new { error = "Invalid order data.", details = ModelState });
         }
 
-        [HttpGet("get-order-form")]
-        public async Task<IActionResult> GetOrderForm()
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+        if (string.IsNullOrEmpty(userId))
         {
-            return Ok(new OrderFormViewModel());
+            return Unauthorized(new { error = "You must be logged in to submit an order." });
         }
 
-        [HttpPost("create-order")]
-        public async Task<IActionResult> CreateOrder([FromBody] OrderFormViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new { error = "Invalid order data."});
-            }
+        await _orderService.CreateOrderAsync(userId, model);
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-
-            if (User.Identity?.IsAuthenticated != true)
-            {
-                return Unauthorized(new { error = "You must be logged in to submit an order." });
-            }
-            await _orderService.CreateOrderAsync(userId, model);
-
-            return Ok(new { success = "Your order has been submitted!" });
-        }
+        return Ok(new { message = "Your order has been submitted successfully!" });
     }
 }

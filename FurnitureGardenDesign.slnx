@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/API/">
+    <Project Path="FurnitureGardenDesign.Api.Common/FurnitureGardenDesign.Api.Common.csproj" Id="7600af47-df7a-4691-afdc-fcdbb2ca2b49" />
     <Project Path="FurnitureGardenDesign.WebApi/FurnitureGardenDesign.WebApi.csproj" Id="682f3301-5b07-4ed4-822f-c35096ae9657" />
   </Folder>
   <Folder Name="/Data/">

@@ -15,11 +15,9 @@ public class AccountControllerApi : ControllerBase
         _accountService = accountService;
     }
 
-    [HttpGet("register")]
-    public IActionResult Register() => Ok();
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
+    public async Task<IActionResult> CreateAccount([FromBody] RegisterViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -30,19 +28,15 @@ public class AccountControllerApi : ControllerBase
 
         if (result.Success)
         {
-            return Ok();
+            return CreatedAtAction(nameof(CreateAccount),
+                new { email = model.Email },
+                new { message = "Account created successfully" });
         }
 
-        foreach (var error in result.Errors)
-        {
-            ModelState.AddModelError("", error);
-        }
-
-        return BadRequest(ModelState);
+        return BadRequest(new { Errors = result.Errors });
     }
 
-    [HttpGet("login")]
-    public IActionResult Login() => Ok();
+
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginViewModel model)
@@ -58,14 +52,17 @@ public class AccountControllerApi : ControllerBase
         {
             return Unauthorized(new { Error = "Invalid username or password." });
         }
-
-        return Ok();
+        return Ok(new
+        {
+            message = "Login successful",
+            user = new {  model.Email } 
+        });
     }
 
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
         await _accountService.LogoutAsync();
-        return Ok();
+        return Ok(new { message = "Logout successful" });
     }
 }
