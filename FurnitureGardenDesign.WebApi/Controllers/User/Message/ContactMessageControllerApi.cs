@@ -2,37 +2,32 @@
 using FurnitureGardenDesign.Web.ViewModels.Messages;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.User.Message
+namespace FurnitureGardenDesign.WebApi.Controllers.User.Message;
+
+[Route("api/[controller]")]
+[ApiController]
+public class ContactMessageControllerApi : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ContactMessageControllerApi : ControllerBase
+    private readonly IContactMessageClientService _contactMessageService;
+
+    public ContactMessageControllerApi
+        (IContactMessageClientService contactMessageService)
     {
-        private readonly IContactMessageClientService _contactMessageService;
+        _contactMessageService = contactMessageService;
+    }
 
-        public ContactMessageControllerApi
-            (IContactMessageClientService contactMessageService)
+
+    [HttpPost("create")]
+
+    public async Task<IActionResult> Create([FromBody] ContactMessageCreateViewModel model)
+    {
+        if (!ModelState.IsValid)
         {
-            _contactMessageService = contactMessageService;
+            return BadRequest(ModelState);
         }
 
-        [HttpGet("index")]
-        public IActionResult Index()
-        {
-            return Ok(new ContactMessageCreateViewModel());
-        }
-
-        [HttpPost("index")]
- 
-        public async Task<IActionResult> Index([FromBody] ContactMessageCreateViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            await _contactMessageService.SendContactMessageAsync(model, User);
-            return Ok(new { message = "Your message has been sent successfully! We'll get back to you soon." });
-        }
+        await _contactMessageService.SendContactMessageAsync(model, User);
+        return CreatedAtAction(nameof(Create), new { id = 0 },
+            new { message = "Your message has been sent successfully! We'll get back to you soon." });
     }
 }
