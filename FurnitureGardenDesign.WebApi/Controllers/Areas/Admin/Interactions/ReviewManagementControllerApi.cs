@@ -1,158 +1,147 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
-using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Review;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions
+namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions;
+
+[Route("api/admin/[controller]")]
+[ApiController]
+[Authorize(Roles = "Admin")]
+public class ReviewManagementControllerApi : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize(Roles = "Admin")]
-    public class ReviewManagementControllerApi : ControllerBase
+    private readonly UserManager<AppUser> _userManager;
+    private readonly IReviewManagementService _reviewManagementService;
+
+    public ReviewManagementControllerApi(
+        UserManager<AppUser> userManager,
+        IReviewManagementService reviewManagementService)
     {
-        private readonly IReviewService _reviewService;
-       
-        private readonly IReviewManagementService _reviewManagementService;
+        _userManager = userManager;
+        _reviewManagementService = reviewManagementService;
+    }
 
-        public ReviewManagementControllerApi(
-            
-            IReviewService reviewService,
-            IReviewManagementService reviewManagementService)
-          
+    [HttpGet("write/{productId}")]
+    public async Task<IActionResult> GetWriteReviewModel(Guid productId)
+    {
+        var userId = GetUserId();
+        if (string.IsNullOrEmpty(userId))
         {
-            _reviewService = reviewService;
-            _reviewManagementService = reviewManagementService;
+            return Unauthorized(new { error = "You must be logged in to perform this action." });
         }
 
+        var model = await _reviewManagementService.GetWriteReviewModelAsync(userId, productId);
 
-        [HttpGet("write/{id}")]
-        public async Task<IActionResult> Write(Guid id)
+        if (model == null)
         {
-            var userId = GetUserId();
-            if (string.IsNullOrEmpty(userId))
-                return Unauthorized(new { error = "You must be logged in to write a review." });
-
-            var model = await _reviewService.GetWriteReviewModelAsync(userId, id);
-
-            if (model == null)
-            {
-
-                return BadRequest(new { error = "You have already reviewed this design." });
-            }
-
-            return Ok(model);
+            return BadRequest(new { error = "You have already reviewed this design." });
         }
 
-        private string? GetUserId() => User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+        return Ok(model);
+    }
 
-
-
-      
-        [HttpPost("post")]
-        public async Task<IActionResult> Post(AddReviewViewModel model)
+    [HttpPost("post")]
+    public async Task<IActionResult> CreateReview([FromBody] AddReviewViewModel model)
+    {
+        if (!ModelState.IsValid)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-            if (string.IsNullOrEmpty(userId))
-                return Unauthorized();
-
-            var result = await _reviewService.CreateReviewAsync(userId, model);
-
-            if (!result.Success)
-            {
-
-                return Unauthorized(new { error = "You must be logged in to add a review." });
-            }
-
-
-            return Ok(new { message = "Review added successfully." });
+            return BadRequest(new { errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)) });
         }
 
-
-
-
-
-        [HttpGet("reviews/{id}")]
-        public async Task<IActionResult> Reviews(Guid id)
+        var userId = GetUserId();
+        if (string.IsNullOrEmpty(userId))
         {
-            var reviews = await _reviewService.GetReviewsByDesignIdAsync(id);
-
-            return Ok(reviews);
-
+            return Unauthorized(new { error = "You must be logged in to perform this action." });
         }
 
-       
-        
-        [HttpGet("list")]
-        public async Task<IActionResult> EditList(bool includeDeleted = true)
+        var result = await _reviewManagementService.CreateReviewAsync(userId, model);
+
+        if (!result.Success)
         {
-            IEnumerable<ReviewViewModelList> reviews;
-
-            if (includeDeleted)
-            {
-                reviews = await _reviewManagementService.GetAllIncludingDeletedAsync();
-              
-            }
-            else
-            {
-                reviews = await _reviewManagementService.GetAllActiveAsync();
-               
-            }
-
-            return Ok(new
-            {
-                reviews = reviews.OrderByDescending(r => r.CreatedAt),
-                showDeleted = includeDeleted
-            });
+            return BadRequest(new { error = result.Error ?? "Failed to add review." });
         }
 
-     
+        return Ok(new { success = true, message = "Review added successfully!" });
+    }
 
-     
-      
-        [HttpPost("toggle/{id}")]
-        public async Task<IActionResult> ToggleActive(Guid id)
+    [HttpGet("product/{productId}")]
+    public async Task<IActionResult> GetProductReviews(Guid productId)
+    {
+        var reviews = await _reviewManagementService.GetReviewsByDesignIdAsync(productId);
+        return Ok(reviews);
+    }
+
+    [HttpGet("edit-list")]
+    public async Task<IActionResult> GetEditList([FromQuery] bool includeDeleted = false)
+    {
+        IEnumerable<ReviewViewModelList> reviews;
+
+        if (includeDeleted)
         {
-            try
-            {
-                await _reviewManagementService.ToggleReviewAsync(id);
-                var review = await _reviewManagementService.GetByIdAsync(id);
-
-                return Ok(new
-                {
-
-                    message = review.IsDeleted
-                        ? "Review has been deactivated."
-                        : "Review has been activated.",
-                    isDeleted = review.IsDeleted
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { error = "Error toggling review status: " + ex.Message });
-            }
+            reviews = await _reviewManagementService.GetAllIncludingDeletedAsync();
+        }
+        else
+        {
+            reviews = await _reviewManagementService.GetAllActiveAsync();
         }
 
-
-       
-      
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Details(Guid id)
+        return Ok(new
         {
+            reviews = reviews.OrderByDescending(r => r.CreatedAt),
+            includeDeleted = includeDeleted,
+            totalCount = reviews.Count(),
+            activeCount = reviews.Count(r => !r.IsDeleted),
+            deletedCount = reviews.Count(r => r.IsDeleted)
+        });
+    }
+
+    [HttpPost("{id}/toggle")]
+    public async Task<IActionResult> ToggleReview(Guid id)
+    {
+        try
+        {
+            await _reviewManagementService.ToggleReviewAsync(id);
+
             var review = await _reviewManagementService.GetByIdAsync(id);
 
             if (review == null)
             {
-
                 return NotFound(new { error = "Review not found." });
             }
 
-            return Ok(review);
+            return Ok(new
+            {
+                success = true,
+                message = review.IsDeleted
+                    ? "🔒 Review has been hidden from customers!"
+                    : "✨ Review is now visible to customers!",
+                isDeleted = review.IsDeleted,
+                reviewId = id
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = "Error toggling review status: " + ex.Message });
+        }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetReviewDetails(Guid id)
+    {
+        var review = await _reviewManagementService.GetByIdAsync(id);
+
+        if (review == null)
+        {
+            return NotFound(new { error = "Review not found." });
         }
 
+        return Ok(review);
+    }
+
+    private string? GetUserId()
+    {
+        return User?.Identity?.Name;
     }
 }
-
