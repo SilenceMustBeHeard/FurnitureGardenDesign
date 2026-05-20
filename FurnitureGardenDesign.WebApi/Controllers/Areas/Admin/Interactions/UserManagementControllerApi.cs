@@ -6,65 +6,156 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions
+namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions;
+
+[Route("api/admin/[controller]")]
+[ApiController]
+[Authorize(Roles = "Admin")]
+public class UserManagementControllerApi : ControllerBase
 {
-    [Route("api/admin/[controller]")]
-    [ApiController]
-    [Authorize(Roles = "Admin")]
-    public class UserManagementControllerApi : ControllerBase
+    private readonly IUserService _userService;
+    private readonly UserManager<AppUser> _userManager;
+
+    public UserManagementControllerApi(
+        IUserService userService,
+        UserManager<AppUser> userManager)
     {
-        private readonly IUserService _userService;
+        _userService = userService;
+        _userManager = userManager;
+    }
 
-        public UserManagementControllerApi(IUserService userService)
+    [HttpGet("users")]
+    public async Task<IActionResult> GetUsers()
+    {
+
+        var currentUserId = GetCurrentUserId();
+        if (currentUserId == null)
         {
-            _userService = userService;
+            return Unauthorized(new { error = "Unable to identify current user" });
         }
 
-        private Guid GetUserId()
+        var allUsers = await _userService.GetUserManagmentBoardDataAsync(currentUserId.Value);
+
+        if (allUsers == null || !allUsers.Any())
         {
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return Guid.TryParse(userIdString, out var userId) ? userId : Guid.Empty;
-             
-          
+            return Ok(new { users = new List<object>(), message = "No users found" });
         }
 
+        return Ok(allUsers);
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
+    [HttpPost("assign-role")]
+    public async Task<IActionResult> AssignRole([FromBody] ChangeUserRoleViewModel model)
+    {
+        if (model == null)
         {
-            var allUsers = await _userService.GetUserManagmentBoardDataAsync(GetUserId());
-            return Ok(allUsers);
+            return BadRequest(new { error = "Invalid request body" });
         }
 
-       
-        [HttpPost("assign-role")]
-        public async Task<IActionResult> AssignRole([FromBody] ChangeUserRoleViewModel model)
+        if (string.IsNullOrWhiteSpace(model.NewRole))
         {
-            if (!ModelState.IsValid || string.IsNullOrWhiteSpace(model.NewRole))
-            { 
-                return BadRequest(new { error = "Please select a valid role." });
-            }
-
-            var result = await _userService.ChangeUserRoleAsync(model, GetUserId());
-
-            if (result.Failed)
-                return NotFound(new { error = "User not found!" });
-
-            return Ok(new { message = "User role changed successfully!" });
+            return BadRequest(new { error = "Please select a valid role." });
         }
 
-       
-        [HttpPost("disable/{userId}")]
-        public async Task<IActionResult> DisableUser(string userId)
+        var currentUserId = GetCurrentUserId();
+        if (currentUserId == null)
         {
-            var result = await _userService.DisableUser(userId);
-
-            if (result.Failed)
-            {
-                return NotFound(new { error = "User not found!" });
-            }
-
-            return Ok(new { message = "User disabled successfully!" });
+            return Unauthorized(new { error = "Unable to identify current user" });
         }
+
+        var result = await _userService.ChangeUserRoleAsync(model, currentUserId.Value);
+
+        if (result.Failed)
+        {
+            return BadRequest(new { error = result.ErrorMessage });
+        }
+
+        return Ok(new
+        {
+            success = true,
+            message = "User role changed successfully.",
+            userId = model.UserId,
+            newRole = model.NewRole
+        });
+    }
+
+    [HttpPost("disable/{userId}")]
+    public async Task<IActionResult> DisableUser(string userId)
+    {
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return BadRequest(new { error = "User ID is required" });
+        }
+
+        var currentUserId = GetCurrentUserId();
+        if (currentUserId == null)
+        {
+            return Unauthorized(new { error = "Unable to identify current user" });
+        }
+
+        if (userId == currentUserId.Value.ToString())
+        {
+            return BadRequest(new { error = "You cannot disable your own account" });
+        }
+
+        var result = await _userService.DisableUser(userId);
+
+        if (result.Failed)
+        {
+            return BadRequest(new { error = result.ErrorMessage });
+        }
+
+        return Ok(new
+        {
+            success = true,
+            message = "User disabled successfully.",
+            userId = userId
+        });
+    }
+
+    //[HttpPost("enable/{userId}")]
+    //public async Task<IActionResult> EnableUser(string userId)
+    //{
+    //    if (string.IsNullOrEmpty(userId))
+    //       {
+    //       return BadRequest(new { error = "User ID is required" });
+    //       }
+
+    //    var currentUserId = GetCurrentUserId();
+    //    if (currentUserId == null)
+    //      {
+    //      return Unauthorized(new { error = "Unable to identify current user" });
+    //      }
+
+    //    var result = await _userService.EnableUser(userId);
+
+    //    if (result.Failed)
+    //     {
+    //     return BadRequest(new { error = result.ErrorMessage });
+    //     }
+
+    //    return Ok(new
+    //    {
+    //        success = true,
+    //        message = "User enabled successfully.",
+    //        userId = userId
+    //    });
+    //}
+
+    private Guid? GetCurrentUserId()
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            return null;
+        }
+
+        if (Guid.TryParse(userIdClaim, out var userId))
+        {
+            return userId;
+        }
+        return null;
     }
 }
