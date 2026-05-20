@@ -5,19 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FurnitureGardenDesign.Services.Core.Admin.Interfaces
+namespace FurnitureGardenDesign.Services.Core.Admin.Interfaces;
+
+public interface ICatalogManagementService: ICatalogService
 {
-    public interface ICatalogManagementService: ICatalogService
-    {
-        Task<IEnumerable<CatalogViewModelList>> GetAllActiveCataloguesAsync();
+    Task<IEnumerable<CatalogViewModelList>> GetAllActiveCataloguesAsync();
 
-        Task AddCatalogAsync(CatalogViewModelCreate model);
+    Task AddCatalogAsync(CatalogViewModelCreate model);
 
-        Task<CatalogViewModelEdit?> GetCatalogForEditByIdAsync(Guid id);
-        Task EditCatalogAsync(Guid id, CatalogViewModelEdit model);
+    Task<CatalogViewModelEdit?> GetCatalogForEditByIdAsync(Guid id);
+    Task EditCatalogAsync(Guid id, CatalogViewModelEdit model);
 
-        Task ToggleCatalogAsync(Guid id);
+    Task ToggleCatalogAsync(Guid id);
 
-        Task<IEnumerable<CatalogViewModelList>> GetAllCataloguesForAdminAsync();
-    }
+    Task<IEnumerable<CatalogViewModelList>> GetAllCataloguesForAdminAsync();
 }
