@@ -25,15 +25,30 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Add HttpClient factory for services that need to make HTTP requests (like IPreviewService)
 builder.Services.AddHttpClient();
-
 // Add Identity 
 builder.Services.AddDefaultIdentity<AppUser>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false;
-    options.Password.RequireDigit = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireLowercase = false;
+    // Вход
+    options.SignIn.RequireConfirmedAccount = true;      
+    options.SignIn.RequireConfirmedEmail = true;       
+
+    // password settings
+    options.Password.RequireDigit = true;
+    options.Password.RequireNonAlphanumeric = true;     
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequiredLength = 10;               
+    options.Password.RequiredUniqueChars = 4;
+
+    // lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    options.Lockout.MaxFailedAccessAttempts = 5;       
+    options.Lockout.AllowedForNewUsers = true;
+
+    // user settings
+    options.User.RequireUniqueEmail = true;
+    options.User.AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
