@@ -28,7 +28,7 @@ builder.Services.AddHttpClient();
 // Add Identity 
 builder.Services.AddDefaultIdentity<AppUser>(options =>
 {
-    // Вход
+   
     options.SignIn.RequireConfirmedAccount = true;      
     options.SignIn.RequireConfirmedEmail = true;       
 
