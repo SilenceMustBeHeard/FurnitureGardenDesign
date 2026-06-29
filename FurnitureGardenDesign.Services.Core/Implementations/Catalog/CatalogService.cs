@@ -31,12 +31,11 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Catalog
           .GetAllAttached()
           .Where(c => c.IsActive)
           .Include(c => c.Category)
-        
+
           .Include(c => c.Reviews)
           .Include(c => c.Favorites)
 
           .ToListAsync();
-
 
         // For admin panel or internal use
         public async Task<CatalogDesign?> GetByIdAsync(Guid id)
@@ -45,7 +44,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Catalog
                 .GetAllAttached()
                 .Where(c => c.IsActive)
                 .Include(c => c.Category)
-               
+
                 .Include(c => c.Reviews)
                 .Include(c => c.Favorites)
                 .FirstOrDefaultAsync(c => c.Id == id);
@@ -85,7 +84,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Catalog
             }
         }
 
-
         // Add review
         public async Task AddReviewAsync(string userId, Guid designId, int rating, string? comment)
         {
@@ -100,12 +98,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Catalog
             await _reviewRepo.AddAsync(review);
             await _reviewRepo.SaveChangesAsync();
         }
-
-
-
-
-
-
 
         // For public catalog listing with pagination
         public async Task<IEnumerable<CatalogDesignViewModel>> GetPublicCatalogAsync(
@@ -161,8 +153,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Catalog
                 .ToListAsync();
         }
 
-
-
         // get total count for pagination
         public async Task<int> GetTotalActiveDesignsAsync()
         {
@@ -171,7 +161,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Catalog
                 .Where(d => d.IsActive)
                 .CountAsync();
         }
-
 
         // For details page
         public async Task<CatalogDesignViewModel?> GetDetailsAsync(
@@ -214,14 +203,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Catalog
                ReviewCount = d.Reviews.Count
            })
               .FirstOrDefaultAsync();
-
-            
         }
-
-
-
-
     }
 }
-
-

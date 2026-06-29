@@ -36,10 +36,6 @@ public class OrdersController : Controller
         _categoryServiceClient = categoryServiceClient;
     }
 
-
-
-
-
     // show order form for submission
     [HttpGet]
     public async Task<IActionResult> Create(Guid? approveFirst = null)
@@ -58,7 +54,6 @@ public class OrdersController : Controller
         return View(new OrderFormViewModel());
     }
 
-
     // create order (submit)
 
     [HttpPost]
@@ -74,7 +69,7 @@ public class OrdersController : Controller
 
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-        if(User.Identity?.IsAuthenticated != true)
+        if (User.Identity?.IsAuthenticated != true)
         {
             TempData["Error"] = "You must be logged in to submit an order.";
             return RedirectToAction("Login", "Account");
@@ -90,10 +85,8 @@ public class OrdersController : Controller
     [HttpPost]
     private async Task LoadCategoriesAsync()
     {
-        
         var categories = await _categoryServiceClient.GetAllActiveCategoriesForClientAsync();
 
-       
         ViewBag.Categories = categories
             .Select(c => new SelectListItem
             {
@@ -103,7 +96,7 @@ public class OrdersController : Controller
             .ToList();
     }
 
-    // fetch image for preview 
+    // fetch image for preview
     [HttpGet]
     public async Task<IActionResult> FetchWebpageImage(string url)
     {
@@ -117,12 +110,3 @@ public class OrdersController : Controller
         return Json(new { success = false, message = message ?? "Could not fetch image" });
     }
 }
-
-
-
-
-
-
-
-
-

@@ -3,7 +3,6 @@ using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -23,8 +22,6 @@ public class CatalogControllerApi : ControllerBase
         _favoriteService = favoriteService;
     }
 
-
-
     [HttpGet]
     [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<CatalogDesignViewModel>>> GetCatalog(int page = 1, int pageSize = 9)
@@ -38,23 +35,20 @@ public class CatalogControllerApi : ControllerBase
         if (isGuest)
         {
             designs = await _catalogService.GetPublicCatalogAsync(userId, 1, 3, isGuest);
-            totalItems = 3; 
+            totalItems = 3;
         }
         else
         {
             designs = await _catalogService.GetPublicCatalogAsync(userId, page, pageSize, isGuest);
-            totalItems = await _catalogService.GetTotalActiveDesignsAsync(); 
+            totalItems = await _catalogService.GetTotalActiveDesignsAsync();
         }
 
-       
         Response.Headers.Append("X-Total-Count", totalItems.ToString());
         Response.Headers.Append("X-Page", (isGuest ? 1 : page).ToString());
         Response.Headers.Append("X-Page-Size", (isGuest ? 3 : pageSize).ToString());
 
         return Ok(designs);
     }
-
-
 
     [HttpGet("{id}")]
     [AllowAnonymous]
@@ -64,7 +58,7 @@ public class CatalogControllerApi : ControllerBase
         var model = await _catalogService.GetDetailsAsync(id, userId);
 
         if (model == null)
-        { 
+        {
             return NotFound
                 (
                 new { Message = "Design not found." }
@@ -73,10 +67,6 @@ public class CatalogControllerApi : ControllerBase
 
         return Ok(model);
     }
-
-
-
-
 
     [HttpPost("{id}/favorite")]
     [Authorize]
@@ -98,7 +88,6 @@ public class CatalogControllerApi : ControllerBase
             isNowFavorited,
             message = isNowFavorited ? "Design added to favorites." : "Design removed from favorites."
         });
-       
     }
 
     [HttpPost("{id}/review")]
@@ -106,8 +95,8 @@ public class CatalogControllerApi : ControllerBase
     public async Task<ActionResult> AddReview(Guid id, [FromBody] ReviewRequest request)
     {
         if (request.Rating < 1 || request.Rating > 5)
-        { 
-            return BadRequest("Rating must be between 1 and 5."); 
+        {
+            return BadRequest("Rating must be between 1 and 5.");
         }
 
         await _catalogService.AddReviewAsync(
@@ -123,4 +112,3 @@ public class CatalogControllerApi : ControllerBase
             );
     }
 }
-

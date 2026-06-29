@@ -1,10 +1,7 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
-using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces.Account;
 using FurnitureGardenDesign.Services.Core.Interfaces.Message;
-using FurnitureGardenDesign.Services.Core.Manager.Interfaces;
-using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,25 +12,22 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Account
     [Authorize(Roles = "Manager")]
     public class ManagerProfileController : Controller
     {
-
         private readonly IProfileService _profileService;
         private readonly UserManager<AppUser> _userManager;
         private readonly IInboxMessageService _inboxMessageService;
         private readonly ISystemInboxMessageService _systemInboxMessageService;
-      
 
         public ManagerProfileController(
             ISystemInboxMessageService systemInboxMessageService,
             IProfileService profileService,
             UserManager<AppUser> userManager,
             IInboxMessageService inboxMessageService)
-          
+
         {
             _systemInboxMessageService = systemInboxMessageService;
             _profileService = profileService;
             _userManager = userManager;
             _inboxMessageService = inboxMessageService;
-           
         }
 
         [HttpGet]
@@ -48,12 +42,6 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Account
 
             var model = await _profileService.GetProfileAsync(user.Id);
 
-        
-          
-
-         
-         
-
             return View(model);
         }
 
@@ -65,7 +53,6 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Account
             {
                 TempData["Error"] = "You must be logged in to perform this action.";
                 return RedirectToAction("Login", "Account");
-
             }
 
             await _inboxMessageService.MarkMessageAsReadAsync(id, user.Id);
@@ -102,7 +89,6 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Account
             {
                 TempData["Error"] = "You must be logged in to perform this action.";
                 return RedirectToAction("Login", "Account");
-
             }
 
             var viewModel = await _inboxMessageService.GetMessageDetailsAsync(id, user.Id);
@@ -115,6 +101,7 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Account
 
             return View(viewModel);
         }
+
         [HttpGet]
         public async Task<IActionResult> SystemMessageDetails(Guid id)
         {
@@ -154,7 +141,7 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Account
                 TempData["Error"] = "Unable to approve design. Message not found or you don't have permission.";
                 return NotFound();
             }
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Invalid data. Please try again.";
                 return RedirectToAction(nameof(MessageDetails), new { id });
@@ -163,12 +150,6 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Account
             TempData["Success"] = "Design approved successfully!";
             return RedirectToAction(nameof(MessageDetails), new { id });
         }
-
-
-
-
-
-
 
         //[HttpGet]
         //public async Task<IActionResult> ManagerInbox()
@@ -179,7 +160,6 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Account
         //        TempData["Error"] = "You must be logged in to perform this action.";
         //        return RedirectToAction("Login", "Account");
         //    }
-
 
         //    var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
         //    var isManager = await _userManager.IsInRoleAsync(user, "Manager");

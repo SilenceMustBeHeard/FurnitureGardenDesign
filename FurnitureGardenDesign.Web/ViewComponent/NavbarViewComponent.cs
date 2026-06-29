@@ -1,12 +1,12 @@
 ﻿using FurnitureGardenDesign.Common;
 using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces.Account;
 using FurnitureGardenDesign.Services.Core.Interfaces.Message;
 using FurnitureGardenDesign.Web.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 namespace FurnitureGardenDesign.Web.ViewComponents
 {
     public class NavbarViewComponent : ViewComponent
@@ -34,8 +34,6 @@ namespace FurnitureGardenDesign.Web.ViewComponents
             _profileService = profileService;
         }
 
-
-
         // It checks if the user is logged in and retrieves their role information to determine which navbar buttons to display.
 
         // In NavbarViewComponent.cs
@@ -58,13 +56,11 @@ namespace FurnitureGardenDesign.Web.ViewComponents
                 {
                     if (model.IsAdmin || model.IsManager)
                     {
-                       
                         model.PendingOrdersCount = await _orderService.GetPendingOrdersCountAsync();
                         model.UnreadMessagesCount = await _inbo.GetUnreadCountForAdminAndManagerAsync(user.Id);
                     }
                     else
                     {
-                        
                         var designSystemUnread = await _inbo.GetUnreadCountAsync(user.Id);
                         var contactResponseUnread = await _contactMessageClientService.GetUserUnreadResponsesCountAsync(user.Id);
                         model.UnreadMessagesCount = designSystemUnread + contactResponseUnread;

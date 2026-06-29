@@ -1,9 +1,5 @@
 ﻿using FurnitureGardenDesign.Data.Models.Messages;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FurnitureGardenDesign.Data.Configuration.Messages
 {

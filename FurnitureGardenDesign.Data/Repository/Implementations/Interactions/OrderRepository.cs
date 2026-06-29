@@ -3,15 +3,9 @@ using FurnitureGardenDesign.Data.Models.Interactions;
 using FurnitureGardenDesign.Data.Repository.Implementations.Account;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Data.Repository.Implementations.Interactions
 {
-
-
     public class OrderRepository
         : BaseRepository<Order, Guid>, IOrderRepository
     {
@@ -26,8 +20,6 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations.Interactions
                 .CountAsync(o => o.Status == OrderStatus.Pending);
         }
 
-
-
         // gets an order with its design variants included
         public async Task<Order?> GetOrderWithVariantsAsync(Guid orderId)
         {
@@ -35,11 +27,6 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations.Interactions
                 .Include(o => o.DesignVariants)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
         }
-
-
-
-
-
 
         // updates the status of an order
 
@@ -53,8 +40,5 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations.Interactions
                 await _context.SaveChangesAsync();
             }
         }
-
     }
-
-
 }

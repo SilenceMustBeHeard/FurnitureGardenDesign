@@ -28,11 +28,9 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Message
             var sender = await _userManager.GetUserAsync(userPrincipal)
                 ?? throw new ArgumentException("You must be logged in to send a contact message.");
 
-         
             var adminUser = (await _userManager.GetUsersInRoleAsync("Admin")).FirstOrDefault()
                 ?? throw new InvalidOperationException("No admin user found in the system.");
 
-           
             var existingMessage = await _messageRepository
                 .GetAllAttached()
                 .FirstOrDefaultAsync(m => m.SenderId == sender.Id
@@ -98,7 +96,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Message
 
             if (message == null) return null;
 
-       
             if (!string.IsNullOrEmpty(message.Response) && !message.IsRead)
             {
                 message.IsRead = true;

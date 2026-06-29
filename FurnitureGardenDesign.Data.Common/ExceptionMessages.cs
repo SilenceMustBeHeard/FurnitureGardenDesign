@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FurnitureGardenDesign.Data.Common
+﻿namespace FurnitureGardenDesign.Data.Common
 {
     public static class ExceptionMessages
     {
@@ -13,7 +9,5 @@ namespace FurnitureGardenDesign.Data.Common
         public const string Forbidden = "Forbidden access.";
         public const string OperationFailed = "Operation failed.";
         public const string SoftDeleteNotSupported = "Soft delete not supported for this entity.";
-
-
     }
 }

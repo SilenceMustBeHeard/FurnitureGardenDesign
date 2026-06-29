@@ -18,5 +18,4 @@ namespace FurnitureGardenDesign.Web.Controllers.Account
             return Ok("You are logged in as manager!");
         }
     }
-
 }

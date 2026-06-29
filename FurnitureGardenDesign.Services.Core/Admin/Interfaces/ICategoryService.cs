@@ -1,7 +1,7 @@
 ﻿using FurnitureGardenDesign.Web.ViewModels.Category;
+
 namespace FurnitureGardenDesign.Services.Core.Admin.Interfaces
 {
-
     public interface ICategoryService
     {
         Task<IEnumerable<CategoryViewModelList>> GetAllActiveCategoriesAsync();
@@ -16,5 +16,4 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Interfaces
 
         Task<IEnumerable<CategoryViewModelList>> GetAllCategoriesForAdminAsync();
     }
-
 }

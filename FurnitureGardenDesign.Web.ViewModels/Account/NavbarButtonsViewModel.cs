@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FurnitureGardenDesign.Web.ViewModels.Account
+﻿namespace FurnitureGardenDesign.Web.ViewModels.Account
 {
     public class NavbarButtonsViewModel
     {
@@ -13,12 +9,7 @@ namespace FurnitureGardenDesign.Web.ViewModels.Account
         public int PendingOrdersCount { get; set; }
         public int UnreadMessagesCount { get; set; }
 
-
         //  used to highlight the current area in the navbar
-        public string? CurrentArea { get; set; } 
-
-
+        public string? CurrentArea { get; set; }
     }
-
-
 }

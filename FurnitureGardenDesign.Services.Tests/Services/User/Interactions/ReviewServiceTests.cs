@@ -108,7 +108,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
         [Test]
         public async Task AddReviewAsync_AddsReviewSuccessfully()
         {
-          
             var model = new AddReviewViewModel
             {
                 CatalogDesignId = _testCatalogDesignId,
@@ -122,10 +121,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
             _reviewRepoMock.Setup(r => r.SaveChangesAsync())
                 .Returns(Task.CompletedTask);
 
-           
             await _reviewService.AddReviewAsync(_testUserId, model);
 
-          
             _reviewRepoMock.Verify(r => r.AddAsync(It.Is<Review>(review =>
                 review.CatalogDesignId == _testCatalogDesignId &&
                 review.UserId == _testUserId &&
@@ -134,21 +131,18 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
             _reviewRepoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
 
-        #endregion
+        #endregion AddReviewAsync Tests
 
         #region HasUserReviewedAsync Tests
 
         [Test]
         public async Task HasUserReviewedAsync_ReturnsTrue_WhenUserHasReviewed()
         {
-            
             _reviewRepoMock.Setup(r => r.HasUserReviewedAsync(_testUserId, _testCatalogDesignId))
                 .ReturnsAsync(true);
 
-        
             var result = await _reviewService.HasUserReviewedAsync(_testUserId, _testCatalogDesignId);
 
-           
             Assert.That(result, Is.True);
             _reviewRepoMock.Verify(r => r.HasUserReviewedAsync(_testUserId, _testCatalogDesignId), Times.Once);
         }
@@ -156,32 +150,27 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
         [Test]
         public async Task HasUserReviewedAsync_ReturnsFalse_WhenUserHasNotReviewed()
         {
-            
             _reviewRepoMock.Setup(r => r.HasUserReviewedAsync(_testUserId, _testCatalogDesignId))
                 .ReturnsAsync(false);
 
-           
             var result = await _reviewService.HasUserReviewedAsync(_testUserId, _testCatalogDesignId);
 
-          
             Assert.That(result, Is.False);
             _reviewRepoMock.Verify(r => r.HasUserReviewedAsync(_testUserId, _testCatalogDesignId), Times.Once);
         }
 
-        #endregion
+        #endregion HasUserReviewedAsync Tests
 
         #region GetReviewsByDesignIdAsync Tests
 
         [Test]
         public async Task GetReviewsByDesignIdAsync_ReturnsReviewsForDesign()
         {
-           
             var activeReviews = _testReviews.Where(r => !r.IsDeleted).ToList();
 
             _reviewRepoMock.Setup(r => r.GetReviewsByDesignIdAsync(_testCatalogDesignId))
                 .ReturnsAsync(activeReviews);
 
-          
             var result = await _reviewService.GetReviewsByDesignIdAsync(_testCatalogDesignId);
 
             Assert.That(result, Is.Not.Null);
@@ -195,38 +184,31 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
         [Test]
         public async Task GetReviewsByDesignIdAsync_ReturnsEmptyList_WhenNoReviews()
         {
-            
             var emptyList = new List<Review>();
 
             _reviewRepoMock.Setup(r => r.GetReviewsByDesignIdAsync(_testCatalogDesignId))
                 .ReturnsAsync(emptyList);
 
-         
             var result = await _reviewService.GetReviewsByDesignIdAsync(_testCatalogDesignId);
 
-          
             Assert.That(result, Is.Empty);
         }
 
-      
-        #endregion
+        #endregion GetReviewsByDesignIdAsync Tests
 
         #region GetWriteReviewModelAsync Tests
 
         [Test]
         public async Task GetWriteReviewModelAsync_ReturnsModel_WhenUserCanReview()
         {
-           
             _reviewRepoMock.Setup(r => r.HasUserReviewedAsync(_testUserId, _testCatalogDesignId))
                 .ReturnsAsync(false);
 
             _catalogRepoMock.Setup(r => r.GetByIdWithReviewsAsync(_testCatalogDesignId))
                 .ReturnsAsync(_testCatalogDesign);
 
-          
             var result = await _reviewService.GetWriteReviewModelAsync(_testUserId, _testCatalogDesignId);
 
-           
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(_testCatalogDesignId));
             Assert.That(result.Title, Is.EqualTo("Test Design"));
@@ -244,7 +226,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
         [Test]
         public async Task GetWriteReviewModelAsync_ReturnsModelWithAverageRating_WhenReviewsExist()
         {
-           
             var designWithReviews = new CatalogDesign
             {
                 Id = _testCatalogDesignId,
@@ -266,27 +247,21 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
             _catalogRepoMock.Setup(r => r.GetByIdWithReviewsAsync(_testCatalogDesignId))
                 .ReturnsAsync(designWithReviews);
 
-         
             var result = await _reviewService.GetWriteReviewModelAsync(_testUserId, _testCatalogDesignId);
 
-          
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.AverageRating, Is.EqualTo(4.0)); 
+            Assert.That(result.AverageRating, Is.EqualTo(4.0));
             Assert.That(result.ReviewCount, Is.EqualTo(3));
         }
-        
 
         [Test]
         public async Task GetWriteReviewModelAsync_ReturnsNull_WhenUserAlreadyReviewed()
         {
-           
             _reviewRepoMock.Setup(r => r.HasUserReviewedAsync(_testUserId, _testCatalogDesignId))
                 .ReturnsAsync(true);
 
-         
             var result = await _reviewService.GetWriteReviewModelAsync(_testUserId, _testCatalogDesignId);
 
-         
             Assert.That(result, Is.Null);
             _reviewRepoMock.Verify(r => r.HasUserReviewedAsync(_testUserId, _testCatalogDesignId), Times.Once);
             _catalogRepoMock.Verify(r => r.GetByIdWithReviewsAsync(It.IsAny<Guid>()), Times.Never);
@@ -295,7 +270,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
         [Test]
         public async Task GetWriteReviewModelAsync_ReturnsNull_WhenDesignNotFound()
         {
-         
             _reviewRepoMock.Setup(r => r.HasUserReviewedAsync(_testUserId, _testCatalogDesignId))
                 .ReturnsAsync(false);
             _catalogRepoMock.Setup(r => r.GetByIdWithReviewsAsync(_testCatalogDesignId))
@@ -303,18 +277,16 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
 
             var result = await _reviewService.GetWriteReviewModelAsync(_testUserId, _testCatalogDesignId);
 
-          
             Assert.That(result, Is.Null);
         }
 
-        #endregion
+        #endregion GetWriteReviewModelAsync Tests
 
         #region CreateReviewAsync Tests
 
         [Test]
         public async Task CreateReviewAsync_CreatesReviewSuccessfully_WhenUserHasNotReviewed()
         {
-           
             var model = new AddReviewViewModel
             {
                 CatalogDesignId = _testCatalogDesignId,
@@ -331,10 +303,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
             _reviewRepoMock.Setup(r => r.SaveChangesAsync())
                 .Returns(Task.CompletedTask);
 
-          
             var result = await _reviewService.CreateReviewAsync(_testUserId, model);
 
-         
             Assert.That(result.Success, Is.True);
             Assert.That(result.Error, Is.Null);
 
@@ -360,10 +330,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
             _reviewRepoMock.Setup(r => r.HasUserReviewedAsync(_testUserId, _testCatalogDesignId))
                 .ReturnsAsync(true);
 
-          
             var result = await _reviewService.CreateReviewAsync(_testUserId, model);
 
-          
             Assert.That(result.Success, Is.False);
 
             Assert.That(result.Error, Is.EqualTo("You have already reviewed this design."));
@@ -391,10 +359,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
             _reviewRepoMock.Setup(r => r.SaveChangesAsync())
                 .Returns(Task.CompletedTask);
 
-          
             var result = await _reviewService.CreateReviewAsync(_testUserId, model);
 
-         
             Assert.That(result.Success, Is.True);
             _reviewRepoMock.Verify(r => r.AddAsync(It.Is<Review>(review => review.Rating == 1)), Times.Once);
         }
@@ -402,7 +368,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
         [Test]
         public async Task CreateReviewAsync_HandlesMaximumRating()
         {
-           
             var model = new AddReviewViewModel
             {
                 CatalogDesignId = _testCatalogDesignId,
@@ -419,10 +384,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
             _reviewRepoMock.Setup(r => r.SaveChangesAsync())
                 .Returns(Task.CompletedTask);
 
-        
             var result = await _reviewService.CreateReviewAsync(_testUserId, model);
 
-          
             Assert.That(result.Success, Is.True);
 
             _reviewRepoMock.Verify(r => r.AddAsync(It.Is<Review>(review => review.Rating == 5)), Times.Once);
@@ -431,7 +394,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
         [Test]
         public async Task CreateReviewAsync_HandlesEmptyComment()
         {
-          
             var model = new AddReviewViewModel
             {
                 CatalogDesignId = _testCatalogDesignId,
@@ -450,12 +412,11 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Interactions
 
             var result = await _reviewService.CreateReviewAsync(_testUserId, model);
 
-          
             Assert.That(result.Success, Is.True);
 
             _reviewRepoMock.Verify(r => r.AddAsync(It.Is<Review>(review => review.Comment == "")), Times.Once);
         }
 
-        #endregion
+        #endregion CreateReviewAsync Tests
     }
 }

@@ -15,7 +15,6 @@ public class AccountControllerApi : ControllerBase
         _accountService = accountService;
     }
 
-
     [HttpPost("register")]
     public async Task<IActionResult> CreateAccount([FromBody] RegisterViewModel model)
     {
@@ -36,8 +35,6 @@ public class AccountControllerApi : ControllerBase
         return BadRequest(new { Errors = result.Errors });
     }
 
-
-
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginViewModel model)
     {
@@ -55,7 +52,7 @@ public class AccountControllerApi : ControllerBase
         return Ok(new
         {
             message = "Login successful",
-            user = new {  model.Email } 
+            user = new { model.Email }
         });
     }
 

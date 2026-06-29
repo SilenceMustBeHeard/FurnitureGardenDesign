@@ -13,7 +13,6 @@ namespace FurnitureGardenDesign.Services.Core
             _userManager = userManager;
         }
 
-
         // Checks if the user with the given ID is in the "Manager" role
         public async Task<bool> IsUserManagerAsync(string userId)
         {
@@ -23,11 +22,11 @@ namespace FurnitureGardenDesign.Services.Core
             {
                 return false;
             }
-            if(string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
             {
                 return false;
             }
-                
+
             return await _userManager.IsInRoleAsync(user, "Manager");
         }
     }

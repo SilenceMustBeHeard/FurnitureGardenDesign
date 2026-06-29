@@ -6,7 +6,8 @@ namespace FurnitureGardenDesign.Services.Core.Manager.Interfaces
     public interface IManagerDesignVariantService
     {
         Task<IEnumerable<DesignVariant>> GetDesignVariantsByOrderIdAsync(Guid orderId);
-         Task<DesignVariant> GetDesignVariantByIdAsync(Guid id);
+
+        Task<DesignVariant> GetDesignVariantByIdAsync(Guid id);
 
         Task<DesignVariant> CreateDesignVariantAsync(DesignVariantViewModel model);
 
@@ -14,10 +15,6 @@ namespace FurnitureGardenDesign.Services.Core.Manager.Interfaces
 
         Task SendDesignVariantProposalAsync(Guid designVariantId);
 
-
         Task DeleteDesignVariantAsync(Guid id);
-
-
     }
-
 }

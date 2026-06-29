@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureGardenDesign.Web.Controllers.Account
 {
-
     [Authorize]
     public abstract class BaseController : Controller
     {
@@ -13,6 +12,7 @@ namespace FurnitureGardenDesign.Web.Controllers.Account
         {
             _userManager = userManager;
         }
+
         // Helper methods for user information and role checks
         protected bool IsUserAdmin() => User.IsInRole("Admin");
 
@@ -35,12 +35,11 @@ namespace FurnitureGardenDesign.Web.Controllers.Account
 
             return _userManager.GetUserId(User);
         }
-        
+
         // Retrieves the current user
         protected async Task<AppUser?> GetCurrentUserAsync()
         {
             return await _userManager.GetUserAsync(User);
         }
-
     }
 }

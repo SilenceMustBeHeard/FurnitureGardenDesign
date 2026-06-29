@@ -12,7 +12,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions
 {
     public class AdminDesignVariantService : IAdminDesignVariantService
     {
-
         private readonly IDesignVariantRepository _designVariantRepository;
         private readonly IInboxMessageRepository _inboxMessageRepository;
         private readonly IOrderRepository _orderRepository;
@@ -25,16 +24,11 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions
             _inboxMessageRepository = inboxMessageRepository;
         }
 
-
-
         // retrieves all design variants associated with a specific order
         public async Task<IEnumerable<DesignVariant>> GetDesignVariantsByOrderIdAsync(Guid orderId)
         {
             return await _designVariantRepository.GetByOrderId(orderId);
         }
-
-
-
 
         // retrieves a specific design variant by its id, including the associated order details
         public async Task<DesignVariant> GetDesignVariantByIdAsync(Guid id)
@@ -50,7 +44,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions
             return designVariant;
         }
 
-
         // creates a new design variant based on the provided view model
         // saves it to the database, and returns the created entity
 
@@ -63,8 +56,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions
 
             return entity;
         }
-
-
 
         // updates an existing design variant with new data from the provided view model
         // its used in second step of design process,
@@ -84,9 +75,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions
             await _designVariantRepository.SaveChangesAsync();
         }
 
-
-
-
         // sends a design variant proposal to the customer by creating an inbox message and updating the order status
         // this method is called when the designer is ready to send the design variant to the customer for approval
         public async Task SendDesignVariantProposalAsync(Guid designVariantId)
@@ -101,7 +89,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions
 
             var recipientId = designVariant.Order.UserId;
 
-         
             await _orderRepository.UpdateStatusAsync(designVariant.OrderId, OrderStatus.DesignProvided);
 
             var message = new InboxMessage
@@ -118,8 +105,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions
             await _inboxMessageRepository.SaveChangesAsync();
         }
 
-
-
         // deletes a design variant by its id, ensuring that it exists before attempting deletion
         public async Task DeleteDesignVariantAsync(Guid id)
         {
@@ -130,9 +115,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions
             }
             _designVariantRepository.Delete(designVariant);
             await _designVariantRepository.SaveChangesAsync();
-
-
-
         }
 
         // helper method to map a DesignVariantViewModel to a DesignVariant entity
@@ -147,11 +129,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions
                 Model3DUrl = model.Model3DUrl,
                 Notes = model.Notes,
                 IsApproved = false,
-
-
             };
         }
-
-
     }
 }

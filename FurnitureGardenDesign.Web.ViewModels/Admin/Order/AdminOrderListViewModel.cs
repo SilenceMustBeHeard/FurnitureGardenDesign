@@ -1,7 +1,4 @@
 ﻿using Furniture_GardenDesign.Data.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FurnitureGardenDesign.Web.ViewModels.Admin.Order
 {
@@ -14,5 +11,4 @@ namespace FurnitureGardenDesign.Web.ViewModels.Admin.Order
         public OrderStatus Status { get; set; }
         public DateTime CreatedOn { get; set; }
     }
-
 }

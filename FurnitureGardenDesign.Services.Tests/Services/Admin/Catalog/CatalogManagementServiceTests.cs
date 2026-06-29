@@ -101,7 +101,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
         [Test]
         public async Task AddCatalogAsync_CreatesAndAddsCatalog()
         {
-           
             var model = new CatalogViewModelCreate
             {
                 Title = "New Catalog",
@@ -119,27 +118,24 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
                 .Setup(r => r.AddAsync(It.IsAny<CatalogDesign>()))
                 .Returns(Task.CompletedTask);
 
-      
             await _service.AddCatalogAsync(model);
 
-          
             _catalogRepositoryMock.Verify(r => r.AddAsync(It.Is<CatalogDesign>(c =>
                 c.Title == "New Catalog"
                && c.Description == "New Description"
                && c.Image2DUrl == "/images/new.jpg"
                && c.Model3DUrl == "/models/new.glb"
                && c.Materials == "Glass, Steel"
-               && c.Price == 199.99m 
-               && c.CategoryId == _testCategoryId 
-               && c.IsDeleted == false 
-               && c.Model3DStatus == Model3DStatus.Ready 
+               && c.Price == 199.99m
+               && c.CategoryId == _testCategoryId
+               && c.IsDeleted == false
+               && c.Model3DStatus == Model3DStatus.Ready
                && c.Id != Guid.Empty)), Times.Once);
         }
 
         [Test]
         public async Task AddCatalogAsync_CreatesCatalogWithNullModel3DUrl()
         {
-           
             var model = new CatalogViewModelCreate
             {
                 Title = "No 3D Catalog",
@@ -157,23 +153,20 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
                 .Setup(r => r.AddAsync(It.IsAny<CatalogDesign>()))
                 .Returns(Task.CompletedTask);
 
-           
             await _service.AddCatalogAsync(model);
 
-          
             _catalogRepositoryMock.Verify(r => r.AddAsync(It.Is<CatalogDesign>(c =>
                 c.Model3DUrl == null
                 && c.Model3DStatus == Model3DStatus.None)), Times.Once);
         }
 
-        #endregion
+        #endregion AddCatalogAsync Tests
 
         #region EditCatalogAsync Tests
 
         [Test]
         public async Task EditCatalogAsync_UpdatesExistingCatalog()
         {
-           
             var existingCatalog = new CatalogDesign
             {
                 Id = _testCatalogId,
@@ -210,10 +203,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
                 .Setup(r => r.UpdateAsync(It.IsAny<CatalogDesign>()))
                 .ReturnsAsync(true);
 
-          
             await _service.EditCatalogAsync(_testCatalogId, model);
 
-            
             Assert.That(existingCatalog.Title, Is.EqualTo("Updated Title"));
             Assert.That(existingCatalog.Description, Is.EqualTo("Updated Description"));
             Assert.That(existingCatalog.Image2DUrl, Is.EqualTo("/images/updated.jpg"));
@@ -231,7 +222,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
         [Test]
         public void EditCatalogAsync_ThrowsException_WhenCatalogNotFound()
         {
-          
             var nonExistentId = Guid.NewGuid();
             var model = new CatalogViewModelEdit
             {
@@ -243,7 +233,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
                 .Setup(r => r.GetByIdAsync(nonExistentId))
                 .ReturnsAsync((CatalogDesign)null!);
 
-          
             var ex = Assert.ThrowsAsync<Exception>(
                 async () => await _service.EditCatalogAsync(nonExistentId, model));
 
@@ -254,7 +243,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
         [Test]
         public async Task EditCatalogAsync_UpdatesPartialData()
         {
-           
             var existingCatalog = new CatalogDesign
             {
                 Id = _testCatalogId,
@@ -291,34 +279,28 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
                 .Setup(r => r.UpdateAsync(It.IsAny<CatalogDesign>()))
                 .ReturnsAsync(true);
 
-           
             await _service.EditCatalogAsync(_testCatalogId, model);
 
-           
             Assert.That(existingCatalog.Title, Is.EqualTo("Updated Title Only"));
             Assert.That(existingCatalog.Description, Is.EqualTo("Old Description"));
             Assert.That(existingCatalog.Model3DUrl, Is.Null);
         }
 
-        #endregion
+        #endregion EditCatalogAsync Tests
 
         #region GetAllActiveCataloguesAsync Tests
 
         [Test]
         public async Task GetAllActiveCataloguesAsync_ReturnsOnlyActiveCatalogs()
         {
-          
             var activeCatalogs = _testCatalogs.Where(c => !c.IsDeleted).ToList();
-
 
             _catalogRepositoryMock
                 .Setup(r => r.GetAllActiveAsync())
                 .ReturnsAsync(activeCatalogs);
 
-          
             var result = await _service.GetAllActiveCataloguesAsync();
 
-           
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count(), Is.EqualTo(2));
             Assert.That(result.All(c => !c.IsDeleted), Is.True);
@@ -337,33 +319,27 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
                 .Setup(r => r.GetAllActiveAsync())
                 .ReturnsAsync(emptyList);
 
-         
             var result = await _service.GetAllActiveCataloguesAsync();
 
-          
             Assert.That(result, Is.Empty);
         }
 
-        #endregion
+        #endregion GetAllActiveCataloguesAsync Tests
 
         #region GetAllCataloguesForAdminAsync Tests
 
         [Test]
         public async Task GetAllCataloguesForAdminAsync_ReturnsAllCatalogsIncludingDeleted()
         {
-           
             _catalogRepositoryMock
                 .Setup(r => r.GetAllForAdminAsync())
                 .ReturnsAsync(_testCatalogs);
 
-           
             var result = await _service.GetAllCataloguesForAdminAsync();
 
-          
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count(), Is.EqualTo(3));
             Assert.That(result.Any(c => c.IsDeleted), Is.True);
-
 
             _catalogRepositoryMock.Verify(r => r.GetAllForAdminAsync(), Times.Once);
         }
@@ -371,17 +347,13 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
         [Test]
         public async Task GetAllCataloguesForAdminAsync_ReturnsCorrectProperties()
         {
-           
             _catalogRepositoryMock
                 .Setup(r => r.GetAllForAdminAsync())
                 .ReturnsAsync(_testCatalogs);
 
-          
             var result = await _service.GetAllCataloguesForAdminAsync();
 
-         
             var catalog = result.First(c => c.Id == _testCatalogId);
-
 
             Assert.That(catalog.Id, Is.EqualTo(_testCatalogId));
             Assert.That(catalog.Title, Is.EqualTo("Test Catalog"));
@@ -394,25 +366,20 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
         [Test]
         public async Task GetAllCataloguesForAdminAsync_ReturnsEmptyList_WhenNoCatalogs()
         {
-          
             var emptyList = new List<CatalogDesign>();
-
 
             _catalogRepositoryMock
                 .Setup(r => r.GetAllForAdminAsync())
                 .ReturnsAsync(emptyList);
 
-        
             var result = await _service.GetAllCataloguesForAdminAsync();
 
-           
             Assert.That(result, Is.Empty);
         }
 
         [Test]
         public async Task GetAllCataloguesForAdminAsync_HandlesNullCategory()
         {
-           
             var catalogWithNullCategory = new CatalogDesign
             {
                 Id = Guid.NewGuid(),
@@ -424,9 +391,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
                 CreatedOn = DateTime.UtcNow
             };
 
-
             var catalogs = new List<CatalogDesign> { catalogWithNullCategory };
-
 
             _catalogRepositoryMock
                 .Setup(r => r.GetAllForAdminAsync())
@@ -437,22 +402,19 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
             Assert.That(result.First().CategoryName, Is.Null);
         }
 
-        #endregion
+        #endregion GetAllCataloguesForAdminAsync Tests
 
         #region GetCatalogForEditByIdAsync Tests
 
         [Test]
         public async Task GetCatalogForEditByIdAsync_ReturnsCatalog_WhenExists()
         {
-           
             _catalogRepositoryMock
                 .Setup(r => r.GetByIdAsync(_testCatalogId))
                 .ReturnsAsync(_testCatalog);
 
-           
             var result = await _service.GetCatalogForEditByIdAsync(_testCatalogId);
 
-          
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(_testCatalogId));
             Assert.That(result.Title, Is.EqualTo("Test Catalog"));
@@ -471,27 +433,23 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
         [Test]
         public async Task GetCatalogForEditByIdAsync_ReturnsNull_WhenCatalogNotFound()
         {
-           
             var nonExistentId = Guid.NewGuid();
             _catalogRepositoryMock
                 .Setup(r => r.GetByIdAsync(nonExistentId))
                 .ReturnsAsync((CatalogDesign)null!);
 
-            
             var result = await _service.GetCatalogForEditByIdAsync(nonExistentId);
 
-          
             Assert.That(result, Is.Null);
         }
 
-        #endregion
+        #endregion GetCatalogForEditByIdAsync Tests
 
         #region ToggleCatalogAsync Tests
 
         [Test]
         public async Task ToggleCatalogAsync_TogglesCatalogStatus()
         {
-          
             var catalog = new CatalogDesign
             {
                 Id = _testCatalogId,
@@ -506,10 +464,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
                 .Setup(r => r.ToggleCatalogStatusAsync(catalog))
                 .Returns(Task.CompletedTask);
 
-         
             await _service.ToggleCatalogAsync(_testCatalogId);
 
-          
             _catalogRepositoryMock.Verify(r => r.GetByIdIncludingDeletedAsync(_testCatalogId), Times.Once);
             _catalogRepositoryMock.Verify(r => r.ToggleCatalogStatusAsync(catalog), Times.Once);
         }
@@ -517,14 +473,12 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
         [Test]
         public void ToggleCatalogAsync_ThrowsException_WhenCatalogNotFound()
         {
-           
             var nonExistentId = Guid.NewGuid();
 
             _catalogRepositoryMock
                 .Setup(r => r.GetByIdIncludingDeletedAsync(nonExistentId))
                 .ReturnsAsync((CatalogDesign)null!);
 
-         
             var ex = Assert.ThrowsAsync<Exception>(
                 async () => await _service.ToggleCatalogAsync(nonExistentId));
 
@@ -533,6 +487,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
                 .IsAny<CatalogDesign>()), Times.Never);
         }
 
-        #endregion
+        #endregion ToggleCatalogAsync Tests
     }
 }

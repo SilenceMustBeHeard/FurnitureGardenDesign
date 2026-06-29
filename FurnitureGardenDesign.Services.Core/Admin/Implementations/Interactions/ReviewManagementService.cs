@@ -280,7 +280,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Interactions
 
         //    review.Rating = rating;
         //    review.Comment = comment ?? string.Empty;
-        
 
         //    _reviewRepo.Update(review);
         //    await _reviewRepo.SaveChangesAsync();

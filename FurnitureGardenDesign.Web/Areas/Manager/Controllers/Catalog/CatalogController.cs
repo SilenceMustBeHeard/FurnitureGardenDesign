@@ -53,7 +53,6 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Catalog
             return View(designs);
         }
 
-
         // Details
         [HttpGet]
         [AllowAnonymous]
@@ -62,19 +61,16 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Catalog
             // userId will be null, and service will handle it accordingly
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            
             var model = await _catalogService.GetDetailsAsync(id, userId);
 
             if (model == null)
-              {
+            {
                 TempData["Error"] = "Design not found.";
-                return NotFound(); 
-              }
+                return NotFound();
+            }
 
             return View(model);
         }
-
-
 
         // Toggle Favorite
         [HttpPost]
@@ -90,11 +86,10 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Catalog
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            if(userId == null)
+            if (userId == null)
             {
-               TempData["Error"] = "You must be logged in to manage favorites.";
+                TempData["Error"] = "You must be logged in to manage favorites.";
                 return RedirectToAction(nameof(CatalogIndex));
-
             }
 
             bool isNowFavorited = await _favoriteService.ToggleFavoriteAsync(userId, id);
@@ -108,8 +103,6 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Catalog
             return RedirectToAction(nameof(CatalogIndex));
         }
 
-
-
         // Add Review
         [HttpPost]
         [Authorize]
@@ -117,7 +110,7 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Catalog
         public async Task<IActionResult> AddReview(Guid id, int rating, string? comment)
         {
             if (rating < 1 || rating > 5)
-               {
+            {
                 TempData["Error"] = "Rating must be between 1 and 5.";
                 return RedirectToAction(nameof(Details), new { id });
             }
@@ -128,7 +121,6 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Catalog
                 rating,
                 comment
             );
-
 
             TempData["Success"] = "You added a review!";
             return RedirectToAction(nameof(CatalogIndex));

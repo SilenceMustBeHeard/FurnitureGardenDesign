@@ -211,7 +211,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
             Assert.That(capturedUser.LastName, Is.Null);
         }
 
-        #endregion
+        #endregion RegisterAsync Tests
 
         #region LoginAsync Tests
 
@@ -313,7 +313,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
                 false), Times.Once);
         }
 
-        #endregion
+        #endregion LoginAsync Tests
 
         #region LogoutAsync Tests
 
@@ -342,7 +342,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
             _signInManagerMock.Verify(sm => sm.SignOutAsync(), Times.Exactly(2));
         }
 
-        #endregion
+        #endregion LogoutAsync Tests
 
         #region ForgotPasswordAsync Tests
 
@@ -428,7 +428,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
             Assert.That(result, Is.False);
         }
 
-        #endregion
+        #endregion ForgotPasswordAsync Tests
 
         #region ResetPasswordAsync Tests
 
@@ -547,6 +547,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
             Assert.That(result.Errors[0], Is.EqualTo("Password must be at least 6 characters"));
         }
 
-        #endregion
+        #endregion ResetPasswordAsync Tests
     }
 }

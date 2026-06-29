@@ -41,9 +41,7 @@ public class AccountController : Controller
             return View(model);
         }
 
-
         var user = await _userManager.FindByEmailAsync(model.Email);
-
 
         var (tokenSuccess, tokenError, token) = await _accountService.GenerateEmailConfirmationAsync(user!);
 
@@ -82,6 +80,7 @@ public class AccountController : Controller
         TempData["Success"] = "Email confirmed successfully!";
         return RedirectToAction("Index", "Home");
     }
+
     [HttpGet]
     public IActionResult Login() => View();
 
@@ -128,10 +127,10 @@ public class AccountController : Controller
             return View(model);
 
         var resetLink = Url.Action("ResetPassword", "Account", null, Request.Scheme);
-        if(resetLink == null)
+        if (resetLink == null)
         {
             TempData["Error"] = "Failed to generate reset link.";
-            return RedirectToAction(nameof(ForgotPassword)); 
+            return RedirectToAction(nameof(ForgotPassword));
         }
 
         await _accountService.ForgotPasswordAsync(model.Email, resetLink);

@@ -150,7 +150,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
         [Test]
         public async Task ChangeUserRoleAsync_ChangesRoleSuccessfully()
         {
-           
             var model = new ChangeUserRoleViewModel
             {
                 UserId = Guid.Parse(_testUserId1),
@@ -174,10 +173,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
             _userManagerMock.Setup(u => u.UpdateSecurityStampAsync(user))
                 .ReturnsAsync(IdentityResult.Success);
 
-            
             var result = await _userService.ChangeUserRoleAsync(model, Guid.Parse(_adminId));
 
-           
             Assert.That(result.Failed, Is.False);
             Assert.That(result.ErrorMessage, Is.Empty);
 
@@ -190,7 +187,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
         [Test]
         public async Task ChangeUserRoleAsync_ReturnsError_WhenUserNotFound()
         {
-        
             var model = new ChangeUserRoleViewModel
             {
                 UserId = Guid.NewGuid(),
@@ -200,10 +196,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
             _userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync((AppUser)null!);
 
-            
             var result = await _userService.ChangeUserRoleAsync(model, Guid.Parse(_adminId));
 
-           
             Assert.That(result.Failed, Is.True);
             Assert.That(result.ErrorMessage, Is.EqualTo("User not found."));
 
@@ -216,7 +210,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
         [Test]
         public async Task ChangeUserRoleAsync_ReturnsError_WhenRemoveRolesFails()
         {
-           
             var model = new ChangeUserRoleViewModel
             {
                 UserId = Guid.Parse(_testUserId1),
@@ -234,7 +227,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
             _userManagerMock.Setup(u => u.RemoveFromRolesAsync(user, It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Remove failed" }));
 
-            
             var result = await _userService.ChangeUserRoleAsync(model, Guid.Parse(_adminId));
 
             Assert.That(result.Failed, Is.True);
@@ -248,7 +240,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
         [Test]
         public async Task ChangeUserRoleAsync_ReturnsError_WhenAddRoleFails()
         {
-           
             var model = new ChangeUserRoleViewModel
             {
                 UserId = Guid.Parse(_testUserId1),
@@ -269,10 +260,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
             _userManagerMock.Setup(u => u.AddToRoleAsync(user, "Manager"))
                 .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Add failed" }));
 
-           
             var result = await _userService.ChangeUserRoleAsync(model, Guid.Parse(_adminId));
 
-           
             Assert.That(result.Failed, Is.True);
             Assert.That(result.ErrorMessage, Is.EqualTo("Failed to assign new role."));
 
@@ -285,11 +274,10 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
         [Test]
         public async Task ChangeUserRoleAsync_UpdatesSecurityStamp_EvenWhenRolesDontChange()
         {
-          
             var model = new ChangeUserRoleViewModel
             {
                 UserId = Guid.Parse(_testUserId1),
-                NewRole = "User" 
+                NewRole = "User"
             };
 
             var user = _testUsers.First(u => u.Id == _testUserId1);
@@ -309,10 +297,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
             _userManagerMock.Setup(u => u.UpdateSecurityStampAsync(user))
                 .ReturnsAsync(IdentityResult.Success);
 
-           
             var result = await _userService.ChangeUserRoleAsync(model, Guid.Parse(_adminId));
 
-            
             Assert.That(result.Failed, Is.False);
             _userManagerMock.Verify(u => u.UpdateSecurityStampAsync(user), Times.Once);
         }
@@ -320,7 +306,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
         [Test]
         public async Task ChangeUserRoleAsync_ReturnsError_WhenUpdateSecurityStampFails()
         {
-          
             var model = new ChangeUserRoleViewModel
             {
                 UserId = Guid.Parse(_testUserId1),
@@ -344,12 +329,10 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Account
             _userManagerMock.Setup(u => u.UpdateSecurityStampAsync(user))
                 .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Security stamp update failed" }));
 
-            
             var result = await _userService.ChangeUserRoleAsync(model, Guid.Parse(_adminId));
 
-            
             Assert.That(result.Failed, Is.True);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Failed to update security stamp.")); 
+            Assert.That(result.ErrorMessage, Is.EqualTo("Failed to update security stamp."));
             _userManagerMock.Verify(u => u.UpdateSecurityStampAsync(user), Times.Once);
         }
 

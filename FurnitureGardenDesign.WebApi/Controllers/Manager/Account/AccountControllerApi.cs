@@ -22,7 +22,6 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Account
             _signInManager = signInManager;
         }
 
-       
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
@@ -41,9 +40,8 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Account
                 return BadRequest(result.Errors.Select(e => e.Description));
             }
 
-          
             if (!await _userManager.IsInRoleAsync(user, "User"))
-            { 
+            {
                 await _userManager.AddToRoleAsync(user, "User");
             }
 
@@ -52,7 +50,6 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Account
             return Ok(new { message = "Registration successful!", userId = user.Id });
         }
 
-   
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
@@ -75,7 +72,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Account
             {
                 return Unauthorized(new { error = "User not found." });
             }
-          
+
             var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
 
             return Ok(new
@@ -87,7 +84,6 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Account
             });
         }
 
-        
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
@@ -95,20 +91,19 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Account
             return Ok(new { message = "Logout successful!" });
         }
 
-        
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
             {
-                return Unauthorized(); 
+                return Unauthorized();
             }
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
-            { 
-                return NotFound(); 
+            {
+                return NotFound();
             }
 
             var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");

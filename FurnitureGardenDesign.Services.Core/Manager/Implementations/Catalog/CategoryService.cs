@@ -25,7 +25,5 @@ namespace FurnitureGardenDesign.Services.Core.Manager.Implementations.Catalog
                 IsDeleted = c.IsDeleted
             });
         }
-
-        
     }
 }

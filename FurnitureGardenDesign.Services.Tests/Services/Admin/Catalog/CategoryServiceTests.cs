@@ -2,13 +2,7 @@
 using FurnitureGardenDesign.Data.Repository.Interfaces.Catalog;
 using FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Category;
-using MockQueryable.Moq;
 using Moq;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
 {
@@ -103,7 +97,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
             _categoryRepositoryMock.Verify(r => r.GetAllActiveAsync(), Times.Once);
         }
 
-        #endregion
+        #endregion GetAllActiveCategoriesAsync Tests
 
         #region GetAllCategoriesForAdminAsync Tests
 
@@ -160,7 +154,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
             _categoryRepositoryMock.Verify(r => r.GetAllForAdminAsync(), Times.Once);
         }
 
-        #endregion
+        #endregion GetAllCategoriesForAdminAsync Tests
 
         #region AddCategoryAsync Tests
 
@@ -239,7 +233,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
             Assert.That(capturedCategory.IsDeleted, Is.False);
         }
 
-        #endregion
+        #endregion AddCategoryAsync Tests
 
         #region GetCategoryForEditByIdAsync Tests
 
@@ -322,7 +316,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
             _categoryRepositoryMock.Verify(r => r.GetByIdIncludingDeletedAsync(emptyId), Times.Once);
         }
 
-        #endregion
+        #endregion GetCategoryForEditByIdAsync Tests
 
         #region EditCategoryAsync Tests
 
@@ -426,7 +420,7 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
             Assert.That(existingCategory.IsDeleted, Is.False);
         }
 
-        #endregion
+        #endregion EditCategoryAsync Tests
 
         #region ToggleCategoryAsync Tests
 
@@ -473,6 +467,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.Admin.Catalog
             _categoryRepositoryMock.Verify(r => r.ToggleCategoryStatusAsync(It.IsAny<Category>()), Times.Never);
         }
 
-        #endregion
+        #endregion ToggleCategoryAsync Tests
     }
 }

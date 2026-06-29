@@ -48,22 +48,19 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Account
             var systemMessages = await _systemInboxMessageService.GetUserMessagesAsync(userId);
 
             var roles = await _userManager.GetRolesAsync(user);
-            var isAdmin = roles.Contains("Admin");  
+            var isAdmin = roles.Contains("Admin");
             var isManager = roles.Contains("Manager");
 
             List<ContactMessageDetailsViewModel> contactMessages = new List<ContactMessageDetailsViewModel>();
 
             if (isAdmin)
             {
-              
                 contactMessages = await _contactMessageService.GetAdminMessagesAsync(userId);
             }
             else if (!isManager)
             {
-               
                 contactMessages = await _contactMessageClientService.GetUserMessagesAsync(userId);
             }
-          
 
             return new ProfileViewModel
             {

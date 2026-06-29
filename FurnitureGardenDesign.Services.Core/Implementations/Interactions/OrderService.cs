@@ -17,7 +17,8 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Interactions
         {
             _orderRepo = orderRepo;
         }
-        // creates new order 
+
+        // creates new order
 
         public async Task CreateOrderAsync(string userId, OrderFormViewModel model)
         {
@@ -36,20 +37,11 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Interactions
             await _orderRepo.AddAsync(order);
         }
 
-
-
-
-  
-  
-
         // gets the count of all pending orders for admin or manager view
         public async Task<int> GetPendingOrdersCountAsync()
         {
             return await _orderRepo.CountPendingAsync();
         }
-
-
-
 
         // gets all pending orders for admin or manager view
         public async Task<IEnumerable<AdminOrderListViewModel>> GetPendingOrdersAsync()
@@ -71,7 +63,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Interactions
                 .ToListAsync();
         }
 
-
         // gets order details by id for admin or manager
         public async Task<DetailsOrderViewModel?> GetByIdAsync(Guid id)
         {
@@ -92,7 +83,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Interactions
             };
         }
 
-
         // reject order by id for admin or manager(sets status to rejected, imitates soft delete)
         public async Task<bool> RejectOrderAsync(Guid id)
         {
@@ -102,21 +92,9 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Interactions
 
             order.Status = OrderStatus.Rejected;
 
-          
-
-
-
             await _orderRepo.SaveChangesAsync();
             return true;
         }
-
-
-
-
-
-
-
-
 
         // deletes the order (still in developement, not used in the application, but can be used for hard delete if needed)
         public async Task<bool> DeleteOrderAsync(Guid id)
@@ -125,21 +103,10 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Interactions
             if (order == null)
                 return false;
 
-        
-
-        
             await _orderRepo.DeleteAsync(order);
-
-
 
             await _orderRepo.SaveChangesAsync();
             return true;
         }
-
-
-
-
-
-
     }
 }

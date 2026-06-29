@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FurnitureGardenDesign.Web.ViewModels.Messages;
+﻿using FurnitureGardenDesign.Web.ViewModels.Messages;
 
 namespace FurnitureGardenDesign.Web.ViewModels.Admin
 {

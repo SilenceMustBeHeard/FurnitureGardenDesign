@@ -1,17 +1,11 @@
-﻿using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Web.ViewModels;
+﻿using FurnitureGardenDesign.Web.ViewModels;
 using FurnitureGardenDesign.Web.ViewModels.Admin.Order;
 using FurnitureGardenDesign.Web.ViewModels.Orders;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 
 namespace FurnitureGardenDesign.Services.Core.Interfaces
 {
     public interface IOrderService
     {
-        
         // get count of pending orders for admin
         Task<int> GetPendingOrdersCountAsync();
 
@@ -24,10 +18,7 @@ namespace FurnitureGardenDesign.Services.Core.Interfaces
         // get order details by id for admin
         Task<DetailsOrderViewModel?> GetByIdAsync(Guid id);
 
-
         // reject order by id for admin
         Task<bool> RejectOrderAsync(Guid id);
-
     }
-
 }

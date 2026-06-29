@@ -15,7 +15,7 @@ public class CatalogManagementController : Controller
 {
     private readonly ICatalogManagementService _catalogManagementService;
     private readonly ICategoryServiceClient _categoryServiceClient;
-    private readonly IFavoriteService _favoriteService; 
+    private readonly IFavoriteService _favoriteService;
 
     public CatalogManagementController(
         ICatalogManagementService catalogManagementService,
@@ -24,10 +24,8 @@ public class CatalogManagementController : Controller
     {
         _catalogManagementService = catalogManagementService;
         _categoryServiceClient = categoryServiceClient;
-        _favoriteService = favoriteService; 
+        _favoriteService = favoriteService;
     }
-
-    
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
@@ -150,7 +148,7 @@ public class CatalogManagementController : Controller
             comment
         );
 
-       if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             TempData["Error"] = "Failed to add review. Please try again.";
             return RedirectToAction(nameof(Details), new { id });
@@ -159,9 +157,9 @@ public class CatalogManagementController : Controller
         TempData["Success"] = "You added a review!";
         return RedirectToAction(nameof(AdminIndex));
     }
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
-
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ToggleFavorite(Guid id, string? returnUrl)
     {
@@ -177,23 +175,17 @@ public class CatalogManagementController : Controller
         {
             TempData["Error"] = "You must be logged in to manage favorites.";
             return RedirectToAction(nameof(AdminIndex));
-
         }
 
         bool isNowFavorited = await _favoriteService.ToggleFavoriteAsync(userId, id);
 
-       
         TempData["Success"] = isNowFavorited
             ? "You added this design to favorites!"
             : "You removed this design from favorites.";
 
-       
         return RedirectToAction(nameof(AdminIndex));
     }
 
-
-
-   
     private async Task LoadCategoriesAsync(CatalogViewModelCreate model)
     {
         var categories = await _categoryServiceClient.GetAllActiveCategoriesForClientAsync();

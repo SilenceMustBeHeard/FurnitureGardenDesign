@@ -1,8 +1,6 @@
-﻿using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Services.Core.Interfaces.Account;
+﻿using FurnitureGardenDesign.Services.Core.Interfaces.Account;
 using FurnitureGardenDesign.Web.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account;

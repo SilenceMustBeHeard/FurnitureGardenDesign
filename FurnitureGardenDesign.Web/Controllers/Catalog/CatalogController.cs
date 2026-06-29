@@ -46,11 +46,10 @@ public class CatalogController : Controller
         ViewData["CurrentPage"] = isGuest ? 1 : page;
         ViewData["PageSize"] = isGuest ? 3 : pageSize;
         ViewData["TotalItems"] = totalItems;
-        ViewData["IsGuest"] = isGuest; 
+        ViewData["IsGuest"] = isGuest;
 
         return View(designs);
     }
-
 
     // Details
     [HttpGet]
@@ -59,22 +58,18 @@ public class CatalogController : Controller
     {   // if user is not authenticated
         // userId will be null, and service will handle it accordingly
 
-      
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-       
-        
+
         var model = await _catalogService.GetDetailsAsync(id, userId);
 
         if (model == null)
-          {
+        {
             TempData["Error"] = "Design not found.";
-            return NotFound(); 
-          }
+            return NotFound();
+        }
 
         return View(model);
     }
-
-
 
     // Toggle Favorite
     [HttpPost]
@@ -90,11 +85,10 @@ public class CatalogController : Controller
 
         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-        if(userId == null)
+        if (userId == null)
         {
-           TempData["Error"] = "You must be logged in to manage favorites.";
+            TempData["Error"] = "You must be logged in to manage favorites.";
             return RedirectToAction(nameof(CatalogIndex));
-
         }
 
         bool isNowFavorited = await _favoriteService.ToggleFavoriteAsync(userId, id);
@@ -108,8 +102,6 @@ public class CatalogController : Controller
         return RedirectToAction(nameof(CatalogIndex));
     }
 
-
-
     // Add Review
     [HttpPost]
     [Authorize]
@@ -117,12 +109,12 @@ public class CatalogController : Controller
     public async Task<IActionResult> AddReview(Guid id, int rating, string? comment)
     {
         if (rating < 1 || rating > 5)
-           {
+        {
             TempData["Error"] = "Rating must be between 1 and 5.";
             return RedirectToAction(nameof(Details), new { id });
         }
 
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             TempData["Error"] = "Invalid review data.";
             return RedirectToAction(nameof(Details), new { id });
@@ -134,7 +126,6 @@ public class CatalogController : Controller
             rating,
             comment
         );
-
 
         TempData["Success"] = "You added a review!";
         return RedirectToAction(nameof(CatalogIndex));

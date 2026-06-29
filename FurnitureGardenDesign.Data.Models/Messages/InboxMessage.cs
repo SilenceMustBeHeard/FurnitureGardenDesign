@@ -1,6 +1,4 @@
-﻿using FurnitureGardenDesign.Data.Common.Enums;
-using FurnitureGardenDesign.Data.Models.Catalog;
-using System;
+﻿using FurnitureGardenDesign.Data.Models.Catalog;
 
 namespace FurnitureGardenDesign.Data.Models.Messages
 {
@@ -9,7 +7,7 @@ namespace FurnitureGardenDesign.Data.Models.Messages
         public Guid DesignVariantId { get; set; }
         public string? Notes { get; set; }
 
-        // Navigation 
+        // Navigation
         public virtual DesignVariant DesignVariant { get; set; } = null!;
     }
 }

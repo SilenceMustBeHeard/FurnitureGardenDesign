@@ -13,36 +13,33 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Connection string 
+// Connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-// Add DbContext 
+// Add DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-
-
 // Add HttpClient factory for services that need to make HTTP requests (like IPreviewService)
 builder.Services.AddHttpClient();
-// Add Identity 
+// Add Identity
 builder.Services.AddDefaultIdentity<AppUser>(options =>
 {
-   
-    options.SignIn.RequireConfirmedAccount = true;      
-    options.SignIn.RequireConfirmedEmail = true;       
+    options.SignIn.RequireConfirmedAccount = true;
+    options.SignIn.RequireConfirmedEmail = true;
 
     // password settings
     options.Password.RequireDigit = true;
-    options.Password.RequireNonAlphanumeric = true;     
+    options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireLowercase = true;
-    options.Password.RequiredLength = 10;               
+    options.Password.RequiredLength = 10;
     options.Password.RequiredUniqueChars = 4;
 
     // lockout settings
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
-    options.Lockout.MaxFailedAccessAttempts = 5;       
+    options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = true;
 
     // user settings

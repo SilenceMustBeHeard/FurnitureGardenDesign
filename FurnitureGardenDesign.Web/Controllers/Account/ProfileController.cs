@@ -1,7 +1,5 @@
 ﻿using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Services.Core.Admin.Implementations;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
-using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces.Account;
 using FurnitureGardenDesign.Services.Core.Interfaces.Message;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureGardenDesign.Web.Controllers.Account;
 
-
 [Authorize]
 public class ProfileController : Controller
 {
@@ -18,16 +15,16 @@ public class ProfileController : Controller
     private readonly UserManager<AppUser> _userManager;
     private readonly IInboxMessageService _inboxMessageService;
     private readonly ISystemInboxMessageService _systemInboxMessageService;
-    private readonly IContactMessageClientService _contactMessageClientService; 
+    private readonly IContactMessageClientService _contactMessageClientService;
 
     public ProfileController(
-        IContactMessageClientService contactMessageClientService, 
+        IContactMessageClientService contactMessageClientService,
         ISystemInboxMessageService systemInboxMessageService,
         IProfileService profileService,
         UserManager<AppUser> userManager,
         IInboxMessageService inboxMessageService)
     {
-        _contactMessageClientService = contactMessageClientService; 
+        _contactMessageClientService = contactMessageClientService;
         _systemInboxMessageService = systemInboxMessageService;
         _profileService = profileService;
         _userManager = userManager;
@@ -42,7 +39,6 @@ public class ProfileController : Controller
         {
             TempData["Error"] = "You must be logged in to perform this action.";
             return RedirectToAction("Login", "Account");
-
         }
 
         var model = await _profileService.GetProfileAsync(user.Id);
@@ -57,7 +53,6 @@ public class ProfileController : Controller
         {
             TempData["Error"] = "You must be logged in to perform this action.";
             return RedirectToAction("Login", "Account");
-
         }
 
         await _inboxMessageService.MarkMessageAsReadAsync(id, user.Id);
@@ -94,7 +89,6 @@ public class ProfileController : Controller
         {
             TempData["Error"] = "You must be logged in to perform this action.";
             return RedirectToAction("Login", "Account");
-
         }
 
         var viewModel = await _inboxMessageService.GetMessageDetailsAsync(id, user.Id);
@@ -162,7 +156,6 @@ public class ProfileController : Controller
             return RedirectToAction("Login", "Account");
         }
 
-       
         var viewModel = await _contactMessageClientService.GetMessageDetailsAsync(id, user.Id);
 
         if (viewModel == null)

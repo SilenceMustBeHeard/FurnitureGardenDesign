@@ -2,12 +2,7 @@
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Admin;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Account
 {
@@ -42,12 +37,10 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Account
                     Roles = roles,
                     LockoutEnd = user.LockoutEnd
                 });
-
             }
 
             return result;
         }
-
 
         // Change user role (starts from "User")
         public async Task<(bool Failed, string ErrorMessage)> ChangeUserRoleAsync(
@@ -117,7 +110,5 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Account
 
             return (false, string.Empty);
         }
-
     }
-
 }

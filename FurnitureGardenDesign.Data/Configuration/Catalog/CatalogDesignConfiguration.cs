@@ -6,22 +6,17 @@ namespace FurnitureGardenDesign.Data.Configuration.Catalog
 {
     public class CatalogDesignConfiguration : IEntityTypeConfiguration<CatalogDesign>
     {
-
         public void Configure(EntityTypeBuilder<CatalogDesign> builder)
         {
             builder.HasKey(d => d.Id);
 
-          
             builder.Property(d => d.Price)
              .HasPrecision(18, 2);
-
 
             builder.HasOne(d => d.Category)
                    .WithMany(c => c.CatalogDesigns)
                    .HasForeignKey(d => d.CategoryId)
                    .OnDelete(DeleteBehavior.Restrict);
-
-           
 
             // CatalogDesign <> Reviews
             builder.HasMany(d => d.Reviews)
@@ -37,7 +32,6 @@ namespace FurnitureGardenDesign.Data.Configuration.Catalog
 
             builder.HasIndex(d => d.CategoryId);
             builder.HasIndex(d => d.IsActive);
-
         }
     }
 }

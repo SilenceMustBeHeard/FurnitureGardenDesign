@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace FurnitureGardenDesign.Web.ViewModels.Account
 {
@@ -11,7 +6,6 @@ namespace FurnitureGardenDesign.Web.ViewModels.Account
     {
         [Required]
         [EmailAddress(ErrorMessage = "Invalid email address.")]
-     
         public string Email { get; set; } = null!;
 
         [Required]

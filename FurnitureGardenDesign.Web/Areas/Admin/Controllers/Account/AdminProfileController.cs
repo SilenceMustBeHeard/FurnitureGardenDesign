@@ -1,6 +1,5 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
-using FurnitureGardenDesign.Services.Core.Implementations;
 using FurnitureGardenDesign.Services.Core.Interfaces.Account;
 using FurnitureGardenDesign.Services.Core.Interfaces.Message;
 using FurnitureGardenDesign.Web.ViewModels.Admin;
@@ -18,20 +17,20 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         private readonly UserManager<AppUser> _userManager;
         private readonly IInboxMessageService _inboxMessageService;
         private readonly ISystemInboxMessageService _systemInboxMessageService;
-        private readonly IContactMessageService _contactMessageService;  
+        private readonly IContactMessageService _contactMessageService;
 
         public AdminProfileController(
             ISystemInboxMessageService systemInboxMessageService,
             IProfileService profileService,
             UserManager<AppUser> userManager,
             IInboxMessageService inboxMessageService,
-            IContactMessageService contactMessageService)  
+            IContactMessageService contactMessageService)
         {
             _systemInboxMessageService = systemInboxMessageService;
             _profileService = profileService;
             _userManager = userManager;
             _inboxMessageService = inboxMessageService;
-            _contactMessageService = contactMessageService;  
+            _contactMessageService = contactMessageService;
         }
 
         [HttpGet]
@@ -56,7 +55,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         [HttpPost]
         public async Task<IActionResult> MarkAsRead(Guid id)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Invalid request.";
                 return RedirectToAction(nameof(Index));
@@ -69,7 +68,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
             }
 
             await _inboxMessageService.MarkMessageAsReadAsync(id, user.Id);
-           if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Unable to mark message as read. Please try again.";
                 return RedirectToAction(nameof(Index));
@@ -102,7 +101,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         [HttpGet]
         public async Task<IActionResult> MessageDetails(Guid id)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Invalid request.";
                 return RedirectToAction(nameof(Index));
@@ -137,7 +136,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
             }
 
             var messages = await _systemInboxMessageService.GetAdminMessagesAsync(user.Id);
-            
+
             if (messages == null)
             {
                 TempData["Error"] = "Unable to load system inbox messages. Please try again later.";
@@ -151,7 +150,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApproveDesign(Guid id)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Invalid request.";
                 return RedirectToAction(nameof(Index));
@@ -179,8 +178,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         [HttpGet]
         public async Task<IActionResult> SystemMessageDetails(Guid id)
         {
-          
-
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -220,7 +217,7 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
 
             var userId = _userManager.GetUserId(User);
 
-            if(userId == null)
+            if (userId == null)
             {
                 TempData["Error"] = "You must be logged in to perform this action.";
                 return RedirectToAction("Login", "Account");

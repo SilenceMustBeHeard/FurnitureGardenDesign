@@ -10,7 +10,6 @@ namespace FurnitureGardenDesign.Data.Configuration.Interactions
         {
             builder.HasKey(o => o.Id);
 
-
             // Order ↔ DesignVariants
             builder.HasMany(o => o.DesignVariants)
                    .WithOne(d => d.Order)
@@ -24,11 +23,10 @@ namespace FurnitureGardenDesign.Data.Configuration.Interactions
                    .OnDelete(DeleteBehavior.Restrict);
 
             // Order ↔ User (ApplicationUser)
-            builder.HasOne(o=>o.User)
+            builder.HasOne(o => o.User)
                    .WithMany(u => u.Orders)
                    .HasForeignKey(o => o.UserId)
                    .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
-

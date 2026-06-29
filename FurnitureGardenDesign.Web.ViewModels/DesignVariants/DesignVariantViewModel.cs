@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace FurnitureGardenDesign.Web.ViewModels.DesignVariants
 {
@@ -18,9 +16,6 @@ namespace FurnitureGardenDesign.Web.ViewModels.DesignVariants
         [MaxLength(500, ErrorMessage = "Model URL cannot exceed 500 characters.")]
         [Url]
         public string? Model3DUrl { get; set; }
-
-
-     
 
         [RegularExpression(@"^[a-zA-Z0-9\s\-]+$",
             ErrorMessage = "Notes can only contain letters, numbers, spaces, and hyphens.")]

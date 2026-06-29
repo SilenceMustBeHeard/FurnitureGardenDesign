@@ -1,5 +1,4 @@
-﻿
-// STAR RATING FUNCTIONALITY
+﻿// STAR RATING FUNCTIONALITY
 
 document.querySelectorAll(".star-rating").forEach(rating => {
     const designId = rating.dataset.designId;
@@ -18,7 +17,6 @@ document.querySelectorAll(".star-rating").forEach(rating => {
     });
 });
 
-
 // SMOOTH SCROLL FOR ANCHOR LINKS
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -32,7 +30,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
-
 
 // TOOLTIP INITIALIZATION
 

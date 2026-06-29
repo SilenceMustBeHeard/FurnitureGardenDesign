@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using static FurnitureGardenDesign.Common.ExceptionMessages;
+
 namespace FurnitureGardenDesign.Web.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
@@ -33,30 +34,23 @@ namespace FurnitureGardenDesign.Web.Infrastructure.Extensions
 
             foreach (Type implementation in serviceClasses)
             {
-
                 Type? serviceInterface = implementation.GetInterfaces()
                     .FirstOrDefault(i => i.Name == $"{InterfacePreffix}{implementation.Name}");
                 if (serviceInterface == null)
                 {
                     throw new RepositoryRegistrationException(
                    string.Format(RepoInterfaceNotFound, implementation.Name));
-
                 }
 
                 services.AddScoped(serviceInterface, implementation);
-
             }
 
             return services;
         }
 
-
-
         public static IServiceCollection RegisterRepositories
             (this IServiceCollection serviceCollection, Assembly repositoryAssembly)
         {
-
-
             Type[] repoClasses = repositoryAssembly
                 .GetTypes()
                 .Where(r => r.Name.EndsWith(RepoTypeSuffix)
@@ -70,30 +64,14 @@ namespace FurnitureGardenDesign.Web.Infrastructure.Extensions
                     .FirstOrDefault(i => i.Name == $"{InterfacePreffix}{implementation.Name}");
                 if (repoInterface == null)
                 {
-
                     throw new RepositoryRegistrationException(
                    string.Format(RepoInterfaceNotFound, implementation.Name));
                 }
 
                 serviceCollection.AddScoped(repoInterface, implementation);
-
-
             }
 
             return serviceCollection;
         }
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-

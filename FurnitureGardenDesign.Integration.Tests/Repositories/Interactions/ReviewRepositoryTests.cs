@@ -3,12 +3,7 @@ using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Models.Catalog;
 using FurnitureGardenDesign.Data.Models.Interactions;
 using FurnitureGardenDesign.Data.Repository.Implementations.Interactions;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
 {
@@ -56,18 +51,17 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
 
         private void SeedTestData()
         {
-            
             var users = new[]
             {
-                new AppUser 
+                new AppUser
                 {
-                    Id = _testUserId1, 
+                    Id = _testUserId1,
                     Email = "user1@example.com",
-                    UserName = "user1@example.com" 
+                    UserName = "user1@example.com"
                 },
 
-                new AppUser 
-                { 
+                new AppUser
+                {
                     Id = _testUserId2,
                     Email = "user2@example.com",
                     UserName = "user2@example.com"
@@ -81,7 +75,6 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
                 }
             };
 
-           
             var catalogDesigns = new[]
             {
                 new CatalogDesign
@@ -108,7 +101,6 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
                 }
             };
 
-           
             var reviews = new[]
             {
                 new Review
@@ -164,64 +156,52 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task HasUserReviewedAsync_ReturnsTrue_WhenUserHasReviewedDesign()
         {
-          
             var result = await _repository.HasUserReviewedAsync(_testUserId1, _testCatalogDesignId1);
 
-           
             Assert.That(result, Is.True);
         }
 
         [Test]
         public async Task HasUserReviewedAsync_ReturnsFalse_WhenUserHasNotReviewedDesign()
         {
-           
             var result = await _repository.HasUserReviewedAsync(_testUserId3, _testCatalogDesignId1);
 
-           
             Assert.That(result, Is.False);
         }
 
         [Test]
         public async Task HasUserReviewedAsync_ReturnsFalse_WhenUserReviewedDifferentDesign()
         {
-           
             var result = await _repository.HasUserReviewedAsync(_testUserId1, _testCatalogDesignId2);
 
-          
             Assert.That(result, Is.True);
         }
 
         [Test]
         public async Task HasUserReviewedAsync_ReturnsFalse_WhenDesignDoesNotExist()
         {
-            
             var result = await _repository.HasUserReviewedAsync(_testUserId1, Guid.NewGuid());
 
-           
             Assert.That(result, Is.False);
         }
 
         [Test]
         public async Task HasUserReviewedAsync_ReturnsFalse_WhenUserDoesNotExist()
         {
-           
             var result = await _repository.HasUserReviewedAsync("non-existent-user", _testCatalogDesignId1);
 
-          
             Assert.That(result, Is.False);
         }
 
-        #endregion
+        #endregion HasUserReviewedAsync Tests
 
         #region GetReviewsByDesignIdAsync Tests
 
         [Test]
         public async Task GetReviewsByDesignIdAsync_ReturnsAllReviews_ForSpecificDesign()
         {
-           
             var result = await _repository.GetReviewsByDesignIdAsync(_testCatalogDesignId1);
 
-          
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count(), Is.EqualTo(2));
             Assert.That(result.All(r => r.CatalogDesignId == _testCatalogDesignId1), Is.True);
@@ -232,7 +212,6 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         {
             var newDesignId = Guid.NewGuid();
 
-           
             var result = await _repository.GetReviewsByDesignIdAsync(newDesignId);
 
             Assert.That(result, Is.Empty);
@@ -241,11 +220,9 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task GetReviewsByDesignIdAsync_IncludesCatalogDesignNavigation()
         {
-          
             var result = await _repository.GetReviewsByDesignIdAsync(_testCatalogDesignId1);
             var review = result.First();
 
-          
             Assert.That(review.CatalogDesign, Is.Not.Null);
             Assert.That(review.CatalogDesign.Title, Is.EqualTo("Design 1"));
         }
@@ -253,11 +230,9 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task GetReviewsByDesignIdAsync_ReturnsReviewsWithCorrectProperties()
         {
-           
             var result = await _repository.GetReviewsByDesignIdAsync(_testCatalogDesignId1);
             var review = result.First(r => r.Id == _testReviewId1);
 
-           
             Assert.That(review.Id, Is.EqualTo(_testReviewId1));
             Assert.That(review.UserId, Is.EqualTo(_testUserId1));
             Assert.That(review.Rating, Is.EqualTo(5));
@@ -268,11 +243,9 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task GetReviewsByDesignIdAsync_ReturnsMultipleReviewsWithDifferentUsers()
         {
-          
             var result = await _repository.GetReviewsByDesignIdAsync(_testCatalogDesignId1);
             var resultList = result.ToList();
 
-          
             Assert.That(resultList[0].UserId, Is.EqualTo(_testUserId1));
             Assert.That(resultList[1].UserId, Is.EqualTo(_testUserId2));
         }
@@ -280,11 +253,9 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task GetReviewsByDesignIdAsync_ReturnsReviewsWithDifferentRatings()
         {
-            
             var result = await _repository.GetReviewsByDesignIdAsync(_testCatalogDesignId1);
             var resultList = result.ToList();
 
-           
             Assert.That(resultList[0].Rating, Is.EqualTo(5));
             Assert.That(resultList[1].Rating, Is.EqualTo(4));
         }
@@ -292,7 +263,6 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task GetReviewsByDesignIdAsync_DoesNotReturnReviewsForOtherDesigns()
         {
-          
             var resultForDesign1 = await _repository.GetReviewsByDesignIdAsync(_testCatalogDesignId1);
             var resultForDesign2 = await _repository.GetReviewsByDesignIdAsync(_testCatalogDesignId2);
 
@@ -302,50 +272,41 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
             Assert.That(resultForDesign2.All(r => r.CatalogDesignId == _testCatalogDesignId2), Is.True);
         }
 
-        #endregion
+        #endregion GetReviewsByDesignIdAsync Tests
 
         #region Edge Cases and Validation Tests
 
         [Test]
         public async Task HasUserReviewedAsync_HandlesEmptyUserId()
         {
-           
             var result = await _repository.HasUserReviewedAsync(string.Empty, _testCatalogDesignId1);
 
-          
             Assert.That(result, Is.False);
         }
 
         [Test]
         public async Task HasUserReviewedAsync_HandlesEmptyDesignId()
         {
-            
             var result = await _repository.HasUserReviewedAsync(_testUserId1, Guid.Empty);
 
-        
             Assert.That(result, Is.False);
         }
 
         [Test]
         public async Task GetReviewsByDesignIdAsync_HandlesNonExistentDesignId()
         {
-          
             var result = await _repository.GetReviewsByDesignIdAsync(Guid.NewGuid());
 
-           
             Assert.That(result, Is.Empty);
         }
 
-       
-
-        #endregion
+        #endregion Edge Cases and Validation Tests
 
         #region Additional Repository Method Tests (Inherited)
 
         [Test]
         public async Task AddAsync_AddsReviewSuccessfully()
         {
-           
             var newReview = new Review
             {
                 Id = Guid.NewGuid(),
@@ -357,10 +318,8 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
                 IsDeleted = false
             };
 
-        
             await _repository.AddAsync(newReview);
 
-          
             var savedReview = await _context.Reviews.FindAsync(newReview.Id);
 
             Assert.That(savedReview, Is.Not.Null);
@@ -370,10 +329,8 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task GetByIdAsync_ReturnsReview_WhenExists()
         {
-           
             var result = await _repository.GetByIdAsync(_testReviewId1);
 
-         
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(_testReviewId1));
             Assert.That(result.Comment, Is.EqualTo("Excellent design! Highly recommended."));
@@ -384,14 +341,12 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         {
             var result = await _repository.GetByIdAsync(Guid.NewGuid());
 
-            
             Assert.That(result, Is.Null);
         }
 
         [Test]
         public async Task UpdateAsync_UpdatesReviewSuccessfully()
         {
-            
             var review = await _repository.GetByIdAsync(_testReviewId1);
 
             Assert.That(review, Is.Not.Null);
@@ -400,7 +355,6 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
 
             var result = await _repository.UpdateAsync(review);
 
-          
             Assert.That(result, Is.True);
             var updatedReview = await _context.Reviews.FindAsync(_testReviewId1);
 
@@ -415,15 +369,13 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
             var review = await _repository.GetByIdAsync(_testReviewId1);
             Assert.That(review, Is.Not.Null);
 
-
             var result = await _repository.HardDeleteAsync(review);
 
-           
             Assert.That(result, Is.True);
             var deletedReview = await _context.Reviews.FindAsync(_testReviewId1);
             Assert.That(deletedReview, Is.Null);
         }
 
-        #endregion
+        #endregion Additional Repository Method Tests (Inherited)
     }
 }

@@ -373,8 +373,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Messages
 
         #endregion Constructor Tests
 
-
-
         #region Additional GetMessageDetailsAsync Tests
 
         [Test]

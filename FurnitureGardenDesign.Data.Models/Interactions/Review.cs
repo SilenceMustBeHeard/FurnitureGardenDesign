@@ -1,5 +1,4 @@
 ﻿using FurnitureGardenDesign.Data.Models.Catalog;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FurnitureGardenDesign.Data.Models.Interactions
@@ -13,16 +12,15 @@ namespace FurnitureGardenDesign.Data.Models.Interactions
 
         // Foreign key to the user who wrote the review
         public string UserId { get; set; } = null!;
+
         public virtual AppUser User { get; set; } = null!;
 
         // Rating from 0 to 5
-        [Range(0,5)]
+        [Range(0, 5)]
         public int Rating { get; set; }
 
         // Optional comment
         public string? Comment { get; set; }
-
-
 
         // Navigation
         public CatalogDesign CatalogDesign { get; set; } = null!;

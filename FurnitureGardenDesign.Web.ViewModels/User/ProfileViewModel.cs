@@ -1,7 +1,4 @@
 ﻿using FurnitureGardenDesign.Web.ViewModels.Messages;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FurnitureGardenDesign.Web.ViewModels.User
 {
@@ -18,11 +15,11 @@ namespace FurnitureGardenDesign.Web.ViewModels.User
 
         public IEnumerable<InboxMessageViewModel> Inbox { get; set; }
             = new List<InboxMessageViewModel>();
-        public IEnumerable<SystemInboxMessageViewModel> SystemInbox { get; set; } 
+
+        public IEnumerable<SystemInboxMessageViewModel> SystemInbox { get; set; }
             = new List<SystemInboxMessageViewModel>();
 
         public IEnumerable<ContactMessageDetailsViewModel> ContactMessages { get; set; }
             = new List<ContactMessageDetailsViewModel>();
     }
-
 }

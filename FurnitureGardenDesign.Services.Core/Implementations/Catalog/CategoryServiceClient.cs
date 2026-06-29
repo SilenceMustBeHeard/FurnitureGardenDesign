@@ -1,10 +1,6 @@
 ﻿using FurnitureGardenDesign.Data.Repository.Interfaces.Catalog;
-using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Category;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FurnitureGardenDesign.Services.Core.Implementations.Catalog
 {
@@ -16,7 +12,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Catalog
         {
             _categoryRepository = categoryRepository;
         }
-
 
         // retrieves all active categories for the client
         // and maps them to a list of CategoryViewModelList objects for dropdown display
@@ -30,7 +25,5 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Catalog
                 Name = c.Name
             });
         }
-
     }
-
 }

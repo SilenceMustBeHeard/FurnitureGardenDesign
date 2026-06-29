@@ -1,10 +1,6 @@
 ﻿using FurnitureGardenDesign.Data.Models.Interactions;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace FurnitureGardenDesign.Data.Repository.Implementations.Interactions
 {
@@ -18,7 +14,7 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations.Interactions
         // returns active reviews
         public async Task<IEnumerable<Review>> GetAllActiveAsync()
             => await _dbSet
-                .Where(r => !r.IsDeleted)  
+                .Where(r => !r.IsDeleted)
                 .Include(r => r.CatalogDesign)
                 .Include(r => r.User)
                 .ToListAsync();
@@ -27,21 +23,18 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations.Interactions
         public async Task<IEnumerable<Review>> GetAllForAdminAsync()
             => await _dbSet
                 .IgnoreQueryFilters()
-                .Include(r => r.CatalogDesign)  
-                .Include(r => r.User)            
+                .Include(r => r.CatalogDesign)
+                .Include(r => r.User)
                 .OrderByDescending(r => r.CreatedOn)
                 .ToListAsync();
 
-      
-
         public async Task ToggleReviewStatusAsync(Review review)
         {
-            review.IsDeleted = !review.IsDeleted;  
+            review.IsDeleted = !review.IsDeleted;
             _dbSet.Update(review);
             await _context.SaveChangesAsync();
         }
 
-        
         public async Task<Review?> GetByIdIncludingDeletedAsync(Guid id)
         {
             return await _dbSet

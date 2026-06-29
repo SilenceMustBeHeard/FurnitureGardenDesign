@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FurnitureGardenDesign.Data.Common.Enums
+﻿namespace FurnitureGardenDesign.Data.Common.Enums
 {
     public enum InboxMessageType
     {
@@ -13,5 +9,4 @@ namespace FurnitureGardenDesign.Data.Common.Enums
         ChangesRequested = 4,
         ContactMessage = 5
     }
-
 }

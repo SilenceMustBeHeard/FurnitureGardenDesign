@@ -1,7 +1,6 @@
 ﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.Controllers.Account;
-using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Review;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +20,6 @@ public class ReviewController : BaseController
     {
         _reviewService = reviewService;
     }
-
 
     // gets the form for writing a review for a specific catalog design
     // checks if the user is authorized and if they have already reviewed the design
@@ -44,8 +42,6 @@ public class ReviewController : BaseController
         return View(model);
     }
 
-
-
     // posts the review form data to create a new review for a specific catalog design
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -66,7 +62,6 @@ public class ReviewController : BaseController
         TempData["Success"] = "Review added successfully!";
         return RedirectToAction("CatalogIndex", "Catalog");
     }
-
 
     // gets the reviews for a specific catalog design and returns the view with the reviews list
 

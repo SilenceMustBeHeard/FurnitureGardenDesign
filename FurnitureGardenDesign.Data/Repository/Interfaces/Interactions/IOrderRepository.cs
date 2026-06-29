@@ -1,9 +1,6 @@
 ﻿using Furniture_GardenDesign.Data.Enums;
 using FurnitureGardenDesign.Data.Models.Interactions;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Account;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FurnitureGardenDesign.Data.Repository.Interfaces.Interactions
 {
@@ -11,8 +8,8 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces.Interactions
        : IRepository<Order, Guid>, IRepositoryAsync<Order, Guid>
     {
         Task<int> CountPendingAsync();
-        Task<Order?> GetOrderWithVariantsAsync(Guid orderId);
 
+        Task<Order?> GetOrderWithVariantsAsync(Guid orderId);
 
         Task UpdateStatusAsync(Guid orderId, OrderStatus newStatus);
     }

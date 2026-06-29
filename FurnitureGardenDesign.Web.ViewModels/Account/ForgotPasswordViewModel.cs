@@ -9,6 +9,4 @@ namespace FurnitureGardenDesign.Web.ViewModels.Account
         [Display(Name = "Email")]
         public string Email { get; set; } = null!;
     }
-
-  
 }

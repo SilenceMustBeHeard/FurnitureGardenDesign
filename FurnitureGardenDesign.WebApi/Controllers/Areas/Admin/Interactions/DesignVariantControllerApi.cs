@@ -1,7 +1,6 @@
 ﻿using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.DesignVariants;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions
@@ -11,67 +10,51 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions
     [Authorize(Roles = "Admin")]
     public class DesignVariantControllerApi : ControllerBase
     {
-       
-            private readonly IAdminDesignVariantService _designVariantService;
+        private readonly IAdminDesignVariantService _designVariantService;
 
-            public DesignVariantControllerApi(IAdminDesignVariantService designVariantService)
+        public DesignVariantControllerApi(IAdminDesignVariantService designVariantService)
+        {
+            _designVariantService = designVariantService;
+        }
+
+        [HttpGet("create/{orderId}")]
+        public IActionResult Create(Guid orderId)
+        {
+            var model = new DesignVariantViewModel
             {
-                _designVariantService = designVariantService;
-            }
+                OrderId = orderId
+            };
 
+            return Ok(model);
+        }
 
-
-             [HttpGet("create/{orderId}")]
-            public IActionResult Create(Guid orderId)
+        [HttpPost("create")]
+        public async Task<IActionResult> Create(DesignVariantViewModel model)
+        {
+            if (!ModelState.IsValid)
             {
-                var model = new DesignVariantViewModel
-                {
-                    OrderId = orderId
-                };
-
-                return Ok(model);
+                return BadRequest(ModelState);
             }
 
-           
-            [HttpPost("create")]
-            public async Task<IActionResult> Create(DesignVariantViewModel model)
+            var entity = await _designVariantService.CreateDesignVariantAsync(model);
+
+            return Ok(new { Id = entity.Id });
+        }
+
+        [HttpPost("send/{designVariantId}")]
+        public async Task<IActionResult> Send(Guid designVariantId)
+        {
+            try
             {
-                if (!ModelState.IsValid)
-                {
-                   return BadRequest(ModelState);
+                await _designVariantService.SendDesignVariantProposalAsync(designVariantId);
+
+                return Ok(new { message = "Design variant proposal sent to client successfully." });
             }
-
-
-                var entity = await _designVariantService.CreateDesignVariantAsync(model);
-               
-
-                return Ok(new { Id = entity.Id });
-            }
-
-
-
-
-           [HttpPost("send/{designVariantId}")]
-            public async Task<IActionResult> Send(Guid designVariantId)
+            catch (KeyNotFoundException ex)
             {
-                try
-                {
-                    await _designVariantService.SendDesignVariantProposalAsync(designVariantId);
-
-                   
-                    return Ok(new { message = "Design variant proposal sent to client successfully." });
-                }
-                catch (KeyNotFoundException ex)
-                {
-                    return NotFound(new { message = ex.Message });
-                }
-                
+                return NotFound(new { message = ex.Message });
             }
-
-
-
-
-
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(Guid id)
@@ -83,26 +66,18 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Interactions
                 return NotFound(new { message = "Design variant not found." });
             }
 
-                return Ok(new
-                {
-                    variant.Id,
-                    variant.OrderId,
-                    variant.Image2DUrl,
-                    variant.Model3DUrl,
-                    variant.Notes,
-                    variant.IsApproved,
-                    OrderDescription = variant.Order?.Description,
-                    OrderDimensions = variant.Order?.Dimensions,
-                    ReferenceImageUrl = variant.Order?.ReferenceImageUrl
-                });
-
-
-            
+            return Ok(new
+            {
+                variant.Id,
+                variant.OrderId,
+                variant.Image2DUrl,
+                variant.Model3DUrl,
+                variant.Notes,
+                variant.IsApproved,
+                OrderDescription = variant.Order?.Description,
+                OrderDimensions = variant.Order?.Dimensions,
+                ReferenceImageUrl = variant.Order?.ReferenceImageUrl
+            });
         }
-
-
-
-
-        
     }
 }

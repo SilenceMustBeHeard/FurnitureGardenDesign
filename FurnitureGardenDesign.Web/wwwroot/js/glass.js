@@ -1,11 +1,8 @@
-﻿
-
-(function () {
+﻿(function () {
     'use strict';
 
-    
     // THEME
-    
+
     function setDarkTheme() {
         // Force dark theme always
         document.documentElement.setAttribute('data-bs-theme', 'dark');
@@ -13,19 +10,17 @@
         console.log('✨ Luxury Dark Theme Activated');
     }
 
-    // SCENE BACKGROUND 
-   
+    // SCENE BACKGROUND
+
     function initSceneEffects() {
         const sceneBg = document.querySelector('.scene-bg');
         if (!sceneBg) return;
 
-       
         const luxuryBg = new Image();
-        // Alternatively, you can use a another image by setting the src to a relative path like 'images/luxury-bg.jpg' 
+        // Alternatively, you can use a another image by setting the src to a relative path like 'images/luxury-bg.jpg'
         // or an external URL. Make sure to choose a high-quality image that fits the luxury theme.
         luxuryBg.src = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80';
-         
-   
+
         function updateSceneBackground() {
             sceneBg.style.backgroundImage = `url('${luxuryBg.src}')`;
             sceneBg.style.backgroundSize = 'cover';
@@ -40,9 +35,8 @@
         updateSceneBackground();
     }
 
-    
-    // GLASS CARD EFFECTS 
-    
+    // GLASS CARD EFFECTS
+
     function initGlassCardEffects() {
         const glassCards = document.querySelectorAll('.glass-card, .admin-catalog-card, .user-catalog-card');
 
@@ -62,9 +56,8 @@
         });
     }
 
-    
     //  STAR RATING WITH GOLD EFFECT
-    
+
     function initStarRating() {
         const starContainers = document.querySelectorAll('.star-rating');
 
@@ -112,9 +105,8 @@
         }
     }
 
-    
-    // FLOATING ANIMATION 
-   
+    // FLOATING ANIMATION
+
     function initFloatingElements() {
         const floatingElements = document.querySelectorAll('.hero-section, .hero-glass, .glass-card');
 
@@ -136,9 +128,8 @@
         }
     }
 
-    
-    // 6. NOTIFICATION TOAST 
-   
+    // 6. NOTIFICATION TOAST
+
     function initToastNotifications() {
         if (!document.querySelector('.toast-container')) {
             const container = document.createElement('div');
@@ -197,9 +188,8 @@
         }
     }
 
-    
-    // INPUT GLOW 
-    
+    // INPUT GLOW
+
     function initInputGlowEffects() {
         const inputs = document.querySelectorAll('input:not([type="hidden"]), textarea, select');
 
@@ -217,9 +207,8 @@
         });
     }
 
-    
-    // SCROLL REVEAL 
-    
+    // SCROLL REVEAL
+
     function initScrollReveal() {
         const revealElements = document.querySelectorAll('.glass-card, .admin-catalog-card, .user-catalog-card, .carousel-section');
 
@@ -257,9 +246,8 @@
         document.head.appendChild(style);
     }
 
-    
     // COPYRIGHT YEAR
-    
+
     function updateCopyrightYear() {
         const footerText = document.querySelector('footer .container');
         if (footerText) {
@@ -270,9 +258,8 @@
         }
     }
 
-    
     // IMAGE EFFECTS - SMART ZOOM
-   
+
     function initImageEffects() {
         const images = document.querySelectorAll('.admin-catalog-img, .user-catalog-img, .review-img');
 
@@ -290,9 +277,8 @@
         });
     }
 
-    
     // ROLE INDICATOR
-   
+
     function initRoleIndicator() {
         const roleIndicators = document.querySelectorAll('.glass-caption.admin-glow, .glass-caption.manager-glow');
 
@@ -305,11 +291,11 @@
             style.id = 'pulse-keyframes';
             style.textContent = `
                 @keyframes luxuryPulse {
-                    0%, 100% { 
+                    0%, 100% {
                         opacity: 1;
                         box-shadow: 0 0 5px rgba(192, 154, 108, 0.3);
                     }
-                    50% { 
+                    50% {
                         opacity: 0.85;
                         box-shadow: 0 0 15px rgba(192, 154, 108, 0.6);
                     }
@@ -319,11 +305,9 @@
         }
     }
 
-    
     //  HOME AMBIENT EFFECT
-    
+
     function initAmbientEffect() {
-     
         const sceneWrapper = document.querySelector('.scene-wrapper');
         if (sceneWrapper && !document.querySelector('.ambient-overlay')) {
             const overlay = document.createElement('div');
@@ -352,9 +336,8 @@
         }
     }
 
-    
     // INITIALIZE ALL FEATURES
-    
+
     document.addEventListener('DOMContentLoaded', () => {
         console.log('🏰 Furniture And Garden Design Initializing...');
 
@@ -373,5 +356,4 @@
 
         console.log('✨ Furniture And Garden Design Ready ✨');
     });
-
 })();

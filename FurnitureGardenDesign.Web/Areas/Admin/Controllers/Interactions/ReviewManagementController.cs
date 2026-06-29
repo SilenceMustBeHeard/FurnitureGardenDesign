@@ -1,5 +1,4 @@
 ﻿using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Services.Core.Admin.Implementations;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account;
@@ -28,14 +27,13 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
             _reviewManagementService = reviewManagementService;
         }
 
-
         // gets the form for writing a review for a specific catalog design
         // checks if the user is authorized and if they have already reviewed the design
         // and returns the appropriate view or redirects with an error message
         [HttpGet]
         public async Task<IActionResult> Write(Guid id)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Invalid request.";
                 return RedirectToAction("AdminIndex", "CatalogManagement");
@@ -56,21 +54,19 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
             return View(model);
         }
 
-
-
         // posts the review form data to create a new review for a specific catalog design
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Post(AddReviewViewModel model)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Invalid request.";
                 return RedirectToAction("AdminIndex", "CatalogManagement");
             }
 
             var userId = GetUserId();
-            if(string.IsNullOrEmpty(userId.ToString()))
+            if (string.IsNullOrEmpty(userId.ToString()))
                 return Unauthorized();
 
             var result = await _reviewService.CreateReviewAsync(userId.ToString(), model);
@@ -85,14 +81,11 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
             return RedirectToAction("AdminIndex", "CatalogManagement");
         }
 
-
         // gets the reviews for a specific catalog design and returns the view with the reviews list
 
         [HttpGet]
         public async Task<IActionResult> Reviews(Guid id)
         {
-          
-
             var reviews = await _reviewService.GetReviewsByDesignIdAsync(id);
 
             return View(new ReviewListViewModel
@@ -106,7 +99,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditList(bool includeDeleted = true)
         {
-
             IEnumerable<ReviewViewModelList> reviews;
 
             if (includeDeleted)
@@ -147,9 +139,8 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
             return RedirectToAction(nameof(EditList));
         }
 
-
         // get the details for a specific review by its id
-        
+
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(Guid id)
@@ -164,7 +155,5 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
 
             return View(review);
         }
-
     }
 }
-

@@ -1,7 +1,6 @@
 ﻿using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.DesignVariants;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Interactgions

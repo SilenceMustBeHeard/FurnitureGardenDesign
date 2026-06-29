@@ -1,11 +1,9 @@
-﻿using FurnitureGardenDesign.Services.Core.Interfaces.Account;
-using FurnitureGardenDesign.Services.Common;
+﻿using FurnitureGardenDesign.Services.Common;
+using FurnitureGardenDesign.Services.Core.Interfaces.Account;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using System;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Services.Core.Implementations.Account
 {
@@ -22,13 +20,11 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Account
             _emailValidator = new EmailValidator();
         }
 
-
         // sends an email using SendGrid API
         // It validates the email address, subject, and body before sending
         // It also logs the process and handles any exceptions that may occur during the email sending process.
         public async Task<bool> SendEmailAsync(string to, string subject, string body)
         {
-          
             if (!_emailValidator.IsValidEmail(to) ||
                 string.IsNullOrWhiteSpace(subject) ||
                 string.IsNullOrWhiteSpace(body))
@@ -65,7 +61,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Account
 
                 var response = await client.SendEmailAsync(msg);
 
-              
                 if (response.IsSuccessStatusCode)
                 {
                     _logger.LogInformation("Email service request completed");
@@ -75,9 +70,8 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Account
                 _logger.LogWarning("Email service request failed");
                 return false;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-
                 _logger.LogWarning(ex, "Email service error");
                 return false;
             }

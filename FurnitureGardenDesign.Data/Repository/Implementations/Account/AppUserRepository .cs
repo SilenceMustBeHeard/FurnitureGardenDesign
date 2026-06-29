@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FurnitureGardenDesign.Data.Models;
+﻿using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Account;
-
 
 namespace FurnitureGardenDesign.Data.Repository.Implementations.Account
 {
@@ -15,5 +11,4 @@ namespace FurnitureGardenDesign.Data.Repository.Implementations.Account
         {
         }
     }
-
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Furniture_GardenDesign.Data.Enums
+﻿namespace Furniture_GardenDesign.Data.Enums
 {
     public enum OrderStatus
     {

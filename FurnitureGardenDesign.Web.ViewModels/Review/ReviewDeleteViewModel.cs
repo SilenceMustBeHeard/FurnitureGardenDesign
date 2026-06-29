@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FurnitureGardenDesign.Web.ViewModels.Review
+﻿namespace FurnitureGardenDesign.Web.ViewModels.Review
 {
     public class ReviewDeleteViewModel
     {

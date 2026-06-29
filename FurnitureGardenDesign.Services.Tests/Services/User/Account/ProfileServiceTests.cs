@@ -1,12 +1,12 @@
 ﻿using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Data.Repository.Interfaces.Account;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
-using Microsoft.AspNetCore.Identity;
-using Moq;
-using MockQueryable.Moq;
 using FurnitureGardenDesign.Services.Core.Implementations.Account;
 using FurnitureGardenDesign.Services.Core.Interfaces.Message;
-using FurnitureGardenDesign.Data.Repository.Interfaces.Account;
 using FurnitureGardenDesign.Web.ViewModels.Messages;
+using Microsoft.AspNetCore.Identity;
+using MockQueryable.Moq;
+using Moq;
 
 namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
 {
@@ -142,8 +142,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
         [Test]
         public async Task GetProfileAsync_ReturnsProfileViewModel_WhenUserExistsAndIsRegularUser()
         {
-          
-
             var users = new List<AppUser> { _testUser };
 
             var mockQueryable = users.BuildMockDbSet();
@@ -151,7 +149,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
             _userRepositoryMock.Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-          
             _userManagerMock.Setup(u => u.GetRolesAsync(_testUser))
                 .ReturnsAsync(new List<string> { "User" });
 
@@ -167,10 +164,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
                 .Setup(s => s.GetUserMessagesAsync(_testUserId))
                 .ReturnsAsync(_testContactMessages);
 
-            
             var result = await _profileService.GetProfileAsync(_testUserId);
 
-         
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(_testUser.Id));
             Assert.That(result.Email, Is.EqualTo(_testUser.Email));
@@ -189,20 +184,18 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
             _contactMessageServiceMock.Verify(s => s.GetAdminMessagesAsync(It.IsAny<string>()), Times.Never);
         }
 
-        #endregion
+        #endregion GetProfileAsync Tests - Regular User
 
         #region GetProfileAsync Tests - Admin User
 
         [Test]
         public async Task GetProfileAsync_ReturnsProfileViewModel_WhenUserIsAdmin()
         {
-           
             var users = new List<AppUser> { _testUser };
             var mockQueryable = users.BuildMockDbSet();
             _userRepositoryMock.Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-          
             _userManagerMock.Setup(u => u.GetRolesAsync(_testUser))
                 .ReturnsAsync(new List<string> { "Admin" });
 
@@ -220,7 +213,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
 
             var result = await _profileService.GetProfileAsync(_testUserId);
 
-           
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(_testUser.Id));
             Assert.That(result.ContactMessages.Count(), Is.EqualTo(2));
@@ -233,20 +225,18 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
             _contactMessageClientServiceMock.Verify(s => s.GetUserMessagesAsync(It.IsAny<string>()), Times.Never);
         }
 
-        #endregion
+        #endregion GetProfileAsync Tests - Admin User
 
         #region GetProfileAsync Tests - Manager User
 
         [Test]
         public async Task GetProfileAsync_ReturnsProfileViewModel_WhenUserIsManager()
         {
-           
             var users = new List<AppUser> { _testUser };
             var mockQueryable = users.BuildMockDbSet();
             _userRepositoryMock.Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-           
             _userManagerMock.Setup(u => u.GetRolesAsync(_testUser))
                 .ReturnsAsync(new List<string> { "Manager" });
 
@@ -258,10 +248,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
                 .Setup(s => s.GetUserMessagesAsync(_testUserId))
                 .ReturnsAsync(_testSystemMessages);
 
-           
             var result = await _profileService.GetProfileAsync(_testUserId);
 
-          
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(_testUser.Id));
             Assert.That(result.ContactMessages, Is.Empty);
@@ -274,22 +262,19 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
             _contactMessageServiceMock.Verify(s => s.GetAdminMessagesAsync(It.IsAny<string>()), Times.Never);
         }
 
-        #endregion
+        #endregion GetProfileAsync Tests - Manager User
 
         #region GetProfileAsync Tests - User Not Found
 
         [Test]
         public async Task GetProfileAsync_ReturnsNull_WhenUserDoesNotExist()
         {
-           
             var users = new List<AppUser>();
             var mockQueryable = users.BuildMockDbSet();
             _userRepositoryMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-          
             var result = await _profileService.GetProfileAsync("non-existent-user");
 
-            
             Assert.That(result, Is.Null);
 
             _userRepositoryMock.Verify(r => r.GetAllAttached(), Times.Once);
@@ -298,14 +283,13 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
             _systemInboxMessageServiceMock.Verify(s => s.GetUserMessagesAsync(It.IsAny<string>()), Times.Never);
         }
 
-        #endregion
+        #endregion GetProfileAsync Tests - User Not Found
 
         #region GetProfileAsync Tests - Empty Messages
 
         [Test]
         public async Task GetProfileAsync_ReturnsEmptyCollections_WhenNoMessagesExist()
         {
-         
             var users = new List<AppUser> { _testUser };
             var mockQueryable = users.BuildMockDbSet();
 
@@ -327,24 +311,21 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
                 .Setup(s => s.GetUserMessagesAsync(_testUserId))
                 .ReturnsAsync(new List<ContactMessageDetailsViewModel>());
 
-           
             var result = await _profileService.GetProfileAsync(_testUserId);
 
-         
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Inbox, Is.Empty);
             Assert.That(result.SystemInbox, Is.Empty);
             Assert.That(result.ContactMessages, Is.Empty);
         }
 
-        #endregion
+        #endregion GetProfileAsync Tests - Empty Messages
 
         #region GetProfileAsync Tests - Null Returns from Services
 
         [Test]
         public async Task GetProfileAsync_HandlesNullMessagesFromServices()
         {
-           
             var users = new List<AppUser> { _testUser };
 
             var mockQueryable = users.BuildMockDbSet();
@@ -367,24 +348,21 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
                 .Setup(s => s.GetUserMessagesAsync(_testUserId))
                 .ReturnsAsync((List<ContactMessageDetailsViewModel>)null!);
 
-            
             var result = await _profileService.GetProfileAsync(_testUserId);
 
-           
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Inbox, Is.Empty);
             Assert.That(result.SystemInbox, Is.Empty);
             Assert.That(result.ContactMessages, Is.Empty);
         }
 
-        #endregion
+        #endregion GetProfileAsync Tests - Null Returns from Services
 
         #region GetProfileAsync Tests - Edge Cases
 
         [Test]
         public async Task GetProfileAsync_ReturnsUserWithNoAddress_WhenAddressIsNull()
         {
-          
             var userWithNullAddress = new AppUser
             {
                 Id = Guid.NewGuid().ToString(),
@@ -416,10 +394,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
                 .Setup(s => s.GetUserMessagesAsync(userWithNullAddress.Id))
                 .ReturnsAsync(new List<ContactMessageDetailsViewModel>());
 
-            
             var result = await _profileService.GetProfileAsync(userWithNullAddress.Id);
 
-          
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Address, Is.Null);
         }
@@ -427,7 +403,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
         [Test]
         public async Task GetProfileAsync_ReturnsEmptyEmail_WhenEmailIsNull()
         {
-         
             var userWithNullEmail = new AppUser
             {
                 Id = "user3",
@@ -459,10 +434,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
                 .Setup(s => s.GetUserMessagesAsync("user3"))
                 .ReturnsAsync(new List<ContactMessageDetailsViewModel>());
 
-          
             var result = await _profileService.GetProfileAsync("user3");
 
-          
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Email, Is.EqualTo(string.Empty));
         }
@@ -470,7 +443,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
         [Test]
         public async Task GetProfileAsync_WithEmptyUserId_ReturnsNull()
         {
-           
             var users = new List<AppUser> { _testUser };
 
             var mockQueryable = users.BuildMockDbSet();
@@ -478,31 +450,26 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
             _userRepositoryMock.Setup(r => r.GetAllAttached())
                 .Returns(mockQueryable.Object);
 
-           
             var result = await _profileService.GetProfileAsync(string.Empty);
 
-           
             Assert.That(result, Is.Null);
         }
 
         [Test]
         public async Task GetProfileAsync_WithNullUserId_ReturnsNull()
         {
-            
             var users = new List<AppUser> { _testUser };
 
             var mockQueryable = users.BuildMockDbSet();
 
             _userRepositoryMock.Setup(r => r.GetAllAttached()).Returns(mockQueryable.Object);
 
-          
             var result = await _profileService.GetProfileAsync(null);
 
-         
             Assert.That(result, Is.Null);
         }
 
-        #endregion
+        #endregion GetProfileAsync Tests - Edge Cases
 
         #region GetProfileAsync Tests - Multiple Users
 
@@ -541,10 +508,8 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
                 .Setup(s => s.GetUserMessagesAsync("user2-id"))
                 .ReturnsAsync(new List<ContactMessageDetailsViewModel>());
 
-          
             var result = await _profileService.GetProfileAsync("user2-id");
 
-        
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo("user2-id"));
             Assert.That(result.Email, Is.EqualTo("user2@example.com"));
@@ -552,6 +517,6 @@ namespace FurnitureGardenDesign.Unit.Tests.Services.User.Account
             Assert.That(result.LastName, Is.EqualTo("Two"));
         }
 
-        #endregion
+        #endregion GetProfileAsync Tests - Multiple Users
     }
 }

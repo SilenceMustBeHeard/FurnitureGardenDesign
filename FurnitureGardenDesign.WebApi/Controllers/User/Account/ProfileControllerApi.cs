@@ -33,7 +33,6 @@ public class ProfileControllerApi : ControllerBase
         _inboxMessageService = inboxMessageService;
     }
 
-    
     [HttpGet]
     public async Task<IActionResult> GetProfile()
     {
@@ -46,7 +45,6 @@ public class ProfileControllerApi : ControllerBase
         var model = await _profileService.GetProfileAsync(user.Id);
         return Ok(model);
     }
-
 
     [HttpPut("inbox/{id}/read")]
     public async Task<IActionResult> MarkMessageAsRead(Guid id)
@@ -79,7 +77,6 @@ public class ProfileControllerApi : ControllerBase
         return Ok(viewModel);
     }
 
-   
     [HttpPut("inbox/{id}/approve-design")]
     public async Task<IActionResult> ApproveDesign(Guid id)
     {
@@ -98,7 +95,6 @@ public class ProfileControllerApi : ControllerBase
         return Ok(new { message = "Design approved successfully!" });
     }
 
-  
     [HttpGet("system-messages/{id}")]
     public async Task<IActionResult> GetSystemMessageDetails(Guid id)
     {
@@ -117,7 +113,6 @@ public class ProfileControllerApi : ControllerBase
         return Ok(viewModel);
     }
 
-    
     [HttpGet("contact-messages/{id}")]
     public async Task<IActionResult> GetContactMessageDetails(Guid id)
     {
@@ -136,7 +131,6 @@ public class ProfileControllerApi : ControllerBase
         return Ok(viewModel);
     }
 
-    
     [HttpGet("admin/inbox")]
     [Authorize(Roles = "Admin,Manager")]
     public async Task<IActionResult> GetAdminInbox()

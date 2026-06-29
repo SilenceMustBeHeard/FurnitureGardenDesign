@@ -1,14 +1,10 @@
 ﻿using FurnitureGardenDesign.Api.Common;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
-using FurnitureGardenDesign.Services.Core.Implementations.Catalog;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Services.Core.Interfaces.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
-using FurnitureGardenDesign.WebApi.Controllers.User.Catalog;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
 namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Catalog;

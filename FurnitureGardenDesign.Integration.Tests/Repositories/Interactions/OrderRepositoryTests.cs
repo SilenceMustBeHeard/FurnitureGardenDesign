@@ -4,10 +4,6 @@ using FurnitureGardenDesign.Data.Models.Catalog;
 using FurnitureGardenDesign.Data.Models.Interactions;
 using FurnitureGardenDesign.Data.Repository.Implementations.Interactions;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
 {
@@ -144,17 +140,14 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task CountPendingAsync_ReturnsCorrectCount()
         {
-           
             var result = await _repository.CountPendingAsync();
 
-           
-            Assert.That(result, Is.EqualTo(2)); 
+            Assert.That(result, Is.EqualTo(2));
         }
 
         [Test]
         public async Task CountPendingAsync_ReturnsZero_WhenNoPendingOrders()
         {
-           
             var allOrders = await _context.Orders.ToListAsync();
 
             foreach (var order in allOrders)
@@ -163,35 +156,29 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
             }
             await _context.SaveChangesAsync();
 
-    
             var result = await _repository.CountPendingAsync();
 
-       
             Assert.That(result, Is.EqualTo(0));
         }
 
         [Test]
         public async Task CountPendingAsync_DoesNotCountNonPendingStatuses()
         {
-            
             var result = await _repository.CountPendingAsync();
 
-          
             Assert.That(result, Is.EqualTo(2));
-            Assert.That(result, Is.Not.EqualTo(5)); 
+            Assert.That(result, Is.Not.EqualTo(5));
         }
 
-        #endregion
+        #endregion CountPendingAsync Tests
 
         #region GetOrderWithVariantsAsync Tests
 
         [Test]
         public async Task GetOrderWithVariantsAsync_ReturnsOrderWithVariants_WhenExists()
         {
-          
             var result = await _repository.GetOrderWithVariantsAsync(_testOrderId1);
 
-           
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(_testOrderId1));
             Assert.That(result.DesignVariants, Is.Not.Null);
@@ -201,10 +188,8 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task GetOrderWithVariantsAsync_ReturnsOrderWithoutVariants_WhenNoVariantsExist()
         {
-            
             var result = await _repository.GetOrderWithVariantsAsync(_testOrderId3);
 
-           
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(_testOrderId3));
             Assert.That(result.DesignVariants, Is.Empty);
@@ -213,22 +198,18 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task GetOrderWithVariantsAsync_ReturnsNull_WhenOrderDoesNotExist()
         {
-           
             var result = await _repository.GetOrderWithVariantsAsync(Guid.NewGuid());
 
-           
             Assert.That(result, Is.Null);
         }
 
         [Test]
         public async Task GetOrderWithVariantsAsync_IncludesAllVariantProperties()
         {
-           
             var result = await _repository.GetOrderWithVariantsAsync(_testOrderId1);
             Assert.That(result, Is.Not.Null);
 
             var variant = result.DesignVariants.First();
-          
 
             Assert.That(variant.Id, Is.Not.EqualTo(Guid.Empty));
             Assert.That(variant.Image2DUrl, Is.Not.Null);
@@ -238,7 +219,6 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task GetOrderWithVariantsAsync_ReturnsCorrectVariantCounts()
         {
-            
             var order1 = await _repository.GetOrderWithVariantsAsync(_testOrderId1);
             var order2 = await _repository.GetOrderWithVariantsAsync(_testOrderId2);
             Assert.That(order1, Is.Not.Null);
@@ -249,22 +229,19 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
             Assert.That(order2.DesignVariants, Is.Not.Null);
         }
 
-        #endregion
+        #endregion GetOrderWithVariantsAsync Tests
 
         #region UpdateStatusAsync Tests
 
         [Test]
         public async Task UpdateStatusAsync_UpdatesOrderStatus_WhenOrderExists()
         {
-          
             var order = await _context.Orders.FindAsync(_testOrderId1);
-           Assert.That(order, Is.Not.Null);
+            Assert.That(order, Is.Not.Null);
             Assert.That(order.Status, Is.EqualTo(OrderStatus.Pending));
 
-  
             await _repository.UpdateStatusAsync(_testOrderId1, OrderStatus.Approved);
 
-           
             var updatedOrder = await _context.Orders.FindAsync(_testOrderId1);
             Assert.That(updatedOrder, Is.Not.Null);
             Assert.That(updatedOrder.Status, Is.EqualTo(OrderStatus.Approved));
@@ -273,10 +250,8 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task UpdateStatusAsync_ChangesFromPendingToDesignProvided()
         {
-          
             await _repository.UpdateStatusAsync(_testOrderId1, OrderStatus.DesignProvided);
 
-        
             var order = await _context.Orders.FindAsync(_testOrderId1);
             Assert.That(order, Is.Not.Null);
             Assert.That(order.Status, Is.EqualTo(OrderStatus.DesignProvided));
@@ -285,10 +260,8 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task UpdateStatusAsync_ChangesFromApprovedToRejected()
         {
-         
             await _repository.UpdateStatusAsync(_testOrderId3, OrderStatus.Rejected);
 
-            
             var order = await _context.Orders.FindAsync(_testOrderId3);
             Assert.That(order, Is.Not.Null);
             Assert.That(order.Status, Is.EqualTo(OrderStatus.Rejected));
@@ -297,14 +270,11 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task UpdateStatusAsync_DoesNothing_WhenOrderDoesNotExist()
         {
-           
             var nonExistentId = Guid.NewGuid();
             var orderCount = await _context.Orders.CountAsync();
 
-        
             await _repository.UpdateStatusAsync(nonExistentId, OrderStatus.Approved);
 
-           
             var newCount = await _context.Orders.CountAsync();
             Assert.That(newCount, Is.EqualTo(orderCount));
         }
@@ -314,7 +284,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         {
             await _repository.UpdateStatusAsync(_testOrderId1, OrderStatus.Approved);
 
-   var order = await _context.Orders.FindAsync(_testOrderId1);
+            var order = await _context.Orders.FindAsync(_testOrderId1);
             Assert.That(order, Is.Not.Null);
             Assert.That(order.Status, Is.EqualTo(OrderStatus.Approved));
         }
@@ -322,7 +292,6 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task UpdateStatusAsync_CanUpdateToAllStatuses()
         {
-            
             await _repository.UpdateStatusAsync(_testOrderId2, OrderStatus.DesignProvided);
             var order1 = await _context.Orders.FindAsync(_testOrderId2);
             Assert.That(order1, Is.Not.Null);
@@ -339,14 +308,13 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
             Assert.That(order3.Status, Is.EqualTo(OrderStatus.Rejected));
         }
 
-        #endregion
+        #endregion UpdateStatusAsync Tests
 
         #region Additional Repository Method Tests (Inherited)
 
         [Test]
         public async Task AddAsync_AddsOrderSuccessfully()
         {
-         
             var newOrder = new Order
             {
                 Id = Guid.NewGuid(),
@@ -358,10 +326,8 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
                 FurnitureType = "New Item"
             };
 
-         
             await _repository.AddAsync(newOrder);
 
-        
             var savedOrder = await _context.Orders.FindAsync(newOrder.Id);
             Assert.That(savedOrder, Is.Not.Null);
             Assert.That(savedOrder.UserId, Is.EqualTo("new-user"));
@@ -370,10 +336,8 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task GetByIdAsync_ReturnsOrder_WhenExists()
         {
-          
             var result = await _repository.GetByIdAsync(_testOrderId1);
 
-            
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(_testOrderId1));
             Assert.That(result.UserId, Is.EqualTo("user-123"));
@@ -382,55 +346,43 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
         [Test]
         public async Task GetByIdAsync_ReturnsNull_WhenOrderDoesNotExist()
         {
-            
             var result = await _repository.GetByIdAsync(Guid.NewGuid());
 
-            
             Assert.That(result, Is.Null);
         }
 
         [Test]
         public async Task GetAllAttached_ReturnsAllOrders()
         {
-           
             var result = _repository.GetAllAttached().ToList();
 
-           
             Assert.That(result.Count, Is.EqualTo(5));
         }
 
         [Test]
         public async Task UpdateAsync_UpdatesOrderSuccessfully()
         {
-            
             var order = await _repository.GetByIdAsync(_testOrderId1);
             Assert.That(order, Is.Not.Null);
             order.Description = "Updated description";
             order.FurnitureType = "Updated Furniture";
 
-           
             var result = await _repository.UpdateAsync(order);
 
-         
             Assert.That(result, Is.True);
             var updatedOrder = await _context.Orders.FindAsync(_testOrderId1);
-                Assert.That(updatedOrder, Is.Not.Null);
+            Assert.That(updatedOrder, Is.Not.Null);
             Assert.That(updatedOrder.Description, Is.EqualTo("Updated description"));
             Assert.That(updatedOrder.FurnitureType, Is.EqualTo("Updated Furniture"));
         }
 
-    
-
-        #endregion
+        #endregion Additional Repository Method Tests (Inherited)
 
         #region Edge Cases and Validation Tests
-
-     
 
         [Test]
         public async Task GetOrderWithVariantsAsync_HandlesNullVariantsCollection()
         {
-          
             var orderWithoutVariants = new Order
             {
                 Id = Guid.NewGuid(),
@@ -445,14 +397,12 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Interactions
             _context.Orders.Add(orderWithoutVariants);
             await _context.SaveChangesAsync();
 
-          
             var result = await _repository.GetOrderWithVariantsAsync(orderWithoutVariants.Id);
 
-           
             Assert.That(result, Is.Not.Null);
             Assert.That(result.DesignVariants, Is.Empty);
         }
 
-        #endregion
+        #endregion Edge Cases and Validation Tests
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FurnitureGardenDesign.Data.Common.Enums
+﻿namespace FurnitureGardenDesign.Data.Common.Enums
 {
     public enum Model3DStatus
     {
@@ -11,7 +7,4 @@ namespace FurnitureGardenDesign.Data.Common.Enums
         Ready = 2,
         Failed = 3
     }
-
-  
-
 }

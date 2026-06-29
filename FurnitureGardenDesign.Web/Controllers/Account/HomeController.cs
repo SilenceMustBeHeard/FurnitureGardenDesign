@@ -27,7 +27,6 @@ namespace FurnitureGardenDesign.Web.Controllers.Account
         [AllowAnonymous]
         public IActionResult Privacy() => View();
 
-
         // The error page is also accessible to all users, and it displays the request ID for debugging purposes.
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

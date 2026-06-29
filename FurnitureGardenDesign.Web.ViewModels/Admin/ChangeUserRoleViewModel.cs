@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FurnitureGardenDesign.Web.ViewModels.Admin
+﻿namespace FurnitureGardenDesign.Web.ViewModels.Admin
 {
     public class ChangeUserRoleViewModel
     {
         public Guid UserId { get; set; }
         public string NewRole { get; set; } = string.Empty;
 
-
-        public IEnumerable<string> AvailableRoles { get; set; } 
+        public IEnumerable<string> AvailableRoles { get; set; }
             = new List<string>();
     }
 }

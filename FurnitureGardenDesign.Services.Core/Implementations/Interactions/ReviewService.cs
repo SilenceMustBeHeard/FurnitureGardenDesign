@@ -4,10 +4,6 @@ using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
 using FurnitureGardenDesign.Services.Core.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Catalog;
 using FurnitureGardenDesign.Web.ViewModels.Review;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Services.Core.Implementations.Interactions
 {
@@ -20,9 +16,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Interactions
         {
             _reviewRepo = reviewRepo;
             this._catalogRepo = catalogRepo;
-
         }
-
 
         // adds a new review for a catalog design by a user
         public async Task AddReviewAsync(string userId, AddReviewViewModel model)
@@ -45,7 +39,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Interactions
             return await _reviewRepo.HasUserReviewedAsync(userId, catalogDesignId);
         }
 
-
         // retrieves all reviews for a specific catalog design and maps them to view models
         //  allows the application to display reviews for a catalog design including the rating and comment left by users
         public async Task<IEnumerable<AddReviewViewModel>> GetReviewsByDesignIdAsync(Guid catalogDesignId)
@@ -61,7 +54,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Interactions
             }).ToList();
         }
 
-        // retrieves a catalog design and its review form 
+        // retrieves a catalog design and its review form
         public async Task<CatalogDesignViewModel?> GetWriteReviewModelAsync(string userId, Guid designId)
         {
             if (await HasUserReviewedAsync(userId, designId))
@@ -86,9 +79,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Interactions
             };
         }
 
-
-
-
         // creates a new review for a catalog design by a user
         // ensuring that the user has not already reviewed the design
         public async Task<(bool Success, string? Error)> CreateReviewAsync(string userId, AddReviewViewModel model)
@@ -109,6 +99,5 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Interactions
 
             return (true, null);
         }
-
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Interactions
 {
-
     [Area("Manager")]
     [Authorize(Roles = "Manager")]
     public class DesignVariantsController : Controller
@@ -16,7 +15,6 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Interactions
         {
             _designVariantService = designVariantService;
         }
-
 
         // a GET action to display the form for creating a new design variant for a specific order
         [HttpGet]
@@ -38,19 +36,16 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Interactions
         public async Task<IActionResult> Create(DesignVariantViewModel model)
         {
             if (!ModelState.IsValid)
-              {
+            {
                 TempData["Error"] = "Please correct the errors in the form.";
-                return View(model); 
+                return View(model);
             }
 
-            
             var entity = await _designVariantService.CreateDesignVariantAsync(model);
             TempData["Success"] = "Design variant created successfully. You can now edit it to add more details.";
 
             return RedirectToAction("Details", new { id = entity.Id });
         }
-
-
 
         // sends a design variant proposal to the client for approval
         [HttpPost]
@@ -70,7 +65,6 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Interactions
             }
         }
 
-
         // creates a proxy endpoint to fetch images from external URLs,
         // to avoid CORS(cross-origin resource sharing) issues when displaying them in the views
         [HttpGet]
@@ -81,7 +75,6 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Interactions
             var contentType = GetContentType(url);
             return File(bytes, contentType);
         }
-
 
         // Get the content type based on the file extension
         // currently supports common image formats, but can be extended as needed
@@ -99,8 +92,6 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Interactions
             };
         }
 
-
-
         // gets the details of a design variant
         // including the associated order information, to display in the details view
         [HttpGet]
@@ -108,7 +99,7 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Interactions
         {
             var variant = await _designVariantService.GetDesignVariantByIdAsync(id);
 
-            if(variant == null)
+            if (variant == null)
             {
                 TempData["Error"] = "Design variant not found.";
                 return RedirectToAction("Index", "Home");
@@ -130,9 +121,5 @@ namespace FurnitureGardenDesign.Web.Areas.Manager.Controllers.Interactions
 
             return View(model);
         }
-
-
-
-
     }
 }

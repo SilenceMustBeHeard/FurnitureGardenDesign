@@ -21,9 +21,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
             _userService = userService;
         }
 
-
-
-
         // gets all users with their roles except the  admin
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -56,12 +53,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
             return RedirectToAction("Index");
         }
 
-
-
-
-
-
-
         // Ban user (soft delete)
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -76,13 +67,5 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Interactions
 
             return RedirectToAction(nameof(Index));
         }
-
-
-
-
-
-
-
-
     }
 }

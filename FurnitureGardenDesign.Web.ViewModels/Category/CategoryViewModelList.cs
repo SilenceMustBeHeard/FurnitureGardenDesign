@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System;
-
-namespace FurnitureGardenDesign.Web.ViewModels.Category
+﻿namespace FurnitureGardenDesign.Web.ViewModels.Category
 {
     public class CategoryViewModelList
     {
@@ -14,4 +9,3 @@ namespace FurnitureGardenDesign.Web.ViewModels.Category
         public bool IsDeleted { get; set; }
     }
 }
-

@@ -1,7 +1,4 @@
 ﻿using FurnitureGardenDesign.Data.Common.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FurnitureGardenDesign.Data.Models.Messages
 {

@@ -2,9 +2,6 @@
 using FurnitureGardenDesign.Services.Core;
 using Microsoft.AspNetCore.Identity;
 using Moq;
-using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Tests.Unit.Services.Core
 {
@@ -79,7 +76,6 @@ namespace FurnitureGardenDesign.Tests.Unit.Services.Core
             var result = await _service.IsUserManagerAsync(string.Empty);
 
             Assert.That(result, Is.False);
-
         }
 
         [Test]
@@ -89,8 +85,7 @@ namespace FurnitureGardenDesign.Tests.Unit.Services.Core
 
             Assert.That(result, Is.False);
 
-
-        #endregion
+        #endregion IsUserManagerAsync Tests
         }
     }
 }

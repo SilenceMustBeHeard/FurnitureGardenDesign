@@ -21,8 +21,6 @@ namespace FurnitureGardenDesign.WebApi
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-
-
             // Identity (Cookie based – same as MVC)
 
             builder.Services
@@ -33,7 +31,6 @@ namespace FurnitureGardenDesign.WebApi
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager();
-
 
             // Authentication + Authorization
 
@@ -57,7 +54,6 @@ namespace FurnitureGardenDesign.WebApi
 
             app.UseHttpsRedirection();
 
-        
             app.UseAuthentication();
             app.UseAuthorization();
 

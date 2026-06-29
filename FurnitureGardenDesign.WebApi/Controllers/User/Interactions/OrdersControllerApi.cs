@@ -21,7 +21,6 @@ public class OrdersControllerApi : ControllerBase
         _categoryServiceClient = categoryServiceClient;
     }
 
- 
     [HttpPost]
     public async Task<IActionResult> CreateOrder([FromBody] OrderFormViewModel model)
     {

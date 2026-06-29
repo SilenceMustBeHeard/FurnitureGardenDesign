@@ -1,6 +1,4 @@
 ﻿using FurnitureGardenDesign.Data.Models.Interactions;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FurnitureGardenDesign.Data.Models.Catalog
@@ -8,7 +6,6 @@ namespace FurnitureGardenDesign.Data.Models.Catalog
     public class Category
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-
 
         // Name of the category, e.g., "Living Room", "Bedroom", etc.
         [Required]
@@ -19,10 +16,8 @@ namespace FurnitureGardenDesign.Data.Models.Catalog
         // Optional description of the category
         public string? Description { get; set; }
 
-
         //flag
         public bool IsDeleted { get; set; } = false;
-
 
         // Navigation properties
         public virtual ICollection<Order> Orders { get; set; }

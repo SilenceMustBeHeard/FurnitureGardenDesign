@@ -2,8 +2,6 @@
 using FurnitureGardenDesign.Web.ViewModels.Category;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Catalog
 {
@@ -17,7 +15,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Catalog
         {
             _categoryService = categoryService;
         }
-
 
         // GET: Admin/CategoryManagement/EditList
         [HttpGet]
@@ -38,14 +35,9 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Catalog
             return RedirectToAction(nameof(EditList));
         }
 
-
         // GET: Admin/CategoryManagement/Create
         [HttpGet]
         public IActionResult Create() => View();
-
-
-
-
 
         // POST: Admin/CategoryManagement/Create
 
@@ -71,7 +63,6 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Catalog
 
             return View(model);
         }
-
 
         // POST: Admin/CategoryManagement/Edit
         [HttpPost]

@@ -40,7 +40,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
             });
         }
 
-        // Add new category 
+        // Add new category
 
         public async Task AddCategoryAsync(CategoryViewModelCreate model)
         {
@@ -53,7 +53,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
 
             await _categoryRepository.AddAsync(category);
         }
-
 
         // Get category for edit (including deleted ones)
 
@@ -72,7 +71,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
             };
         }
 
-
         // Edit category (including toggling IsDeleted)
         public async Task EditCategoryAsync(Guid id, CategoryViewModelEdit model)
         {
@@ -85,7 +83,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
 
             await _categoryRepository.UpdateAsync(category);
         }
-
 
         // Toggle category status (soft delete/restore)
         public async Task ToggleCategoryAsync(Guid id)

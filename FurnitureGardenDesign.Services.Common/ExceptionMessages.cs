@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FurnitureGardenDesign.Common
+﻿namespace FurnitureGardenDesign.Common
 {
     public static class ExceptionMessages
     {

@@ -27,9 +27,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Manager.Interactions
         [HttpGet("create")]
         public async Task<IActionResult> Create()
         {
-
             return Ok(new OrderFormViewModel());
-          
         }
 
         [HttpPost("create")]

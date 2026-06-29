@@ -11,7 +11,6 @@ public class FavoriteService : IFavoriteService
         _favoriteRepository = favoriteRepository;
     }
 
-
     // Toggles the favorite status of a design for a user.
     // If the design is not currently a favorite it will be added. If it is already a favorite it will be removed.
     public async Task<bool> ToggleFavoriteAsync(string userId, Guid designId)
@@ -27,7 +26,6 @@ public class FavoriteService : IFavoriteService
                 IsDeleted = false
             });
 
-           
             return true;
         }
         // toggle logic
@@ -36,7 +34,6 @@ public class FavoriteService : IFavoriteService
 
         await _favoriteRepository.SaveChangesAsync();
 
-       
         return !favorite.IsDeleted;
     }
 

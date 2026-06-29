@@ -13,9 +13,6 @@ public class ContactMessageController : Controller
         _contactMessageService = contactMessageService;
     }
 
-
-    
-
     [HttpGet]
     public IActionResult Index()
     {
@@ -31,9 +28,8 @@ public class ContactMessageController : Controller
             return View(model);
         }
 
-            await _contactMessageService.SendContactMessageAsync(model, User);
-            TempData["Success"] = "Your message has been sent successfully! We'll get back to you soon.";
-            return RedirectToAction("Index", "Home");
-       
+        await _contactMessageService.SendContactMessageAsync(model, User);
+        TempData["Success"] = "Your message has been sent successfully! We'll get back to you soon.";
+        return RedirectToAction("Index", "Home");
     }
 }

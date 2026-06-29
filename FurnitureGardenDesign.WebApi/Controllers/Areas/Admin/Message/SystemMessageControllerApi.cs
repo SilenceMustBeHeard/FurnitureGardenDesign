@@ -3,7 +3,6 @@ using FurnitureGardenDesign.Data.Models.Messages;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Account;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Messages;
-using FurnitureGardenDesign.Web.ViewModels.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -53,7 +52,7 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Message
 
             if (!string.IsNullOrEmpty(userId) && !availableUsers.Any(u => u.Id == userId))
             {
-                return BadRequest(new { error = "User not found." }); 
+                return BadRequest(new { error = "User not found." });
             }
 
             return Ok(new
@@ -70,12 +69,11 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Message
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-         
             var receiver = await _userManager.FindByIdAsync(model.ReceiverId ?? "");
 
             if (receiver == null)
-            { 
-                return BadRequest(new { error = "Receiver not found." }); 
+            {
+                return BadRequest(new { error = "Receiver not found." });
             }
 
             var adminId = _userManager.GetUserId(User);
@@ -103,8 +101,8 @@ namespace FurnitureGardenDesign.WebApi.Controllers.Areas.Admin.Message
             var message = await _systemMessageService.GetMessageDetailsAsync(id, adminId);
 
             if (message == null)
-            { 
-                return NotFound(new { message = "Message not found or you don't have permission to view it." }); 
+            {
+                return NotFound(new { message = "Message not found or you don't have permission to view it." });
             }
 
             var sender = await _userManager.FindByIdAsync(message.SenderId ?? "");

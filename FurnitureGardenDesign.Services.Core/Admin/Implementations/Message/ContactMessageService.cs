@@ -1,9 +1,6 @@
-﻿using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Data.Models.Messages;
-using FurnitureGardenDesign.Data.Repository.Interfaces.Message;
+﻿using FurnitureGardenDesign.Data.Repository.Interfaces.Message;
 using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
 using FurnitureGardenDesign.Web.ViewModels.Messages;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Message
@@ -72,7 +69,6 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Message
 
             if (message == null) return null;
 
-           
             if (!message.IsReadByAdmin)
             {
                 message.IsReadByAdmin = true;

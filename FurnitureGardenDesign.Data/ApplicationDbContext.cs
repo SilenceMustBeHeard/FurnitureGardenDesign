@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using FurnitureGardenDesign.Data.Models;
+﻿using FurnitureGardenDesign.Data.Models;
+using FurnitureGardenDesign.Data.Models.Catalog;
 using FurnitureGardenDesign.Data.Models.Interactions;
 using FurnitureGardenDesign.Data.Models.Messages;
-using FurnitureGardenDesign.Data.Models.Catalog;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace FurnitureGardenDesign.Data
 {
@@ -16,6 +16,7 @@ namespace FurnitureGardenDesign.Data
 
         // DbSets
         public virtual DbSet<Order> Orders { get; set; } = null!;
+
         public virtual DbSet<DesignVariant> DesignVariants { get; set; } = null!;
         public virtual DbSet<CatalogDesign> CatalogDesigns { get; set; } = null!;
         public virtual DbSet<Favorite> Favorites { get; set; } = null!;
@@ -29,12 +30,8 @@ namespace FurnitureGardenDesign.Data
         {
             base.OnModelCreating(builder);
 
-        
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-         
-
-        
             builder.Entity<Order>()
                 .HasQueryFilter(o => !o.IsDeleted);
 
@@ -47,16 +44,11 @@ namespace FurnitureGardenDesign.Data
             builder.Entity<Category>()
                 .HasQueryFilter(c => !c.IsDeleted);
 
-
-         
             builder.Entity<Review>()
                 .HasQueryFilter(r => r.CatalogDesign != null && !r.CatalogDesign.IsDeleted);
 
-         
             builder.Entity<InboxMessage>()
                 .HasQueryFilter(m => m.DesignVariant != null && !m.DesignVariant.IsDeleted);
-
-      
 
             builder.Entity<Order>()
                 .Property(o => o.CreatedOn)

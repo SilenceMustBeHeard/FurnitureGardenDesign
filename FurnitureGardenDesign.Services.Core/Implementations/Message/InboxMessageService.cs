@@ -12,7 +12,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Message
 {
     public class InboxMessageService : IInboxMessageService
     {
-
         private readonly IInboxMessageRepository _messageRepository;
         private readonly ISystemInboxMessageRepository _systemMessageRepository;
         private readonly IContactMessageRepository _contactMessageRepository;
@@ -28,22 +27,20 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Message
         public IContactMessageRepository Object6 { get; }
 
         public InboxMessageService(
-            IInboxMessageRepository messageRepository, 
+            IInboxMessageRepository messageRepository,
           IContactMessageRepository contactMessageRepository,
             ISystemInboxMessageRepository systemMessageRepository,
             UserManager<AppUser> userManager,
                 IAppUserRepository userRepository,
             RoleManager<IdentityRole> roleManager)
         {
-           _contactMessageRepository = contactMessageRepository;
+            _contactMessageRepository = contactMessageRepository;
             _systemMessageRepository = systemMessageRepository;
             _messageRepository = messageRepository;
             _userManager = userManager;
             _userRepository = userRepository;
             _roleManager = roleManager;
         }
-
-      
 
         public async Task<List<InboxMessageViewModel>> GetUserMessagesAsync(string userId)
         {
@@ -59,8 +56,8 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Message
                     DesignImage2DUrl = m.DesignVariant.Image2DUrl,
                     Model3DUrl = m.DesignVariant.Model3DUrl,
                     Notes = m.DesignVariant.Notes,
-                   OrderDescription = m.DesignVariant.Order != null ? m.DesignVariant.Order.Description : null,
-                     OrderDimensions = m.DesignVariant.Order != null ? m.DesignVariant.Order.Dimensions : null,
+                    OrderDescription = m.DesignVariant.Order != null ? m.DesignVariant.Order.Description : null,
+                    OrderDimensions = m.DesignVariant.Order != null ? m.DesignVariant.Order.Dimensions : null,
                     IsRead = m.IsRead,
                     CreatedOn = m.CreatedOn,
                     Type = m.Type,
@@ -68,12 +65,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Message
                 })
                 .ToListAsync();
         }
-
-
-
-
-
-
 
         // marks a message as read
         public async Task MarkMessageAsReadAsync(Guid messageId, string userId)
@@ -103,12 +94,10 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Message
         // gets the count of unread messages
         public async Task<int> GetUnreadCountAsync(string userId)
         {
-           
             var inboxUnreadCount = await _messageRepository
                 .GetAllAttached()
                 .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
 
-            
             var systemUnreadCount = await _systemMessageRepository
                 .GetAllAttached()
                 .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
@@ -116,8 +105,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Message
             var contactUnreadCount = await _contactMessageRepository
                 .GetAllAttached()
                 .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
-
-
 
             return inboxUnreadCount + systemUnreadCount + contactUnreadCount;
         }
@@ -132,14 +119,12 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Message
                 .GetAllAttached()
                 .CountAsync(x => x.ReceiverId == userId && !x.IsRead);
 
-           
             var contactUnreadCount = await _contactMessageRepository
                 .GetAllAttached()
                 .CountAsync(x => x.ReceiverId == userId && !x.IsReadByAdmin);
 
             return inboxUnreadCount + systemUnreadCount + contactUnreadCount;
         }
-
 
         public async Task<InboxMessageViewModel?> GetMessageDetailsAsync(Guid messageId, string userId)
         {
@@ -192,16 +177,12 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Message
             {
                 design.IsApproved = true;
 
-
-
                 var recipientIds = new HashSet<string>();
-
 
                 if (!string.IsNullOrEmpty(message.SenderId))
                 {
                     recipientIds.Add(message.SenderId);
                 }
-
 
                 var originalMessage = await _messageRepository
                     .GetAllAttached()
@@ -213,7 +194,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Message
                     recipientIds.Add(originalMessage.SenderId);
                 }
 
-             
                 var allUsers = await _userRepository.GetAllAttached().ToListAsync();
 
                 foreach (var user in allUsers)
@@ -225,7 +205,6 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Message
                         recipientIds.Add(user.Id);
                     }
                 }
-
 
                 foreach (var recipientId in recipientIds)
                 {

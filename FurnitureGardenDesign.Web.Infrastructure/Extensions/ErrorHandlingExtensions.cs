@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureGardenDesign.Web.Infrastructure.Extensions
 {
@@ -18,8 +17,6 @@ namespace FurnitureGardenDesign.Web.Infrastructure.Extensions
                         context.Features.Get<IExceptionHandlerPathFeature>();
 
                     var exception = exceptionHandlerPathFeature?.Error;
-
-                   
 
                     // Redirect to custom error page
                     context.Response.Redirect("/Error/500");

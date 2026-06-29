@@ -1,6 +1,4 @@
-﻿
-
-namespace FurnitureGardenDesign.Web.ViewComponents
+﻿namespace FurnitureGardenDesign.Web.ViewComponents
 {
     using FurnitureGardenDesign.Data.Models;
     using Microsoft.AspNetCore.Identity;
@@ -21,5 +19,4 @@ namespace FurnitureGardenDesign.Web.ViewComponents
             return View(isLoggedIn);
         }
     }
-
 }

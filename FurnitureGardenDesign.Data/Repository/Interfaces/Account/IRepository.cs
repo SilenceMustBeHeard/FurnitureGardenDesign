@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FurnitureGardenDesign.Data.Repository.Interfaces.Account
+﻿namespace FurnitureGardenDesign.Data.Repository.Interfaces.Account
 {
     public interface IRepository<TEntity, TKey>
     {
         TEntity? GetById(TKey id);
 
         int Count();
+
         IQueryable<TEntity> GetAllIncludingDeleted();
+
         TEntity? SingleOrDefault(Func<TEntity, bool> predicate);
 
         TEntity? FirstOrDefault(Func<TEntity, bool> predicate);
@@ -22,33 +20,12 @@ namespace FurnitureGardenDesign.Data.Repository.Interfaces.Account
 
         void AddRange(IEnumerable<TEntity> items);
 
-
         bool Delete(TEntity entity);
-
 
         bool HardDelete(TEntity entity);
 
-
         bool Update(TEntity item);
 
-
-
-
         void SaveChanges();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

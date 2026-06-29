@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FurnitureGardenDesign.Web.ViewModels
 {
-   
     public class OrderFormViewModel
     {
         [Required]
@@ -29,16 +28,13 @@ namespace FurnitureGardenDesign.Web.ViewModels
         [Url]
         [Display(Name = "Reference Image URL")]
         [MaxLength(500, ErrorMessage = "Image URL cannot exceed 500 characters.")]
-
         public string? ReferenceImageUrl { get; set; } // optional reference image
 
         [Required]
         [Display(Name = "Category")]
         public Guid CategoryId { get; set; } // choice of category
 
-
-        public IEnumerable<SelectListItem> Categories { get; set; } 
+        public IEnumerable<SelectListItem> Categories { get; set; }
             = new List<SelectListItem>();
-
     }
 }

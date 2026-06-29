@@ -2,10 +2,6 @@
 using FurnitureGardenDesign.Data.Models;
 using FurnitureGardenDesign.Data.Repository.Implementations.Account;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Tests.Integration.Repositories.Account
 {
@@ -73,7 +69,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Account
                 async () => await _repository.AddAsync(user2));
         }
 
-        #endregion
+        #endregion AddAsync Tests
 
         #region GetByIdAsync Tests
 
@@ -103,7 +99,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Account
             Assert.That(result, Is.Null);
         }
 
-        #endregion
+        #endregion GetByIdAsync Tests
 
         #region GetAllAttached Tests
 
@@ -141,7 +137,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Account
             Assert.That(result, Is.Empty);
         }
 
-        #endregion
+        #endregion GetAllAttached Tests
 
         #region FirstOrDefaultAsync Tests
 
@@ -174,7 +170,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Account
             Assert.That(result, Is.Null);
         }
 
-        #endregion
+        #endregion FirstOrDefaultAsync Tests
 
         #region CountAsync Tests
 
@@ -202,7 +198,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Account
             Assert.That(result, Is.EqualTo(0));
         }
 
-        #endregion
+        #endregion CountAsync Tests
 
         #region UpdateAsync Tests
 
@@ -262,7 +258,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Account
             Assert.That(dbUser.Email, Is.EqualTo("updated@example.com"));
         }
 
-        #endregion
+        #endregion UpdateAsync Tests
 
         #region HardDeleteAsync Tests
 
@@ -282,14 +278,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Account
             Assert.That(deletedUser, Is.Null);
         }
 
-        
-        #endregion
-
-        #region DeleteAsync (Soft Delete) Tests
-
-       
-
-        #endregion
+        #endregion HardDeleteAsync Tests
 
         #region SaveChangesAsync Tests
 
@@ -308,7 +297,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Account
             Assert.That(savedUser, Is.Not.Null);
         }
 
-        #endregion
+        #endregion SaveChangesAsync Tests
 
         #region SingleOrDefaultAsync Tests
 
@@ -340,7 +329,7 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Account
             Assert.That(result, Is.Null);
         }
 
-        #endregion
+        #endregion SingleOrDefaultAsync Tests
 
         #region AddRangeAsync Tests
 
@@ -363,6 +352,6 @@ namespace FurnitureGardenDesign.Tests.Integration.Repositories.Account
             Assert.That(allUsers.Count, Is.EqualTo(3));
         }
 
-        #endregion
+        #endregion AddRangeAsync Tests
     }
 }

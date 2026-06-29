@@ -1,5 +1,4 @@
-﻿using FurnitureGardenDesign.Data.Common.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace FurnitureGardenDesign.Data.Models.Messages
 {

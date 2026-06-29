@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FurnitureGardenDesign.Services.Core.Interfaces.Account
 {

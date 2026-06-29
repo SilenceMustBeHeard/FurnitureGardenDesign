@@ -16,18 +16,16 @@ public class ContactMessageControllerApi : ControllerBase
         _contactMessageService = contactMessageService;
     }
 
-
     [HttpPost]
     public async Task<IActionResult> SendMessage([FromBody] ContactMessageCreateViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(new { errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))});
+            return BadRequest(new { errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)) });
         }
 
         await _contactMessageService.SendContactMessageAsync(model, User);
 
-       
         return Created(string.Empty, new
         {
             message = "Your message has been sent successfully! We'll get back to you soon."

@@ -1,24 +1,25 @@
-﻿using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
-using FurnitureGardenDesign.Web.ViewModels.Catalog;
-using FurnitureGardenDesign.Data.Models.Catalog;
-using FurnitureGardenDesign.Services.Core.Implementations.Catalog;
+﻿using FurnitureGardenDesign.Data.Models.Catalog;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Catalog;
 using FurnitureGardenDesign.Data.Repository.Interfaces.Interactions;
+using FurnitureGardenDesign.Services.Core.Admin.Interfaces;
+using FurnitureGardenDesign.Services.Core.Implementations.Catalog;
+using FurnitureGardenDesign.Web.ViewModels.Catalog;
 
 namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
 {
     public class CatalogManagementService : CatalogService, ICatalogManagementService
     {
         private readonly ICatalogRepository _catalogRepository;
-        public CatalogManagementService(ICatalogRepository catalogRepo, 
-            IFavoriteRepository favoriteRepo, 
-            IReviewRepository reviewRepo) 
+
+        public CatalogManagementService(ICatalogRepository catalogRepo,
+            IFavoriteRepository favoriteRepo,
+            IReviewRepository reviewRepo)
             : base(catalogRepo, favoriteRepo, reviewRepo)
         {
             _catalogRepository = catalogRepo;
         }
 
-        // adds new catalog design 
+        // adds new catalog design
         public async Task AddCatalogAsync(CatalogViewModelCreate model)
         {
             var catalog = new CatalogDesign
@@ -35,12 +36,10 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
                 Model3DStatus = model.Model3DStatus
             };
 
-
             await _catalogRepository.AddAsync(catalog);
         }
 
-
-        // edits an existing catalog design 
+        // edits an existing catalog design
         public async Task EditCatalogAsync(Guid id, CatalogViewModelEdit model)
         {
             var catalog = await _catalogRepository.GetByIdAsync(id);
@@ -59,14 +58,12 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
             catalog.IsDeleted = model.IsDeleted;
             catalog.Model3DStatus = model.Model3DStatus;
 
-            await _catalogRepository.UpdateAsync(catalog); 
+            await _catalogRepository.UpdateAsync(catalog);
         }
-
 
         // retrieves all active catalog designs for display in the admin panel
         public async Task<IEnumerable<CatalogViewModelList>> GetAllActiveCataloguesAsync()
         {
-
             var catalogues = await _catalogRepository.GetAllActiveAsync();
 
             return catalogues.Select(c => new CatalogViewModelList
@@ -75,11 +72,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
                 Title = c.Title,
                 IsDeleted = c.IsDeleted
             });
-
-
-
         }
-
 
         // retrieves all catalog designs, including deleted ones
         public async Task<IEnumerable<CatalogViewModelList>> GetAllCataloguesForAdminAsync()
@@ -90,13 +83,12 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
             {
                 Id = c.Id,
                 Title = c.Title,
-                CategoryName = c.Category?.Name, 
+                CategoryName = c.Category?.Name,
                 Price = c.Price,
                 Model3DStatus = c.Model3DStatus,
                 IsDeleted = c.IsDeleted
             });
         }
-
 
         // retrieves a specific catalog design by its ID
         // Fixed version
@@ -120,6 +112,7 @@ namespace FurnitureGardenDesign.Services.Core.Admin.Implementations.Catalog
                 Model3DStatus = catalog.Model3DStatus
             };
         }
+
         // toggles the active/deleted status of a catalog design
         public async Task ToggleCatalogAsync(Guid id)
         {

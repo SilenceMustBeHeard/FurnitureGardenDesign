@@ -1,9 +1,6 @@
 ﻿using FurnitureGardenDesign.Data.Common.Enums;
 using FurnitureGardenDesign.Web.ViewModels.User;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace FurnitureGardenDesign.Web.ViewModels.Messages
 {
@@ -11,7 +8,8 @@ namespace FurnitureGardenDesign.Web.ViewModels.Messages
     {
         [Required(ErrorMessage = "Please select a recipient")]
         public string ReceiverId { get; set; } = null!;
-        public string? ReceiverName { get; set; } 
+
+        public string? ReceiverName { get; set; }
 
         [Required]
         [MinLength(20, ErrorMessage = "Description must be at least 20 characters long.")]
@@ -21,9 +19,7 @@ namespace FurnitureGardenDesign.Web.ViewModels.Messages
         [Required]
         [Display(Name = "Message Type")]
         public InboxMessageType Type { get; set; }
-   
+
         public List<UserSelectViewModel> AvailableUsers { get; set; } = new();
     }
-
-   
 }

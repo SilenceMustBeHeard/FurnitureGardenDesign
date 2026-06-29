@@ -15,13 +15,10 @@ namespace FurnitureGardenDesign.Web.Areas.Admin.Controllers.Account
         {
         }
 
-       
         public IActionResult Index() => View();
-
 
         public IActionResult About() => View();
 
-      
         public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,5 +1,4 @@
 ﻿using FurnitureGardenDesign.Data.Models.Catalog;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
@@ -124,7 +123,6 @@ namespace FurnitureGardenDesign.Data.Seeding
                     if (design.CategoryId == Guid.Empty)
                         throw new Exception($"CatalogDesign CategoryId is EMPTY for: {design.Title}");
 
-                  
                     var categoryExists = await context.Categories.AnyAsync(c => c.Id == design.CategoryId);
 
                     if (!categoryExists)

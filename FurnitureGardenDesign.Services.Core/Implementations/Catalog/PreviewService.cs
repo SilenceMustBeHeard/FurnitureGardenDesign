@@ -1,9 +1,6 @@
 ﻿using FurnitureGardenDesign.Services.Core.Interfaces.Catalog;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Net.Http;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Services.Core.Implementations.Catalog
 {
@@ -23,7 +20,7 @@ namespace FurnitureGardenDesign.Services.Core.Implementations.Catalog
         public async Task<(bool Success, string? ImageUrl, string? Message)> FetchWebpageImageAsync(string url)
         {
             // Validate URL
-            if (string.IsNullOrWhiteSpace(url) 
+            if (string.IsNullOrWhiteSpace(url)
                 || !Uri.IsWellFormedUriString(url, UriKind.Absolute))
             {
                 _logger.LogWarning("Invalid URL provided: {Url}", url);

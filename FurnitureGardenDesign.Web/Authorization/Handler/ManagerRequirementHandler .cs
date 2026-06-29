@@ -1,9 +1,7 @@
-﻿using FurnitureGardenDesign.Data.Models;
-using FurnitureGardenDesign.Services.Core.Interfaces.Account;
+﻿using FurnitureGardenDesign.Services.Core.Interfaces.Account;
 using FurnitureGardenDesign.Web.Authorization.Requirements;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace FurnitureGardenDesign.Web.Authorization.Handlers
 {

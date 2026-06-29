@@ -21,7 +21,6 @@ public class AccountControllerApi : ControllerBase
         _signInManager = signInManager;
     }
 
-
     [HttpPost("login")]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginViewModel model)
@@ -80,7 +79,6 @@ public class AccountControllerApi : ControllerBase
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
         var resetLink = $"https://yourapp.com/admin/reset-password?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(user.Email)}";
 
-
         return Ok(new { message = "If an admin account with that email exists, you will receive a password reset link." });
     }
 
@@ -108,7 +106,6 @@ public class AccountControllerApi : ControllerBase
 
         return Ok(new { message = "Password reset successful!" });
     }
-
 
     [HttpPost("logout")]
     [Authorize]
