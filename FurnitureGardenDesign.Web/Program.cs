@@ -17,12 +17,13 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-// Add DbContext
+// Add DbContext - PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseNpgsql(connectionString));
 
-// Add HttpClient factory for services that need to make HTTP requests (like IPreviewService)
+// Add HttpClient factory for services that need to make HTTP requests
 builder.Services.AddHttpClient();
+
 // Add Identity
 builder.Services.AddDefaultIdentity<AppUser>(options =>
 {
@@ -57,7 +58,7 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole("Admin"));
 
     options.AddPolicy("ManagerPolicy", policy =>
-       policy.RequireRole("Manager"));
+        policy.RequireRole("Manager"));
 });
 
 // Repositories & Services
@@ -65,7 +66,7 @@ builder.Services.RegisterRepositories(typeof(ICategoryRepository).Assembly);
 builder.Services.RegisterServices(typeof(ICategoryService).Assembly);
 builder.Services.AddScoped<ICategoryServiceClient, CategoryServiceClient>();
 
-// Add MVC with custom error handling
+// MVC
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
@@ -84,41 +85,42 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    // Apply migrations first
+    // Apply migrations
     await context.Database.MigrateAsync();
 
-    // Seed Identity (Roles and Users) - idempotent (safe to run multiple times)
+    // Seed Identity
     await IdentitySeeder.SeedRolesAsync(roleManager);
     await IdentitySeeder.SeedAdminAsync(userManager);
     await IdentitySeeder.SeedManagerAsync(userManager);
 
-    // Seed Catalog Data - ONLY if Categories table is empty
+    // Seed Catalog Data
     var anyCategories = await context.Categories.AnyAsync();
+
     if (!anyCategories)
     {
         try
         {
             await DbSeeder.SeedCategoriesAsync(context);
             await DbSeeder.SeedCatalogAsync(context);
-            Console.WriteLine("✅ Database seeding completed successfully!");
+
+            Console.WriteLine("Database seeding completed successfully!");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Seeding failed: {ex.Message}");
+            Console.WriteLine($"Seeding failed: {ex.Message}");
             throw;
         }
     }
     else
     {
-        Console.WriteLine("📦 Categories already exist. Skipping catalog data seeding.");
+        Console.WriteLine("Categories already exist. Skipping catalog data seeding.");
     }
 }
 
-// Static files with .glb support for 3D models
+// Static files with .glb support
 var provider = new FileExtensionContentTypeProvider();
 provider.Mappings[".glb"] = "model/gltf-binary";
 
-// Configure error handling middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error/500");
@@ -130,6 +132,7 @@ else
 }
 
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles(new StaticFileOptions
@@ -138,13 +141,15 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Custom error handling for 404
+// Custom 404 handling
 app.Use(async (context, next) =>
 {
     await next();
+
     if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
     {
         context.Items["originalPath"] = context.Request.Path;
