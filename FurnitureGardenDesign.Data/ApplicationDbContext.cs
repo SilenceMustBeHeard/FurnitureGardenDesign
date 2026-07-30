@@ -50,7 +50,6 @@ namespace FurnitureGardenDesign.Data
             builder.Entity<InboxMessage>()
                 .HasQueryFilter(m => m.DesignVariant != null && !m.DesignVariant.IsDeleted);
 
-           
             builder.Entity<Order>()
                 .Property(o => o.CreatedOn)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -59,7 +58,7 @@ namespace FurnitureGardenDesign.Data
                 .Property(d => d.CreatedOn)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            
+         
             builder.Entity<CatalogDesign>()
                 .Property(c => c.Id)
                 .HasDefaultValueSql("gen_random_uuid()");
