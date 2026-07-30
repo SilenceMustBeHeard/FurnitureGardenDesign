@@ -58,7 +58,6 @@ namespace FurnitureGardenDesign.Data
                 .Property(d => d.CreatedOn)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-         
             builder.Entity<CatalogDesign>()
                 .Property(c => c.Id)
                 .HasDefaultValueSql("gen_random_uuid()");
