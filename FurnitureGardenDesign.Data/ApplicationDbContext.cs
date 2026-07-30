@@ -53,20 +53,20 @@ namespace FurnitureGardenDesign.Data
            
             builder.Entity<Order>()
                 .Property(o => o.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                .HasDefaultValueSql("GETUTCDATE()");
 
             builder.Entity<DesignVariant>()
                 .Property(d => d.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                .HasDefaultValueSql("GETUTCDATE()");
 
-            
+
             builder.Entity<CatalogDesign>()
                 .Property(c => c.Id)
-                .HasDefaultValueSql("gen_random_uuid()");
+                .HasDefaultValueSql("NEWID()");
 
             builder.Entity<Review>()
                 .Property(r => r.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                .HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }
