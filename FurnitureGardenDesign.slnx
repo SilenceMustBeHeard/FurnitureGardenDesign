@@ -13,6 +13,11 @@
     <Project Path="FurnitureGardenDesign.Services.Common/FurnitureGardenDesign.Services.Common.csproj" />
     <Project Path="FurnitureGardenDesign.Services.Core/FurnitureGardenDesign.Services.Core.csproj" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
+    <File Path="docker-compose.yml" />
+    <File Path="Dockerfile" />
+  </Folder>
   <Folder Name="/Tests/">
     <Project Path="FurnitureGardenDesign.Integration.Tests/FurnitureGardenDesign.Integration.Tests.csproj" Id="39b7d5b2-4e38-473b-bfce-fea23560d107" />
     <Project Path="FurnitureGardenDesign.Services.Tests/FurnitureGardenDesign.Unit.Tests.csproj" Id="6f870db1-387a-4535-86a2-74db3a1591fe" />

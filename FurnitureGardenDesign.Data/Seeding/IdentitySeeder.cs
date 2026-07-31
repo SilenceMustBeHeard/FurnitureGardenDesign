@@ -5,7 +5,7 @@ namespace FurnitureGardenDesign.Data.Seeding
 {
     public static class IdentitySeeder
     {
-        private const string DefaultPassword = "1234567890";
+        private const string DefaultPassword = "Garden$2026";
 
         // 1️⃣ Seed Roles
         public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)

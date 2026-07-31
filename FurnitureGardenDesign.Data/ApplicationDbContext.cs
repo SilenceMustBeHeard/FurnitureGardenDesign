@@ -50,7 +50,6 @@ namespace FurnitureGardenDesign.Data
             builder.Entity<InboxMessage>()
                 .HasQueryFilter(m => m.DesignVariant != null && !m.DesignVariant.IsDeleted);
 
-           
             builder.Entity<Order>()
                 .Property(o => o.CreatedOn)
                 .HasDefaultValueSql("GETUTCDATE()");

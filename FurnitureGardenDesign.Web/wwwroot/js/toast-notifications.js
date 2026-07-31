@@ -7,7 +7,6 @@
             toastContainer = $('.toast-container');
         }
 
-       
         const colors = {
             success: {
                 bg: 'rgba(42, 95, 58, 0.85)',
@@ -38,7 +37,7 @@
         const color = colors[type] || colors.success;
 
         const toastHtml = `
-            <div class="toast align-items-center text-white border-0 show mb-2" role="alert" 
+            <div class="toast align-items-center text-white border-0 show mb-2" role="alert"
                  style="
                     background: ${color.bg};
                     backdrop-filter: blur(20px);
@@ -49,7 +48,7 @@
                     box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px ${color.glow};
                     transition: all 0.3s ease;
                  ">
-                <div class="toast-header" 
+                <div class="toast-header"
                      style="
                         background: transparent;
                         color: #ffd6b0;
@@ -59,10 +58,10 @@
                      ">
                     <i class="bi ${color.icon} me-2" style="color: ${color.border}; font-size: 1.2rem;"></i>
                     <strong class="me-auto" style="font-weight: 600; letter-spacing: 0.3px;">${title}</strong>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" 
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
                             style="opacity: 0.7; filter: drop-shadow(0 0 4px rgba(0,0,0,0.3));"></button>
                 </div>
-                <div class="toast-body" 
+                <div class="toast-body"
                      style="
                         color: #e8d9cc;
                         padding: 14px 16px;
@@ -79,7 +78,6 @@
         const toastElement = $(toastHtml);
         toastContainer.append(toastElement);
 
-       
         toastElement.css('opacity', '0').animate({ opacity: '1' }, 300);
 
         // auto-hide after 5 seconds

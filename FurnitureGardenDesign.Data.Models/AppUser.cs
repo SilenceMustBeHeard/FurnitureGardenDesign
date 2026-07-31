@@ -6,38 +6,47 @@ namespace FurnitureGardenDesign.Data.Models
 {
     public class AppUser : IdentityUser
     {
-        public string FullName => $"{FirstName?.Trim()} {LastName?.Trim()}".Trim();
+        public string FullName =>
+            $"{FirstName?.Trim()} {LastName?.Trim()}".Trim();
 
         public string? FirstName { get; set; }
+
         public string? LastName { get; set; }
+
         public string? Address { get; set; }
 
-        // Navigation
+
+        // Navigation - Orders
         public virtual ICollection<Order> Orders { get; set; }
             = new HashSet<Order>();
 
+
+        // Navigation - Favorites
         public virtual ICollection<Favorite> Favorites { get; set; }
             = new HashSet<Favorite>();
 
-        // Design messages (InboxMessage)
-        public ICollection<InboxMessage> ReceivedDesignMessages { get; set; }
+
+        // Navigation - Design messages
+        public virtual ICollection<InboxMessage> ReceivedDesignMessages { get; set; }
             = new HashSet<InboxMessage>();
 
-        public ICollection<InboxMessage> SentDesignMessages { get; set; }
+        public virtual ICollection<InboxMessage> SentDesignMessages { get; set; }
             = new HashSet<InboxMessage>();
 
-        // System messages (SystemInboxMessage)
-        public ICollection<SystemInboxMessage> ReceivedSystemMessages { get; set; }
+
+        // Navigation - System messages
+        public virtual ICollection<SystemInboxMessage> ReceivedSystemMessages { get; set; }
             = new HashSet<SystemInboxMessage>();
 
-        public ICollection<SystemInboxMessage> SentSystemMessages { get; set; }
+        public virtual ICollection<SystemInboxMessage> SentSystemMessages { get; set; }
             = new HashSet<SystemInboxMessage>();
 
-        // Contact messages (ContactMessage)
-        public ICollection<ContactMessage> ReceivedContactMessages { get; set; }
+
+        // Navigation - Contact messages
+        public virtual ICollection<ContactMessage> ReceivedContactMessages { get; set; }
             = new HashSet<ContactMessage>();
 
-        public ICollection<ContactMessage> SentContactMessages { get; set; }
+        public virtual ICollection<ContactMessage> SentContactMessages { get; set; }
             = new HashSet<ContactMessage>();
     }
 }
