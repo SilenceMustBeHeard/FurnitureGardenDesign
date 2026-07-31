@@ -4,28 +4,32 @@ services:
     image: postgres:17
     container_name: fgd-postgres
     restart: always
+
     environment:
-      POSTGRES_DB: FurnitureGardenDesign
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234567890
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
     ports:
       - "5432:5432"
+
     volumes:
       - fgd-postgres-data:/var/lib/postgresql/data
-
 
   web:
     image: fgd-app
     container_name: fgd-web
     restart: always
+
     depends_on:
       - postgres
+
     ports:
       - "8080:8080"
+
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=FurnitureGardenDesign;Username=postgres;Password=1234567890;SSL Mode=Prefer"
-
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};SSL Mode=Prefer
 
 volumes:
   fgd-postgres-data:
