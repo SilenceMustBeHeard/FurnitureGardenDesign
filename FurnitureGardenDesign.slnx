@@ -14,6 +14,7 @@
     <Project Path="FurnitureGardenDesign.Services.Core/FurnitureGardenDesign.Services.Core.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
     <File Path="Dockerfile" />
   </Folder>
   <Folder Name="/Tests/">
