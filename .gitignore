@@ -65,3 +65,6 @@ appsettings.Development.json
 appsettings.Production.json
 *.Development.json
 *.Production.json
+
+# Docker environment secrets
+.env
