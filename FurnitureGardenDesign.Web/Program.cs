@@ -76,6 +76,9 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
+
+// Health Checks
+builder.Services.AddHealthChecks();
 var app = builder.Build();
 
 // Seed Roles, Users and Data
@@ -169,4 +172,5 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
+app.MapHealthChecks("/health");
 await app.RunAsync();
