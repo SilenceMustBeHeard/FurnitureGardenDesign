@@ -13,6 +13,8 @@ RUN dotnet publish "FurnitureGardenDesign.Web/FurnitureGardenDesign.Web.csproj" 
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 
+RUN apt-get update && apt-get install -y curl
+
 WORKDIR /app
 
 COPY --from=build /app/publish .
