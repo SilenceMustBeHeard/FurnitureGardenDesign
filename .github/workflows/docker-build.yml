@@ -8,14 +8,17 @@ on:
 
 jobs:
   docker:
-
     runs-on: ubuntu-latest
 
-    steps:
+    env:
+      IMAGE_NAME: silencemustbeheard/furniture-garden-design
 
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -23,15 +26,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-
-      - name: Build Docker image
-        run: |
-          docker build \
-          -t ${{ secrets.DOCKER_USERNAME }}/furniture-garden-design:latest \
-          -t ${{ secrets.DOCKER_USERNAME }}/furniture-garden-design:${{ github.sha }} .
-
-
-      - name: Push Docker image
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/furniture-garden-design:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/furniture-garden-design:${{ github.sha }}
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
