@@ -171,6 +171,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
-
+  
 app.MapHealthChecks("/health");
 await app.RunAsync();
