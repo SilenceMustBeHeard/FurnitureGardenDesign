@@ -2,31 +2,30 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FurnitureGardenDesign.Data.Configuration.Messages
+namespace FurnitureGardenDesign.Data.Configuration.Messages;
+
+public class InboxMessageConfiguration : BaseMessageConfiguration<InboxMessage>
 {
-    public class InboxMessageConfiguration : BaseMessageConfiguration<InboxMessage>
+    public override void Configure(EntityTypeBuilder<InboxMessage> builder)
     {
-        public override void Configure(EntityTypeBuilder<InboxMessage> builder)
-        {
-            base.Configure(builder);
+        base.Configure(builder);
 
-            // Override navigation relationships
-            builder
-                .HasOne(m => m.Receiver)
-                .WithMany(u => u.ReceivedDesignMessages)
-                .HasForeignKey(m => m.ReceiverId);
+        // Override navigation relationships
+        builder
+            .HasOne(m => m.Receiver)
+            .WithMany(u => u.ReceivedDesignMessages)
+            .HasForeignKey(m => m.ReceiverId);
 
-            builder
-                .HasOne(m => m.Sender)
-                .WithMany(u => u.SentDesignMessages)
-                .HasForeignKey(m => m.SenderId);
+        builder
+            .HasOne(m => m.Sender)
+            .WithMany(u => u.SentDesignMessages)
+            .HasForeignKey(m => m.SenderId);
 
-            // DesignVariant relationship
-            builder
-                .HasOne(m => m.DesignVariant)
-                .WithMany()
-                .HasForeignKey(m => m.DesignVariantId)
-                .OnDelete(DeleteBehavior.Restrict);
-        }
+        // DesignVariant relationship
+        builder
+            .HasOne(m => m.DesignVariant)
+            .WithMany()
+            .HasForeignKey(m => m.DesignVariantId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

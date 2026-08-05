@@ -2,27 +2,26 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FurnitureGardenDesign.Data.Configuration.Messages
+namespace FurnitureGardenDesign.Data.Configuration.Messages;
+
+public abstract class BaseMessageConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseMessage
 {
-    public abstract class BaseMessageConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseMessage
+    public virtual void Configure(EntityTypeBuilder<T> builder)
     {
-        public virtual void Configure(EntityTypeBuilder<T> builder)
-        {
-            builder.HasKey(m => m.Id);
+        builder.HasKey(m => m.Id);
 
-            // Message -> Receiver
-            builder
-                .HasOne(m => m.Receiver)
-                .WithMany()
-                .HasForeignKey(m => m.ReceiverId)
-                .OnDelete(DeleteBehavior.Restrict);
+        // Message -> Receiver
+        builder
+            .HasOne(m => m.Receiver)
+            .WithMany()
+            .HasForeignKey(m => m.ReceiverId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            // Message -> Sender
-            builder
-                .HasOne(m => m.Sender)
-                .WithMany()
-                .HasForeignKey(m => m.SenderId)
-                .OnDelete(DeleteBehavior.Restrict);
-        }
+        // Message -> Sender
+        builder
+            .HasOne(m => m.Sender)
+            .WithMany()
+            .HasForeignKey(m => m.SenderId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

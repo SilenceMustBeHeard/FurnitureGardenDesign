@@ -2,36 +2,35 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FurnitureGardenDesign.Data.Configuration.Catalog
+namespace FurnitureGardenDesign.Data.Configuration.Catalog;
+
+public class CatalogDesignConfiguration : IEntityTypeConfiguration<CatalogDesign>
 {
-    public class CatalogDesignConfiguration : IEntityTypeConfiguration<CatalogDesign>
+    public void Configure(EntityTypeBuilder<CatalogDesign> builder)
     {
-        public void Configure(EntityTypeBuilder<CatalogDesign> builder)
-        {
-            builder.HasKey(d => d.Id);
+        builder.HasKey(d => d.Id);
 
-            builder.Property(d => d.Price)
-             .HasPrecision(18, 2);
+        builder.Property(d => d.Price)
+            .HasColumnType("decimal(18,2)");  // PostgreSQL compatible
 
-            builder.HasOne(d => d.Category)
-                   .WithMany(c => c.CatalogDesigns)
-                   .HasForeignKey(d => d.CategoryId)
-                   .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(d => d.Category)
+               .WithMany(c => c.CatalogDesigns)
+               .HasForeignKey(d => d.CategoryId)
+               .OnDelete(DeleteBehavior.Restrict);
 
-            // CatalogDesign <> Reviews
-            builder.HasMany(d => d.Reviews)
-                   .WithOne(r => r.CatalogDesign)
-                   .HasForeignKey(r => r.CatalogDesignId)
-                   .OnDelete(DeleteBehavior.Restrict);
+        // CatalogDesign <> Reviews
+        builder.HasMany(d => d.Reviews)
+               .WithOne(r => r.CatalogDesign)
+               .HasForeignKey(r => r.CatalogDesignId)
+               .OnDelete(DeleteBehavior.Restrict);
 
-            // CatalogDesign => Favorites
-            builder.HasMany(d => d.Favorites)
-                   .WithOne(f => f.CatalogDesign)
-                   .HasForeignKey(f => f.CatalogDesignId)
-                   .OnDelete(DeleteBehavior.Restrict);
+        // CatalogDesign => Favorites
+        builder.HasMany(d => d.Favorites)
+               .WithOne(f => f.CatalogDesign)
+               .HasForeignKey(f => f.CatalogDesignId)
+               .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasIndex(d => d.CategoryId);
-            builder.HasIndex(d => d.IsActive);
-        }
+        builder.HasIndex(d => d.CategoryId);
+        builder.HasIndex(d => d.IsActive);
     }
 }
