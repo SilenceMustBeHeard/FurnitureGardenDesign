@@ -2,21 +2,20 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FurnitureGardenDesign.Data.Configuration.Interactions
+namespace FurnitureGardenDesign.Data.Configuration.Interactions;
+
+public class FavoriteConfiguration : IEntityTypeConfiguration<Favorite>
 {
-    public class FavoriteConfiguration : IEntityTypeConfiguration<Favorite>
+    public void Configure(EntityTypeBuilder<Favorite> builder)
     {
-        public void Configure(EntityTypeBuilder<Favorite> builder)
-        {
-            builder.HasKey(f => f.Id);
+        builder.HasKey(f => f.Id);
 
-            builder.HasIndex(f => new { f.UserId, f.CatalogDesignId })
-                   .IsUnique();
+        builder.HasIndex(f => new { f.UserId, f.CatalogDesignId })
+               .IsUnique();
 
-            builder.Property(f => f.IsDeleted)
-             .HasDefaultValue(false);
+        builder.Property(f => f.IsDeleted)
+         .HasDefaultValue(false);
 
-            builder.HasQueryFilter(f => !f.IsDeleted);
-        }
+        builder.HasQueryFilter(f => !f.IsDeleted);
     }
 }
