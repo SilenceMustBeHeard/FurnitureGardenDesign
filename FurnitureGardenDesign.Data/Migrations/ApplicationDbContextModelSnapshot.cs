@@ -135,7 +135,6 @@ namespace FurnitureGardenDesign.Data.Migrations
                         .HasColumnType("character varying(500)");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Title")
@@ -279,20 +278,20 @@ namespace FurnitureGardenDesign.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<string>("UserId")  
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
-                      
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-                      
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
-                });  
+                });
 
-            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Interactions.Review", b => 
+            modelBuilder.Entity("FurnitureGardenDesign.Data.Models.Interactions.Review", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
