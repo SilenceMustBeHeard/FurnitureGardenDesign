@@ -2,9 +2,9 @@ using FurnitureGardenDesign.Data;
 using FurnitureGardenDesign.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
-namespace FurnitureGardenDesign.WebApi
-{
+namespace FurnitureGardenDesign.WebApi;
     public class Program
     {
         public static void Main(string[] args)
@@ -19,7 +19,7 @@ namespace FurnitureGardenDesign.WebApi
 
             // DbContext
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+              options.UseNpgsql(connectionString));
 
             // Identity (Cookie based – same as MVC)
 

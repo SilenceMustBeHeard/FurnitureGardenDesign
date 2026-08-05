@@ -1,27 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="SendGrid" Version="9.29.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+		<PackageReference Include="SendGrid" Version="9.29.3" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FurnitureGardenDesign.Api.Common\FurnitureGardenDesign.Api.Common.csproj" />
-    <ProjectReference Include="..\FurnitureGardenDesign.Data\FurnitureGardenDesign.Data.csproj" />
-    <ProjectReference Include="..\FurnitureGardenDesign.Services.Core\FurnitureGardenDesign.Services.Core.csproj" />
-    <ProjectReference Include="..\FurnitureGardenDesign.Web.Infrastructure\FurnitureGardenDesign.Web.Infrastructure.csproj" />
-    <ProjectReference Include="..\FurnitureGardenDesign.Web.ViewModels\FurnitureGardenDesign.Web.ViewModels.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\FurnitureGardenDesign.Api.Common\FurnitureGardenDesign.Api.Common.csproj" />
+		<ProjectReference Include="..\FurnitureGardenDesign.Data\FurnitureGardenDesign.Data.csproj" />
+		<ProjectReference Include="..\FurnitureGardenDesign.Services.Core\FurnitureGardenDesign.Services.Core.csproj" />
+		<ProjectReference Include="..\FurnitureGardenDesign.Web.Infrastructure\FurnitureGardenDesign.Web.Infrastructure.csproj" />
+		<ProjectReference Include="..\FurnitureGardenDesign.Web.ViewModels\FurnitureGardenDesign.Web.ViewModels.csproj" />
+	</ItemGroup>
 
 </Project>
