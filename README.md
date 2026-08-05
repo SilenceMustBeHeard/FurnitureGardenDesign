@@ -1,251 +1,160 @@
-# 🌿 Furniture & Garden Design (F&GD)
+🌿 Furniture & Garden Design (F&GD)
 
 [![ASP.NET](https://img.shields.io/badge/ASP.NET-10.0-512BD4?logo=.net)](https://dotnet.microsoft.com/)
 [![Entity Framework](https://img.shields.io/badge/Entity_Framework-10.0-512BD4?logo=.net)](https://learn.microsoft.com/en-us/ef/)
-[![SQL Server](https://img.shields.io/badge/SQL_Server-2022-CC2927?logo=microsoft-sql-server)](https://www.microsoft.com/en-us/sql-server)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1?logo=postgresql)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?logo=docker)](https://www.docker.com/)
+[![Render](https://img.shields.io/badge/Render-Deployed-46E3B7?logo=render)](https://render.com/)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap)](https://getbootstrap.com/)
-[![AI Generated](https://img.shields.io/badge/AI-Powered-FF6B6B?logo=openai)](https://leonardo.ai/)
-[![3D Models](https://img.shields.io/badge/3D-Meshy.ai-4A90E2?logo=three.js)](https://meshy.ai/)
+[![AI Powered](https://img.shields.io/badge/AI-Powered-FF6B6B?logo=openai)](https://openai.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## 📖 Overview
+📖 Overview
+Furniture & Garden Design (F&GD) is a full-stack ASP.NET Core MVC e-commerce platform that enables customers to order personalized furniture and garden designs. The platform leverages AI-powered design generation, interactive 3D visualizations, and a role-based approval workflow.
 
-**Furniture & Garden Design (F&GD)** is a full-stack ASP.NET Core MVC e-commerce platform that enables customers to order personalized furniture and garden designs. The platform leverages **AI-powered design generation**, **interactive 3D visualizations**, and a role-based approval workflow.
+🔗 Live Demo: https://furnituregardendesign.onrender.com
 
-### Key Features
-
-| Feature | Description |
-|---------|-------------|
-| 🤖 **AI-Powered Design Generation** | Generate unique furniture designs from text descriptions |
-| 🎨 **AI Image Generation** | Create realistic product previews using multiple AI engines |
-| 🧊 **Interactive 3D Models** | View and interact with designs in 3D space |
-| 👥 **Role-Based Access** | Admin, Manager, and Customer roles with granular permissions |
-| 📦 **Catalog Management** | Curated collection of approved designs for inspiration |
-| 💬 **Messaging System** | In-app messaging between customers and admins |
-| ⭐ **Reviews & Ratings** | Customer feedback system for catalog items |
-| 🔐 **Secure Authentication** | ASP.NET Core Identity with email confirmation & password reset |
-| 📸 **Reference Image Support** | Upload reference images for AI to work from |
-| 🔄 **Iterative Refinement** | Request changes and AI will regenerate designs |
-
-## 🎯 Workflow
+Key Features
+Feature	Description
+🤖 AI-Powered Design Generation	Generate unique furniture designs from text descriptions
+🎨 AI Image Generation	Create realistic product previews using multiple AI engines
+🧊 Interactive 3D Models	View and interact with designs in 3D space
+👥 Role-Based Access	Admin, Manager, and Customer roles with granular permissions
+📦 Catalog Management	Curated collection of approved designs for inspiration
+💬 Messaging System	In-app messaging between customers and admins
+⭐ Reviews & Ratings	Customer feedback system for catalog items
+🔐 Secure Authentication	ASP.NET Core Identity with email confirmation & password reset
+📸 Reference Image Support	Upload reference images for AI to work from
+🔄 Iterative Refinement	Request changes and AI will regenerate designs
+🎯 Workflow
+text
 Customer Order → Admin/Manager Review → AI Design Generation → Customer Approval → Catalog Publication
-↓
-Optional 3D Render Request
-↓
-Customer Feedback / Refinement
-↓
-AI Regenerates Design
+                                                                           ↓
+                                                          Optional 3D Render Request
+                                                                           ↓
+                                                          Customer Feedback / Refinement
+                                                                           ↓
+                                                          AI Regenerates Design
+🛠️ Technology Stack
+Backend
+Technology	Version	Purpose
+ASP.NET Core	10.0	Web framework
+Entity Framework Core	10.0	ORM & data access
+PostgreSQL	17	Relational database
+Npgsql	10.0	PostgreSQL provider for EF Core
+ASP.NET Core Identity	10.0	Authentication & authorization
+SendGrid	Latest	Email service (password reset)
+Infrastructure
+Technology	Purpose
+Docker	Containerization
+Render	Cloud hosting & deployment
+GitHub Actions	CI/CD pipeline
+Docker Hub	Container registry
+🚀 Getting Started
+Prerequisites
+.NET 10.0 SDK
 
-## 👥 User Roles & Permissions
+PostgreSQL 17 (or use Docker)
 
-| Permission | 👑 Admin | 📋 Manager | 👤 Customer |
-|------------|----------|------------|-------------|
-| Create orders | ✅ | ✅ | ✅ |
-| Track orders | ✅ | ✅ | ✅ |
-| Approve/refine designs | ✅ | ✅ | ✅ |
-| Request AI generation | ✅ | ✅ | ✅ |
-| Request 3D rendering | ✅ | ✅ | ✅ |
-| Manage all orders | ✅ | ✅ | ❌ |
-| Manage users | ✅ | ❌ | ❌ |
-| Manage categories | ✅ | ❌ | ❌ |
-| Manage catalog | ✅ | ❌ | ❌ |
-| Manage reviews | ✅ | ❌ | ✅ (own only) |
-| Send system messages | ✅ | ❌ | ❌ |
-| Contact support | ✅ | ✅ | ✅ |
+Git
 
-## 🛠️ Technology Stack
+Docker Desktop (recommended)
 
-### Backend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **ASP.NET Core** | 10.0 | Web framework |
-| **Entity Framework Core** | 10.0 | ORM & data access |
-| **SQL Server** | 2022 | Relational database |
-| **ASP.NET Core Identity** | 10.0 | Authentication & authorization |
-| **SendGrid** | Latest | Email service (password reset) |
+Visual Studio 2022 (v17.14 or later) or VS Code
 
-### AI & 3D Services
-| Service | Purpose |
-|---------|---------|
-| **Meshy.ai** | 3D model generation from text/images |
-| **Luma AI** | 3D model generation from text/references |
-| **Tripo AI** | Fast 3D model generation |
-| **Masterpiece Studio** | AI-powered 3D modeling |
-| **Kaedim** | 2D to 3D model conversion |
-| **Sloyd** | AI-generated game-ready 3D assets |
-| **CSM (Common Sense Machines)** | 3D generation from images/video |
-| **Leonardo.ai** | AI image generation |
-| **Segmind.ai** | AI image generation & editing |
-| **Playground AI** | AI design variations |
-| **Stable Diffusion** | Open-source AI image generation |
-| **Midjourney** | AI art generation |
-| **DALL-E** | AI image generation |
-| **Remini** | AI image enhancement |
-| **Krikey.ai** | AI video & animation |
+Quick Start with Docker (Recommended)
+The easiest way to run the application:
 
-### Frontend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **Razor Views** | 10.0 | Server-side rendering |
-| **Bootstrap** | 5.3 | Responsive UI framework |
-| **Bootstrap Icons** | 1.11 | Icon library |
-| **CSS Glassmorphism** | Custom | Modern UI effects |
-| **Three.js** | Latest | 3D model viewer |
-
-### External Services
-| Service | Purpose |
-|---------|---------|
-| **Meshy.ai** | 3D model generation |
-| **Luma AI** | 3D model generation |
-| **Tripo AI** | Fast 3D model generation |
-| **Masterpiece Studio** | AI 3D modeling |
-| **Kaedim** | 2D to 3D conversion |
-| **Sloyd** | AI game-ready 3D assets |
-| **CSM** | 3D from images/video |
-| **Leonardo.ai** | AI image generation |
-| **Segmind.ai** | AI image generation |
-| **Playground AI** | AI design variations |
-| **Stable Diffusion** | Open-source AI image |
-| **Midjourney** | AI art generation |
-| **DALL-E** | AI image generation |
-| **Remini** | AI image enhancement |
-| **Krikey.ai** | AI video & animation |
-| **SendGrid** | Transactional emails |
-
-
-
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-- [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (or SQL Server Express)
-- [Git](https://git-scm.com/)
-- [Visual Studio 2022 - 2026](https://visualstudio.microsoft.com/) (v17.14 or later) or VS Code
-- (Optional) [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-
-### Installation
-
-#### 1. Clone the Repository
-
-
+bash
+# Clone the repository
 git clone https://github.com/SilenceMustBeHeard/FurnitureGardenDesign.git
 cd FurnitureGardenDesign
 
+# Create .env file with your credentials
+cat > .env << EOF
+POSTGRES_DB=FurnitureGardenDesign
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your_secure_password
+EOF
 
+# Start the application with Docker Compose
+docker compose up --build
+The application will be available at http://localhost:8080.
 
-2. Configure Database Connection
+Manual Setup (Without Docker)
+1. Configure PostgreSQL Connection
 Update appsettings.json in the FurnitureGardenDesign.Web project:
 
-
+json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=FurnitureGardenDesign;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true"
+    "DefaultConnection": "Host=localhost;Port=5432;Database=FurnitureGardenDesign;Username=postgres;Password=your_password"
   }
-
-Apply Database Migrations ( if not presented). If you have any problems - clear the previous migration folder and start anew.
-
-
-. Seed Initial Data
-The application automatically seeds:
-
-Admin user: admin@example.com / Admin123!
-
-Manager user: manager@example.com / Manager123!
-
-Sample categories and catalog items
-
-System messages
-
-6. Configure SendGrid (for Password Reset)
-
-   dotnet user-secrets set "SendGrid:ApiKey" "YOUR_SENDGRID_API_KEY"
+}
+2. Apply Database Migrations
+bash
+dotnet ef database update --project FurnitureGardenDesign.Data --startup-project FurnitureGardenDesign.Web
+3. Configure SendGrid (for Password Reset)
+bash
+dotnet user-secrets set "SendGrid:ApiKey" "YOUR_SENDGRID_API_KEY"
 dotnet user-secrets set "SendGrid:FromEmail" "your-verified-email@example.com"
-
-
-
-7. Run the Application
-
-
-
-
-Docker Deployment 
-
+4. Run the Application
+bash
+cd FurnitureGardenDesign.Web
+dotnet run
+🐳 Docker Deployment
+Build and Run
+bash
 # Build the image
-docker build -t furniture-garden-app .
+docker build -t fgd-app .
 
-# Run the container
-docker run -d -p 8080:80 --name furniture-garden furniture-garden-app
+# Run with PostgreSQL (via docker-compose)
+docker compose up -d
 
-🧪 Testing
-Run Unit Tests
-bash
-dotnet test FurnitureGardenDesign.Services.Tests/FurnitureGardenDesign.Services.Tests.csproj
-Run Integration Tests
-bash
-dotnet test FurnitureGardenDesign.Integration.Tests/FurnitureGardenDesign.Integration.Tests.csproj
-Test Coverage
-bash
-dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-reportgenerator -reports:TestResults/**/coverage.opencover.xml -targetdir:CoverageReport
-
-
-
-
-
-🔐 Login Page
-<img width="1904" height="912" alt="login" src="https://github.com/user-attachments/assets/68e348e6-9fac-4412-b724-3a9c992945a5" />
-
-
-
-📝 Contact MEssage 
-<img width="1882" height="910" alt="contact message" src="https://github.com/user-attachments/assets/8911eb4f-6945-49d2-836a-7676363c02fd" />
-
-
-
-
-🛠 Admin Panel
-<img width="1892" height="906" alt="admin view" src="https://github.com/user-attachments/assets/e24ab638-64fd-4847-8f2e-00c885a63f9b" />
-
-📝 Create Order
-<img width="1886" height="906" alt="create order" src="https://github.com/user-attachments/assets/2e97b8e7-2b41-4d7a-9e33-c503231ab889" />
-
-
-
-
-
-🔧 Environment Variables
+# Or run standalone with external PostgreSQL
+docker run -d -p 8080:8080 \
+  -e ConnectionStrings__DefaultConnection="Host=postgres;Port=5432;Database=fgd;Username=postgres;Password=secret" \
+  -e ASPNETCORE_ENVIRONMENT=Production \
+  --name fgd-app fgd-app
+Environment Variables
 Variable	Description	Required
 ASPNETCORE_ENVIRONMENT	Runtime environment (Development/Production)	✅
-Leonardo:ApiKey	Leonardo.ai API key for image generation	❌
-Meshy:ApiKey	Meshy.ai API key for 3D generation	❌
+ConnectionStrings__DefaultConnection	PostgreSQL connection string	✅
+POSTGRES_DB	Database name (for docker-compose)	✅
+POSTGRES_USER	Database user (for docker-compose)	✅
+POSTGRES_PASSWORD	Database password (for docker-compose)	✅
 SendGrid:ApiKey	SendGrid API key for email	❌
 SendGrid:FromEmail	Verified sender email	❌
-📚 API Endpoints
-Public Endpoints
-Method	Endpoint	Description
-GET	/Catalog/CatalogIndex	View catalog
-GET	/Catalog/Details/{id}	Design details
-POST	/Catalog/ToggleFavorite/{id}	Favorite/unfavorite design
-POST	/Catalog/AddReview	Submit review
-GET	/Profile/ProxyImage	Fetch external images (CORS proxy)
-Admin Endpoints
-Method	Endpoint	Description
-GET	/Admin/CatalogManagement/EditList	Manage catalog
-GET	/Admin/UserManagement/Index	Manage users
-GET	/Admin/OrdersManagement/Manage	Manage orders
-GET	/Admin/ReviewManagement/EditList	Moderate reviews
-POST	/Admin/DesignVariants/Create	Create design variant
-POST	/Admin/DesignVariants/Send	Send proposal to customer
-AI Generation Endpoints
-Method	Endpoint	Description
-POST	/Api/GenerateImage	Generate AI image from prompt
-POST	/Api/Generate3D	Generate 3D model from prompt/image
-GET	/Api/GenerationStatus/{id}	Check generation status
+🔧 CI/CD Pipeline
+The project uses GitHub Actions for CI/CD:
 
+On push to main or deployment-test:
 
+Builds the Docker image
+Pushes it to Docker Hub
+Render automatically deploys the latest version
+Deployment Status
+Live URL: https://furnituregardendesign.onrender.com
 
+Deployment Platform: Render.com
+
+Database: PostgreSQL 17 (Render managed)
+
+📸 Screenshots
+Login Page
+<img width="800" alt="login" src="https://github.com/user-attachments/assets/68e348e6-9fac-4412-b724-3a9c992945a5" />
+Contact Message
+<img width="800" alt="contact message" src="https://github.com/user-attachments/assets/8911eb4f-6945-49d2-836a-7676363c02fd" />
+Admin Panel
+<img width="800" alt="admin view" src="https://github.com/user-attachments/assets/e24ab638-64fd-4847-8f2e-00c885a63f9b" />
+Create Order
+<img width="800" alt="create order" src="https://github.com/user-attachments/assets/2e97b8e7-2b41-4d7a-9e33-c503231ab889" />
+🔒 Environment Variables (Production)
+For production deployment on Render, configure these environment variables:
+
+env
+ASPNETCORE_ENVIRONMENT=Production
+ConnectionStrings__DefaultConnection=Host=...;Database=...;Username=...;Password=...;Port=5432;SSL Mode=Require
 🤝 Contributing
 Fork the repository
 
@@ -268,8 +177,6 @@ Use meaningful variable names
 
 Target .NET 10.0 compatibility
 
-
-
 🙏 Acknowledgments
 3D Model Generation
 Meshy.ai - AI-powered 3D model generation from text and images
@@ -280,12 +187,6 @@ Tripo AI - Fast AI-powered 3D model generation
 
 Masterpiece Studio - AI-powered 3D modeling and editing
 
-Kaedim - Convert 2D images to 3D models
-
-Sloyd - AI-generated game-ready 3D assets
-
-CSM (Common Sense Machines) - 3D generation from images and video
-
 AI Image Generation
 Leonardo.ai - AI image generation for design concepts
 
@@ -295,14 +196,6 @@ Playground AI - AI design generation and variations
 
 Stable Diffusion - Open-source AI image generation
 
-Midjourney - High-quality AI art generation
-
-DALL-E - OpenAI's image generation
-
-Remini - AI image enhancement and upscaling
-
-Krikey.ai - AI video and animation generation
-
 Infrastructure
 SendGrid - Email service
 
@@ -310,24 +203,11 @@ Bootstrap - UI framework
 
 Three.js - 3D model rendering
 
+PostgreSQL - Database
+
 📄 License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-📞 Support
-For issues, questions, or contributions:
-
-Open an issue
-
-Email: support@furnituregarden.com
-
-<div align="center"> Made with ❤️ by the Furniture & Garden Design Team <br/> <sub>Built with .NET 10.0 | Powered by AI & 3D Generation</sub> </div> ```
 
 
-
-
-
-
-
-  
-
-
+<div align="center"> Made with ❤️ by the Furniture & Garden Design Team <br/> <sub>Built with .NET 10.0 | PostgreSQL | Docker | Powered by AI & 3D Generation</sub> </div> ```
