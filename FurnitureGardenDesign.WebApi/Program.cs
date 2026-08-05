@@ -62,4 +62,3 @@ namespace FurnitureGardenDesign.WebApi;
             app.Run();
         }
     }
-}
