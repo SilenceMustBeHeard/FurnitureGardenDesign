@@ -14,6 +14,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+if (builder.Environment.IsProduction())
+{
+    builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
+}
+
 // Connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
