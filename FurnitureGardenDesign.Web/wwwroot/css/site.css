@@ -630,3 +630,40 @@ header {
         height: 180px;
     }
 }
+/* CAROUSEL CAPTION FIX */
+
+.glass-carousel .carousel-caption {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    width: auto;
+    max-width: 80%;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .glass-carousel .carousel-caption {
+        max-width: 90%;
+        bottom: 15px;
+        padding: 0.5rem 1rem;
+    }
+
+        .glass-carousel .carousel-caption h5 {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+}
+
+@media (max-width: 576px) {
+    .glass-carousel .carousel-caption {
+        max-width: 95%;
+        padding: 0.3rem 0.8rem;
+        bottom: 10px;
+    }
+
+        .glass-carousel .carousel-caption h5 {
+            font-size: 0.7rem;
+        }
+}

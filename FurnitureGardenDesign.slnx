@@ -16,9 +16,12 @@
   <Folder Name="/Solution Items/">
     <File Path=".dockerignore" />
     <File Path=".env" />
+    <File Path=".env.dev" />
     <File Path=".env.example" />
+    <File Path="docker-compose.dev.yml" />
     <File Path="docker-compose.yml" />
     <File Path="Dockerfile" />
+    <File Path="Dockerfile.dev" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="FurnitureGardenDesign.Integration.Tests/FurnitureGardenDesign.Integration.Tests.csproj" Id="39b7d5b2-4e38-473b-bfce-fea23560d107" />
