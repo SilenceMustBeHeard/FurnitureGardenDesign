@@ -85,21 +85,20 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 // Health Checks
 builder.Services.AddHealthChecks();
 var app = builder.Build();
-
 // Seed Roles, Users and Data
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var configuration = services.GetRequiredService<IConfiguration>(); // <-- ДОБАВИ ТОВА
 
-    // Apply migrations first
     await context.Database.MigrateAsync();
 
-    // Seed Identity (Roles and Users) - idempotent (safe to run multiple times)
     await IdentitySeeder.SeedRolesAsync(roleManager);
-    await IdentitySeeder.SeedAdminAsync(userManager);
-    await IdentitySeeder.SeedManagerAsync(userManager);
+    await IdentitySeeder.SeedAdminAsync(userManager, configuration); 
+    await IdentitySeeder.SeedManagerAsync(userManager, configuration); 
 
     // Seed Catalog Data - ONLY if Categories table is empty
     var anyCategories = await context.Categories.AnyAsync();
