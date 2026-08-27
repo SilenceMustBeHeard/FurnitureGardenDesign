@@ -1,49 +1,47 @@
 services:
   postgres:
     image: postgres:17
-    container_name: fgd-postgres
+    container_name: fgd-postgres-dev
     restart: always
-
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-
     ports:
       - "5432:5432"
-
     volumes:
       - fgd-postgres-data:/var/lib/postgresql/data
-
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-
   web:
-    image: fgd-app
-    container_name: fgd-web
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: fgd-web-dev
     restart: always
-
     depends_on:
       postgres:
         condition: service_healthy
-
     ports:
       - "8080:8080"
-
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};SSL Mode=Prefer
-
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
+    volumes:
+      - ./FurnitureGardenDesign.Web:/app/FurnitureGardenDesign.Web
+      - ./FurnitureGardenDesign.Data:/app/FurnitureGardenDesign.Data
+      - ./FurnitureGardenDesign.Data.Common:/app/FurnitureGardenDesign.Data.Common
+      - ./FurnitureGardenDesign.Data.Models:/app/FurnitureGardenDesign.Data.Models
+      - ./FurnitureGardenDesign.Services.Automapping:/app/FurnitureGardenDesign.Services.Automapping
+      - ./FurnitureGardenDesign.Services.Common:/app/FurnitureGardenDesign.Services.Common
+      - ./FurnitureGardenDesign.Services.Core:/app/FurnitureGardenDesign.Services.Core
+      - ./FurnitureGardenDesign.Web.Infrastructure:/app/FurnitureGardenDesign.Web.Infrastructure
+      - ./FurnitureGardenDesign.Web.ViewModels:/app/FurnitureGardenDesign.Web.ViewModels
+      - ./FurnitureGardenDesign.WebApi:/app/FurnitureGardenDesign.WebApi
 
 volumes:
   fgd-postgres-data:

@@ -1,0 +1,29 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0
+
+WORKDIR /app
+
+# install curl for health check
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# copy csproj and restore as distinct layers
+COPY *.sln .
+COPY FurnitureGardenDesign.Web/*.csproj ./FurnitureGardenDesign.Web/
+COPY FurnitureGardenDesign.Data/*.csproj ./FurnitureGardenDesign.Data/
+COPY FurnitureGardenDesign.Data.Common/*.csproj ./FurnitureGardenDesign.Data.Common/
+COPY FurnitureGardenDesign.Data.Models/*.csproj ./FurnitureGardenDesign.Data.Models/
+COPY FurnitureGardenDesign.Services.Automapping/*.csproj ./FurnitureGardenDesign.Services.Automapping/
+COPY FurnitureGardenDesign.Services.Common/*.csproj ./FurnitureGardenDesign.Services.Common/
+COPY FurnitureGardenDesign.Services.Core/*.csproj ./FurnitureGardenDesign.Services.Core/
+COPY FurnitureGardenDesign.Web.Infrastructure/*.csproj ./FurnitureGardenDesign.Web.Infrastructure/
+COPY FurnitureGardenDesign.Web.ViewModels/*.csproj ./FurnitureGardenDesign.Web.ViewModels/
+COPY FurnitureGardenDesign.WebApi/*.csproj ./FurnitureGardenDesign.WebApi/
+
+RUN dotnet restore "FurnitureGardenDesign.Web/FurnitureGardenDesign.Web.csproj"
+
+# copy the rest of the application code
+COPY . .
+
+EXPOSE 8080
+
+# start the application
+ENTRYPOINT ["dotnet", "watch", "run", "--project", "FurnitureGardenDesign.Web/FurnitureGardenDesign.Web.csproj", "--no-launch-profile", "--urls", "http://0.0.0.0:8080"]
