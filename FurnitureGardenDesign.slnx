@@ -1,7 +1,7 @@
 <Solution>
   <Folder Name="/API/">
-    <Project Path="FurnitureGardenDesign.Api.Common/FurnitureGardenDesign.Api.Common.csproj" Id="7600af47-df7a-4691-afdc-fcdbb2ca2b49" />
-    <Project Path="FurnitureGardenDesign.WebApi/FurnitureGardenDesign.WebApi.csproj" Id="682f3301-5b07-4ed4-822f-c35096ae9657" />
+    <Project Path="FurnitureGardenDesign.Api.Common/FurnitureGardenDesign.Api.Common.csproj" />
+    <Project Path="FurnitureGardenDesign.WebApi/FurnitureGardenDesign.WebApi.csproj" />
   </Folder>
   <Folder Name="/Data/">
     <Project Path="FurnitureGardenDesign.Data.Common/FurnitureGardenDesign.Data.Common.csproj" />
@@ -24,9 +24,9 @@
     <File Path="Dockerfile.dev" />
   </Folder>
   <Folder Name="/Tests/">
-    <Project Path="FurnitureGardenDesign.Integration.Tests/FurnitureGardenDesign.Integration.Tests.csproj" Id="39b7d5b2-4e38-473b-bfce-fea23560d107" />
-    <Project Path="FurnitureGardenDesign.Services.Tests/FurnitureGardenDesign.Unit.Tests.csproj" Id="6f870db1-387a-4535-86a2-74db3a1591fe" />
-    <Project Path="FurnitureGardenDesign.Web.Tests/FurnitureGardenDesign.Web.Tests.csproj" Id="ee89c920-06dc-4fa0-82af-752f68a7ce6d" />
+    <Project Path="FurnitureGardenDesign.Integration.Tests/FurnitureGardenDesign.Integration.Tests.csproj" />
+    <Project Path="FurnitureGardenDesign.Services.Tests/FurnitureGardenDesign.Unit.Tests.csproj" />
+    <Project Path="FurnitureGardenDesign.Web.Tests/FurnitureGardenDesign.Web.Tests.csproj" />
   </Folder>
   <Folder Name="/Web/">
     <Project Path="FurnitureGardenDesign.Web.Infrastructure/FurnitureGardenDesign.Web.Infrastructure.csproj" />
